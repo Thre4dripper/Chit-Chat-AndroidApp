@@ -1,14 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.BioFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/homeBackground"
+        tools:context=".ui.fragments.BioFragment">
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/bio_back_btn"
+            style="@style/BackButtonStyle"
+            android:contentDescription="@string/desc_back_btn"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/bio_label"
+            style="@style/ActivityFragmentLabelStyle"
+            android:text="@string/bio_fragment_label"
+            app:layout_constraintBottom_toBottomOf="@+id/bio_back_btn"
+            app:layout_constraintStart_toEndOf="@+id/bio_back_btn"
+            app:layout_constraintTop_toTopOf="@+id/bio_back_btn" />
+
+        <ImageView
+            android:id="@+id/bio_save_btn"
+            style="@style/BackButtonStyle"
+            android:contentDescription="@string/desc_save_btn"
+            android:src="@drawable/ic_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textColorPrimary" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bio_til"
+            style="@style/FragmentTILStyle"
+            app:counterEnabled="true"
+            app:counterMaxLength="70"
+            app:counterTextColor="@color/textColorSecondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bio_label">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bio_et"
+                style="@style/FragmentEtStyle" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/home_bg_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bio_til">
+
+            <TextView
+                style="@style/FragmentInstructionTvStyle"
+                android:text="@string/bio_fragment_instructions"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

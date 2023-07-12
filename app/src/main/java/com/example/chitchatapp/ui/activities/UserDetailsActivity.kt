@@ -23,6 +23,7 @@ class UserDetailsActivity : AppCompatActivity() {
         getProfileImage(binding)
         setUsername(binding)
         setName(binding)
+        setBio(binding)
     }
 
     private fun initBackButtons() {
@@ -56,6 +57,14 @@ class UserDetailsActivity : AppCompatActivity() {
         binding.userDetailsEditName.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_NAME)
+            startActivity(intent)
+        }
+    }
+
+    private fun setBio(binding: ActivityUserDetailsBinding) {
+        binding.userDetailsEditBio.setOnClickListener {
+            val intent = Intent(this, SetDetailsActivity::class.java)
+            intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_BIO)
             startActivity(intent)
         }
     }

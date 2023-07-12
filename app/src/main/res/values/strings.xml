@@ -19,8 +19,6 @@
     <string name="user_details_activity_edit_username">Edit Username</string>
     <string name="user_details_activity_edit_name">Edit Name</string>
     <string name="user_details_activity_edit_bio">Edit Bio</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     //Username Fragment
     <string name="username_fragment_label">Username</string>
@@ -33,5 +31,7 @@
     <string name="name_fragment_instructions">You have to choose a name on Chit Chat. It will appear on your profile.\n\nYou can use a–z, 0–9 and underscores. Minimum length is 5 Characters</string>
 
     //Bio Fragment
+    <string name="bio_fragment_label">Bio</string>
     <string name="bio_fragment_text_set_bio">Set Bio</string>
+    <string name="bio_fragment_instructions">You can add something about yourself. It will appear on your profile. Anyone who visits your profile will be able to see it.</string>
 </resources>
