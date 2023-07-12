@@ -18,10 +18,8 @@ class RegisterUser {
             val userHashMap = hashMapOf(
                 "uid" to user.uid,
                 "name" to user.displayName,
-                "email" to user.email,
                 "image" to user.photoUrl.toString(),
                 "status" to "offline",
-                "search" to user.displayName?.lowercase()
             )
 
             //add user data to document

@@ -13,5 +13,17 @@ class FirestoreUtils {
 
             return userRef.get().isSuccessful
         }
+
+        fun getUserProfileImage(user: FirebaseUser, profileImage: (String) -> Unit) {
+            val firestore = Firebase.firestore
+            val userRef = firestore.collection("Users").document(user.uid)
+
+            userRef.get().addOnSuccessListener {
+                val profileImageUrl = it["image"] as String
+                profileImage(profileImageUrl)
+            }.addOnFailureListener {
+                profileImage("")
+            }
+        }
     }
 }
