@@ -9,6 +9,5 @@
     <color name="secondaryColor">#673AB7</color>
     <color name="secondaryVariantColor">#724FB1</color>
 
-    <color name="backgroundColor">#FFFFFF</color>
-    <color name="surfaceColor">#FFFFFF</color>
+    <color name="homeBackground">#1D2C48</color>
 </resources>

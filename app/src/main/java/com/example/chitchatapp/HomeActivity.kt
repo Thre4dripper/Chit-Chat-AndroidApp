@@ -14,6 +14,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
 
     private val auth = FirebaseAuth.getInstance()
+
+    //navigation drawer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
@@ -23,7 +25,7 @@ class HomeActivity : AppCompatActivity() {
         if (auth.currentUser == null)
             signInLauncher.launch(Auth.googleSignIn())
 
-        binding.btnLogout.setOnClickListener {
+        binding.logoutBtn.setOnClickListener {
             Auth.signOut(this)
         }
     }
