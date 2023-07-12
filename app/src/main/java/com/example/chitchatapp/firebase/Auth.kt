@@ -3,7 +3,10 @@ package com.example.chitchatapp.firebase
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import com.bumptech.glide.Glide
 import com.example.chitchatapp.HomeActivity
+import com.example.chitchatapp.R
+import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,13 +45,21 @@ class Auth {
 
         fun onSignInResult(
             activity: Activity,
-            result: FirebaseAuthUIAuthenticationResult
+            result: FirebaseAuthUIAuthenticationResult,
+            binding: ActivityHomeBinding
         ) {
             val response = result.idpResponse
             if (result.resultCode == RESULT_OK) {
                 // Successfully signed in
                 val user = FirebaseAuth.getInstance().currentUser
-                // ...
+
+                //update profile image in app bar after sign in
+                Glide.with(activity.applicationContext)
+                    .load(user?.photoUrl)
+                    .placeholder(R.drawable.ic_profile)
+                    .circleCrop()
+                    .into(binding.profileImage)
+
             } else {
                 MaterialAlertDialogBuilder(activity)
                     .setTitle("Sign In Failed")

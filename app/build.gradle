@@ -52,4 +52,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
 }

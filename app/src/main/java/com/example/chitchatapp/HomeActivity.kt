@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
 import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.example.chitchatapp.firebase.Auth
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -25,6 +26,13 @@ class HomeActivity : AppCompatActivity() {
         if (auth.currentUser == null)
             signInLauncher.launch(Auth.googleSignIn())
 
+        //setting profile image in app bar
+        Glide.with(this)
+            .load(auth.currentUser?.photoUrl)
+            .placeholder(R.drawable.ic_profile)
+            .circleCrop()
+            .into(binding.profileImage)
+
         binding.logoutBtn.setOnClickListener {
             Auth.signOut(this)
         }
@@ -33,6 +41,6 @@ class HomeActivity : AppCompatActivity() {
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
-        Auth.onSignInResult(this, res)
+        Auth.onSignInResult(this, res, binding)
     }
 }
