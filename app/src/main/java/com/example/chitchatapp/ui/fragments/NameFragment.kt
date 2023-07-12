@@ -1,11 +1,10 @@
 package com.example.chitchatapp.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.chitchatapp.R
+import androidx.fragment.app.Fragment
 import com.example.chitchatapp.databinding.FragmentNameBinding
 
 class NameFragment : Fragment() {
@@ -22,5 +21,9 @@ class NameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nameEt.requestFocus()
+
+        binding.nameBackBtn.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 }

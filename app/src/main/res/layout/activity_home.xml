@@ -61,6 +61,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loading_lottie"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_speed="0.5" />
+
             <LinearLayout
                 android:id="@+id/complete_profile_ll"
                 android:layout_width="wrap_content"

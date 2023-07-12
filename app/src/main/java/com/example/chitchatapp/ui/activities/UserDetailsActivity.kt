@@ -36,7 +36,7 @@ class UserDetailsActivity : AppCompatActivity() {
     }
 
     private fun getProfileImage(binding: ActivityUserDetailsBinding) {
-        FirestoreUtils.getUserProfileImage(auth.currentUser!!) {
+        FirestoreUtils.getUserProfileImage(this, auth.currentUser!!) {
             Glide.with(this)
                 .load(it)
                 .placeholder(R.drawable.ic_profile)

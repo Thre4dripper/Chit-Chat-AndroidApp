@@ -44,6 +44,7 @@ class HomeActivity : AppCompatActivity() {
             Auth.signOut(this)
         }
 
+        binding.loadingLottie.visibility = View.VISIBLE
         initCompleteProfileLayout(binding)
     }
 
@@ -54,12 +55,16 @@ class HomeActivity : AppCompatActivity() {
             return
         }
 
-        binding.completeProfileLl.visibility =
-            if (FirestoreUtils.checkInitialRegisteredUser(auth.currentUser!!)) View.GONE
-            else View.VISIBLE
-
+        //initially setting visibility to gone
+        binding.completeProfileLl.visibility = View.GONE
         binding.completeProfileBtn.setOnClickListener {
             startActivity(Intent(this, UserDetailsActivity::class.java))
+        }
+
+        //checking if user has completed profile or not
+        FirestoreUtils.checkInitialRegisteredUser(auth.currentUser!!) {
+            binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
+            binding.loadingLottie.visibility = View.GONE
         }
     }
 
