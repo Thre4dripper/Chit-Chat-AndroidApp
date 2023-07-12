@@ -22,6 +22,7 @@ class UserDetailsActivity : AppCompatActivity() {
         initBackButtons()
         getProfileImage(binding)
         setUsername(binding)
+        setName(binding)
     }
 
     private fun initBackButtons() {
@@ -47,6 +48,14 @@ class UserDetailsActivity : AppCompatActivity() {
         binding.userDetailsEditUsername.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_USERNAME)
+            startActivity(intent)
+        }
+    }
+
+    private fun setName(binding: ActivityUserDetailsBinding) {
+        binding.userDetailsEditName.setOnClickListener {
+            val intent = Intent(this, SetDetailsActivity::class.java)
+            intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_NAME)
             startActivity(intent)
         }
     }

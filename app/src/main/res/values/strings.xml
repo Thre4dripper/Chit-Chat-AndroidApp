@@ -28,7 +28,9 @@
     <string name="username_fragment_instructions">You have to choose a username on Chit Chat in order to be find by the people. People will be able to find you by this username and contact you.\n\nYou can use a–z, 0–9 and underscores. Minimum length is 5 Characters and it has to be unique</string>
 
     //Name Fragment
+    <string name="name_fragment_label">Name</string>
     <string name="name_fragment_text_set_name">Set Name</string>
+    <string name="name_fragment_instructions">You have to choose a name on Chit Chat. It will appear on your profile.\n\nYou can use a–z, 0–9 and underscores. Minimum length is 5 Characters</string>
 
     //Bio Fragment
     <string name="bio_fragment_text_set_bio">Set Bio</string>
