@@ -3,7 +3,6 @@ package com.example.chitchatapp.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
@@ -38,19 +37,23 @@ class HomeActivity : AppCompatActivity() {
             .circleCrop()
             .into(binding.profileImage)
 
+        binding.profileImage.setOnClickListener {
+            startActivity(Intent(this, UserDetailsActivity::class.java))
+        }
         binding.logoutBtn.setOnClickListener {
             Auth.signOut(this)
         }
 
-        initCompleteProfile(binding)
+        initCompleteProfileLayout(binding)
     }
 
-    private fun initCompleteProfile(binding: ActivityHomeBinding) {
+    private fun initCompleteProfileLayout(binding: ActivityHomeBinding) {
+        //do nothing, after sign in this func will be called again
         if (auth.currentUser == null) {
-            Toast.makeText(this, "Please sign in first", Toast.LENGTH_SHORT).show()
-            finish()
+            binding.completeProfileLl.visibility = View.GONE
             return
         }
+
         binding.completeProfileLl.visibility =
             if (FirestoreUtils.checkInitialRegisteredUser(auth.currentUser!!)) View.GONE
             else View.VISIBLE
@@ -64,5 +67,8 @@ class HomeActivity : AppCompatActivity() {
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
         Auth.onSignInResult(this, res, binding)
+
+        //after sign in, initCompleteProfile will be called again
+        initCompleteProfileLayout(binding)
     }
 }
