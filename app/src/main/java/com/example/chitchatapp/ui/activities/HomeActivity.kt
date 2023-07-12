@@ -6,51 +6,46 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.databinding.ActivityHomeBinding
-import com.example.chitchatapp.firebase.Auth
 import com.example.chitchatapp.firebase.firestore.FirestoreUtils
+import com.example.chitchatapp.viewModels.HomeViewModel
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class HomeActivity : AppCompatActivity() {
     private val TAG = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var viewModel: HomeViewModel
 
-    private val auth = FirebaseAuth.getInstance()
-
-    //navigation drawer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        if (auth.currentUser == null)
-            signInLauncher.launch(Auth.googleSignIn())
+        if (viewModel.currentUser == null)
+            signInLauncher.launch(viewModel.signInUser())
 
-        //setting profile image in app bar
-        Glide.with(this)
-            .load(auth.currentUser?.photoUrl)
-            .placeholder(R.drawable.ic_profile)
-            .circleCrop()
-            .into(binding.profileImage)
-
-        binding.profileImage.setOnClickListener {
+        //all the click listeners
+        binding.profileImageBtn.setOnClickListener {
             startActivity(Intent(this, UserDetailsActivity::class.java))
         }
         binding.logoutBtn.setOnClickListener {
-            Auth.signOut(this)
+            signOut()
         }
 
         binding.loadingLottie.visibility = View.VISIBLE
+        setProfileImage()
         initCompleteProfileLayout(binding)
     }
 
     private fun initCompleteProfileLayout(binding: ActivityHomeBinding) {
         //do nothing, after sign in this func will be called again
-        if (auth.currentUser == null) {
+        if (viewModel.currentUser == null) {
             binding.completeProfileLl.visibility = View.GONE
             return
         }
@@ -62,18 +57,77 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //checking if user has completed profile or not
-        FirestoreUtils.checkInitialRegisteredUser(auth.currentUser!!) {
+        FirestoreUtils.checkInitialRegisteredUser(viewModel.currentUser!!) {
             binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
             binding.loadingLottie.visibility = View.GONE
         }
     }
 
+    /**
+     * This function will be called when user sign out from the app
+     */
+    private fun signOut() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Sign Out")
+            .setMessage("Are you sure you want to sign out?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                viewModel.signOutUser(this) {
+                    if (it) {
+                        finish()
+                    } else {
+                        dialog.dismiss()
+                        signOut()
+                    }
+                }
+            }
+            .setNegativeButton("No") { _, _ -> }
+            .show()
+    }
+
+    /**
+     * Intent launcher for sign in
+     */
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
-        Auth.onSignInResult(this, res, binding)
+        viewModel.onSignInResult(res) {
+            if (it) {
+                setProfileImage()
+                //after sign in, initCompleteProfile will be called again
+                initCompleteProfileLayout(binding)
+            } else {
+                showSignInFailedDialog()
+            }
+        }
+    }
 
-        //after sign in, initCompleteProfile will be called again
-        initCompleteProfileLayout(binding)
+    private fun setProfileImage() {
+        Glide.with(this)
+            .load(viewModel.currentUser?.photoUrl)
+            .placeholder(R.drawable.ic_profile)
+            .circleCrop()
+            .into(binding.profileImageBtn)
+    }
+
+    /**
+     * This function will be called when sign in failed
+     */
+    private fun showSignInFailedDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Sign In Failed")
+            .setMessage("Sign in failed. Do you want to try again?")
+            .setCancelable(false)
+            .setPositiveButton("Ok") { _, _ ->
+                //restart activity
+                finish()
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+            }
+            .setNegativeButton("No") { _, _ ->
+                //close app
+                finish()
+            }
+            .show()
     }
 }
