@@ -6,8 +6,7 @@ import com.google.firebase.ktx.Firebase
 
 class FirestoreUtils {
     companion object {
-        fun checkInitialRegisteredUser(user: FirebaseUser?): Boolean {
-            if (user == null) return false
+        fun checkInitialRegisteredUser(user: FirebaseUser): Boolean {
 
             val firestore = Firebase.firestore
             val userRef = firestore.collection("Users").document(user.uid)

@@ -3,4 +3,5 @@
 
     //HomeActivity
     <string name="home_activity_desc_logout_btn">Logout</string>
+    <string name="home_activity_complete_profile_btn">Complete Profile</string>
 </resources>
