@@ -2,6 +2,7 @@
 <resources>
 
     //User Details Activity
+
     <style name="UserDetailsLLStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -41,4 +42,61 @@
         <item name="android:focusable">true</item>
         <item name="android:padding">8dp</item>
     </style>
+
+    //Back Button and Label Style
+
+    <style name="BackButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="ActivityFragmentLabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="FragmentActionTvStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="FragmentTILStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="errorEnabled">true</item>
+        <item name="boxStrokeColor">@color/textColorSecondary</item>
+    </style>
+
+    <style name="FragmentEtStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <style name="FragmentInstructionTvStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginTop">60dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:textColor">@color/lightGrey</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    //Fragment Styles
 </resources>

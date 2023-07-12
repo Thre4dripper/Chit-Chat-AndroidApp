@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">Chit Chat</string>
+    <string name="desc_back_btn">Go Back</string>
+    <string name="desc_save_btn">Save</string>
 
     //HomeActivity
     <string name="home_activity_desc_logout_btn">Logout</string>
     <string name="home_activity_complete_profile_btn">Complete Profile</string>
 
     //User Details Activity
-    <string name="user_details_activity_desc_back_btn">Go Back</string>
     <string name="user_details_activity_text_back_btn">Back</string>
     <string name="user_details_activity_desc_profile_photo">Profile Photo</string>
     <string name="user_details_activity_text_set_profile_photo">Set Profile Photo</string>
@@ -20,4 +21,15 @@
     <string name="user_details_activity_edit_bio">Edit Bio</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    //Username Fragment
+    <string name="username_fragment_label">Username</string>
+    <string name="username_fragment_text_set_username">Set Username</string>
+    <string name="username_fragment_instructions">You have to choose a username on Chit Chat in order to be find by the people. People will be able to find you by this username and contact you.\n\nYou can use a–z, 0–9 and underscores. Minimum length is 5 Characters and it has to be unique</string>
+
+    //Name Fragment
+    <string name="name_fragment_text_set_name">Set Name</string>
+
+    //Bio Fragment
+    <string name="bio_fragment_text_set_bio">Set Bio</string>
 </resources>
