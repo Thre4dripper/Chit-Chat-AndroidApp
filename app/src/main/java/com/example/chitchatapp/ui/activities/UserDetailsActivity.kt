@@ -1,9 +1,11 @@
-package com.example.chitchatapp.ui
+package com.example.chitchatapp.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.example.chitchatapp.Constants
 import com.example.chitchatapp.R
 import com.example.chitchatapp.databinding.ActivityUserDetailsBinding
 import com.example.chitchatapp.firebase.firestore.FirestoreUtils
@@ -19,6 +21,7 @@ class UserDetailsActivity : AppCompatActivity() {
 
         initBackButtons()
         getProfileImage(binding)
+        setUsername(binding)
     }
 
     private fun initBackButtons() {
@@ -37,6 +40,14 @@ class UserDetailsActivity : AppCompatActivity() {
                 .placeholder(R.drawable.ic_profile)
                 .circleCrop()
                 .into(binding.userDetailsProfileIv)
+        }
+    }
+
+    private fun setUsername(binding: ActivityUserDetailsBinding) {
+        binding.userDetailsEditUsername.setOnClickListener {
+            val intent = Intent(this, SetDetailsActivity::class.java)
+            intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_USERNAME)
+            startActivity(intent)
         }
     }
 }

@@ -5,7 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.util.Log
 import com.bumptech.glide.Glide
-import com.example.chitchatapp.ui.HomeActivity
+import com.example.chitchatapp.ui.activities.HomeActivity
 import com.example.chitchatapp.R
 import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.example.chitchatapp.firebase.firestore.RegisterUser

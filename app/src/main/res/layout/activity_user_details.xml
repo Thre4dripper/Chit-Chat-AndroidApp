@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/homeBackground"
-        tools:context=".ui.UserDetailsActivity">
+        tools:context=".ui.activities.UserDetailsActivity">
 
         <ImageView
             android:id="@+id/user_details_back_btn"
@@ -107,6 +107,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/user_details_edit_username"
                     style="@style/UserDetailsRightIconStyle"
                     android:contentDescription="@string/user_details_activity_edit_username"
                     android:src="@drawable/ic_edit"
@@ -143,6 +144,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/user_details_edit_name"
                     style="@style/UserDetailsRightIconStyle"
                     android:contentDescription="@string/user_details_activity_edit_name"
                     android:src="@drawable/ic_edit"
@@ -178,6 +180,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/user_details_edit_bio"
                     style="@style/UserDetailsRightIconStyle"
                     android:contentDescription="@string/user_details_activity_edit_bio"
                     android:src="@drawable/ic_edit"

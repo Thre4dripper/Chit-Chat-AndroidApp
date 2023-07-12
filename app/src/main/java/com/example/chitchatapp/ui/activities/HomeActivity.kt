@@ -1,4 +1,4 @@
-package com.example.chitchatapp.ui
+package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
