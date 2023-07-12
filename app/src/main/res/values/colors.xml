@@ -9,4 +9,6 @@
     <color name="secondaryVariantColor">#724FB1</color>
 
     <color name="homeBackground">#1D2C48</color>
+    <color name="textColorPrimary">#DAE2FF</color>
+    <color name="textColorSecondary">#90B4F8</color>
 </resources>

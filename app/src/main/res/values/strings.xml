@@ -4,4 +4,10 @@
     //HomeActivity
     <string name="home_activity_desc_logout_btn">Logout</string>
     <string name="home_activity_complete_profile_btn">Complete Profile</string>
+
+    //User Details Activity
+    <string name="user_details_activity_desc_back_btn">Go Back</string>
+    <string name="user_details_activity_text_back_btn">Back</string>
+    <string name="user_details_activity_desc_profile_photo">Profile Photo</string>
+    <string name="user_details_activity_text_set_profile_photo">Set Profile Photo</string>
 </resources>
