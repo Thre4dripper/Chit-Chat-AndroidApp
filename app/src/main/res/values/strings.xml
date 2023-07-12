@@ -10,4 +10,12 @@
     <string name="user_details_activity_text_back_btn">Back</string>
     <string name="user_details_activity_desc_profile_photo">Profile Photo</string>
     <string name="user_details_activity_text_set_profile_photo">Set Profile Photo</string>
+
+    <string name="user_details_activity_label_username">Username</string>
+    <string name="user_details_activity_text_username">\@%s</string>
+    <string name="user_details_activity_label_name">Name</string>
+    <string name="user_details_activity_label_bio">Bio</string>
+    <string name="user_details_activity_edit_username">Edit Username</string>
+    <string name="user_details_activity_edit_name">Edit Name</string>
+    <string name="user_details_activity_edit_bio">Edit Bio</string>
 </resources>

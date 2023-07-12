@@ -76,6 +76,113 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_details_set_profile_image">
 
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                style="@style/UserDetailsLLStyle"
+                android:layout_marginTop="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    style="@style/UserDetailsLeftIconStyle"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/lightGrey"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/UserDetailsLabelStyle"
+                        android:text="@string/user_details_activity_label_username" />
+
+                    <TextView
+                        style="@style/UserDetailsTextStyle"
+                        android:text="@string/user_details_activity_text_username"
+                        tools:text="\@username" />
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/UserDetailsRightIconStyle"
+                    android:contentDescription="@string/user_details_activity_edit_username"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/primaryColor" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                style="@style/UserDetailsLLStyle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                <ImageView
+                    style="@style/UserDetailsLeftIconStyle"
+                    android:src="@drawable/ic_info"
+                    app:tint="@color/lightGrey"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/UserDetailsLabelStyle"
+                        android:text="@string/user_details_activity_label_name" />
+
+                    <TextView
+                        style="@style/UserDetailsTextStyle"
+                        android:text="@string/user_details_activity_label_name" />
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/UserDetailsRightIconStyle"
+                    android:contentDescription="@string/user_details_activity_edit_name"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/primaryColor" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                style="@style/UserDetailsLLStyle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+                <ImageView
+                    style="@style/UserDetailsLeftIconStyle"
+                    android:src="@drawable/ic_bio"
+                    app:tint="@color/lightGrey"
+                    tools:ignore="ContentDescription" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/UserDetailsLabelStyle"
+                        android:text="@string/user_details_activity_label_bio" />
+
+                    <TextView
+                        style="@style/UserDetailsTextStyle"
+                        android:text="@string/user_details_activity_label_bio" />
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/UserDetailsRightIconStyle"
+                    android:contentDescription="@string/user_details_activity_edit_bio"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/primaryColor" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
