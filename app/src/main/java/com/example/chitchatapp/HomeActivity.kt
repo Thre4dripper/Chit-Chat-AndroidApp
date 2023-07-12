@@ -33,6 +33,6 @@ class HomeActivity : AppCompatActivity() {
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
-        Auth.onSignInResult(res)
+        Auth.onSignInResult(this, res)
     }
 }
