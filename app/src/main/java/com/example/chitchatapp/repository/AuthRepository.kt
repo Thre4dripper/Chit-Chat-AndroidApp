@@ -8,7 +8,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 
 class AuthRepository {
     companion object {
-        fun signInUser():Intent {
+        fun signInUser(): Intent {
             return Auth.googleSignIn()
         }
 
@@ -22,10 +22,11 @@ class AuthRepository {
             res: FirebaseAuthUIAuthenticationResult,
             onSuccess: (Boolean) -> Unit,
         ) {
-            Auth.onSignInResult(res) {
+            Auth.onSignInResult(res) { it ->
                 if (it != null) {
-                    onSuccess(true)
-                    RegisterUser.registerInitialUser(it)
+                    RegisterUser.registerInitialUser(it) { isRegistered ->
+                        onSuccess(isRegistered)
+                    }
                 } else {
                     onSuccess(false)
                 }

@@ -10,11 +10,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 class HomeViewModel : ViewModel() {
-    private val _currentUser = FirebaseAuth.getInstance().currentUser
-    val currentUser: FirebaseUser?
-        get() = _currentUser
-
     val userDetails = UserDetailsRepository.userDetails
+
+    fun getCurrentUser(): FirebaseUser? {
+        return FirebaseAuth.getInstance().currentUser
+    }
 
     fun signInUser(): Intent {
         return AuthRepository.signInUser()

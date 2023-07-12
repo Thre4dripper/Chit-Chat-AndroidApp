@@ -27,7 +27,7 @@ class HomeActivity : AppCompatActivity() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        if (viewModel.currentUser == null)
+        if (viewModel.getCurrentUser() == null)
             signInLauncher.launch(viewModel.signInUser())
 
         //all the click listeners
@@ -45,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initCompleteProfileLayout(binding: ActivityHomeBinding) {
         //do nothing, after sign in this func will be called again
-        if (viewModel.currentUser == null) {
+        if (viewModel.getCurrentUser() == null) {
             binding.completeProfileLl.visibility = View.GONE
             return
         }
@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //checking if user has completed profile or not
-        FirestoreUtils.checkInitialRegisteredUser(viewModel.currentUser!!) {
+        FirestoreUtils.checkInitialRegisteredUser(viewModel.getCurrentUser()!!) {
             binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
             binding.loadingLottie.visibility = View.GONE
         }
@@ -103,7 +103,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setProfileImage() {
         Glide.with(this)
-            .load(viewModel.currentUser?.photoUrl)
+            .load(viewModel.getCurrentUser()?.photoUrl)
             .placeholder(R.drawable.ic_profile)
             .circleCrop()
             .into(binding.profileImageBtn)
