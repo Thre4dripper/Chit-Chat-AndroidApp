@@ -29,19 +29,11 @@ class UpdateProfile {
                     if (isCreated) {
 
                         //delete previous username document
-                        FirestoreUtils.deleteFirestoreDocument(
-                            firestore,
-                            Constants.FIRESTORE_USER_COLLECTION,
-                            prevUsername
-                        ) { isDeleted ->
+                        deletePreviousUsernameDocument(firestore, prevUsername) { isDeleted ->
                             if (isDeleted) {
 
                                 //update registered uid collection
-                                FirestoreUtils.updateRegisteredUIDCollection(
-                                    firestore,
-                                    user,
-                                    username
-                                ) { isUpdated ->
+                                updateUIDCollection(firestore, user, username) { isUpdated ->
                                     callback(
                                         if (isUpdated) Constants.USERNAME_UPDATED_SUCCESSFULLY
                                         else Constants.ERROR_UPDATING_USERNAME
@@ -61,9 +53,8 @@ class UpdateProfile {
             username: String,
             callback: (HashMap<String, Any>?) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION)
-                .document(username)
-                .get().addOnSuccessListener {
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username).get()
+                .addOnSuccessListener {
                     val userMap = it.data
                     callback(userMap as HashMap<String, Any>?)
                 }.addOnFailureListener {
@@ -77,13 +68,38 @@ class UpdateProfile {
             userMap: HashMap<String, Any>,
             callback: (Boolean) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION)
-                .document(username)
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
                 .set(userMap).addOnSuccessListener {
                     callback(true)
                 }.addOnFailureListener {
                     callback(false)
                 }
+        }
+
+        /**
+         * PRIVATE FUNCTIONS POINTING TO FIRESTORE UTILS
+         */
+        private fun deletePreviousUsernameDocument(
+            firestore: FirebaseFirestore, prevUsername: String, callback: (Boolean) -> Unit
+        ) {
+            FirestoreUtils.deleteFirestoreDocument(
+                firestore,
+                Constants.FIRESTORE_USER_COLLECTION,
+                prevUsername
+            ) { isDeleted ->
+                callback(isDeleted)
+            }
+        }
+
+        private fun updateUIDCollection(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser?,
+            username: String,
+            callback: (Boolean) -> Unit
+        ) {
+            FirestoreUtils.updateRegisteredUIDCollection(firestore, user, username) { isUpdated ->
+                callback(isUpdated)
+            }
         }
     }
 }

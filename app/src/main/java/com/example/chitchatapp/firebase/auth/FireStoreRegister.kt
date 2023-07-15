@@ -52,20 +52,14 @@ class FireStoreRegister {
                         .set(userMap!!).addOnSuccessListener {
 
                             //delete user document with uid as document id
-                            FirestoreUtils.deleteFirestoreDocument(
-                                firestore,
-                                Constants.FIRESTORE_USER_COLLECTION,
-                                user.uid
-                            ) { isDeleted ->
+                            deleteUIDDocument(firestore, user) { isDeleted ->
                                 if (isDeleted) {
-                                    FirestoreUtils.updateRegisteredUIDCollection(
-                                        firestore,
-                                        user,
-                                        username
-                                    )
-                                    { isUpdated ->
+
+                                    //register user with username as document id
+                                    registerInUIDCollection(firestore, user, username)
+                                    { isRegistered ->
                                         callback(
-                                            if (isUpdated) Constants.USERNAME_UPDATED_SUCCESSFULLY
+                                            if (isRegistered) Constants.USERNAME_UPDATED_SUCCESSFULLY
                                             else Constants.ERROR_UPDATING_USERNAME
                                         )
                                     }
@@ -81,5 +75,32 @@ class FireStoreRegister {
                     callback(Constants.ERROR_UPDATING_USERNAME)
                 }
         }
+
+        /**
+         * PRIVATE FUNCTIONS POINTING TO FIRESTORE UTILS
+         */
+        private fun deleteUIDDocument(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser,
+            callback: (Boolean) -> Unit
+        ) {
+            FirestoreUtils.deleteFirestoreDocument(
+                firestore,
+                Constants.FIRESTORE_USER_COLLECTION,
+                user.uid
+            ) { isDeleted ->
+                callback(isDeleted)
+            }
+        }
+
+        private fun registerInUIDCollection(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser,
+            username: String,
+            callback: (Boolean) -> Unit
+        ) {
+            FirestoreUtils.updateRegisteredUIDCollection(firestore, user, username, callback)
+        }
+
     }
 }

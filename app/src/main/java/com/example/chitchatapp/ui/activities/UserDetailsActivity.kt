@@ -53,6 +53,8 @@ class UserDetailsActivity : AppCompatActivity() {
                     if (it.username == "") {
                         text = getString(R.string.user_details_activity_no_username)
                         setTextColor(ContextCompat.getColor(context, R.color.red))
+                    } else {
+                        setTextColor(ContextCompat.getColor(context, R.color.darkGrey))
                     }
                 }
                 binding.userDetailsNameTv.apply {
@@ -60,6 +62,8 @@ class UserDetailsActivity : AppCompatActivity() {
                     if (it.name == "") {
                         text = getString(R.string.user_details_activity_no_name)
                         setTextColor(ContextCompat.getColor(context, R.color.lightGrey))
+                    } else {
+                        setTextColor(ContextCompat.getColor(context, R.color.darkGrey))
                     }
                 }
                 binding.userDetailsBioTv.apply {
