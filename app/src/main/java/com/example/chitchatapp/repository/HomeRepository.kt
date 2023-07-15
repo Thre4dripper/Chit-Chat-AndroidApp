@@ -6,6 +6,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeRepository {
     companion object {
+        fun getUsername(
+            onSuccess: (String?) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val user = FirebaseAuth.getInstance().currentUser
+
+            FirestoreUtils.getUsernameFromUIDCollection(firestore, user, onSuccess)
+        }
+
         fun checkInitialRegistration(
             onSuccess: (Boolean) -> Unit,
         ) {

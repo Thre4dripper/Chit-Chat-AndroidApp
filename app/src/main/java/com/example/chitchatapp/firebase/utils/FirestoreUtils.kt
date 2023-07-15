@@ -8,6 +8,22 @@ class FirestoreUtils {
     companion object {
         private const val TAG = "FirestoreUtils"
 
+        fun getUsernameFromUIDCollection(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser?,
+            onSuccess: (String?) -> Unit,
+        ) {
+            firestore.collection(Constants.FIRESTORE_REGISTERED_UID_COLLECTION)
+                .document(user!!.uid)
+                .get()
+                .addOnSuccessListener {
+                    val username = it.getString(Constants.FIRESTORE_USER_USERNAME)
+                    onSuccess(username)
+                }.addOnFailureListener {
+                    onSuccess(null)
+                }
+        }
+
         fun deleteFirestoreDocument(
             firestore: FirebaseFirestore,
             collection: String,
