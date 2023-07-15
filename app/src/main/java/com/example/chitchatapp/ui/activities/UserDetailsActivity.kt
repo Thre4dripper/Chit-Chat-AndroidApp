@@ -1,29 +1,31 @@
 package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.Constants
 import com.example.chitchatapp.R
 import com.example.chitchatapp.databinding.ActivityUserDetailsBinding
-import com.example.chitchatapp.firebase.firestore.FirestoreUtils
-import com.google.firebase.auth.FirebaseAuth
+import com.example.chitchatapp.viewModels.UserDetailsViewModel
 
 class UserDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserDetailsBinding
+    private lateinit var viewModel: UserDetailsViewModel
 
-    private val auth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_details)
+        viewModel = ViewModelProvider(this)[UserDetailsViewModel::class.java]
 
         initBackButtons()
-        getProfileImage(binding)
-        setUsername(binding)
-        setName(binding)
-        setBio(binding)
+        getProfile(binding)
+//        setUsername(binding)
+//        setName(binding)
+//        setBio(binding)
     }
 
     private fun initBackButtons() {
@@ -35,13 +37,26 @@ class UserDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getProfileImage(binding: ActivityUserDetailsBinding) {
-        FirestoreUtils.getUserProfileImage(this, auth.currentUser!!) {
-            Glide.with(this)
-                .load(it)
-                .placeholder(R.drawable.ic_profile)
-                .circleCrop()
-                .into(binding.userDetailsProfileIv)
+    private fun getProfile(binding: ActivityUserDetailsBinding) {
+        viewModel.userDetails.observe(this) {
+            if (it != null) {
+                Glide
+                    .with(this)
+                    .load(it.profileImage)
+                    .placeholder(R.drawable.ic_profile)
+                    .circleCrop()
+                    .into(binding.userDetailsProfileIv)
+
+                binding.userDetailsUsernameTv.text = it.username
+                binding.userDetailsNameTv.text = it.name
+                binding.userDetailsBioTv.text = it.bio
+            }
+        }
+
+        viewModel.getUserDetails(this) {
+            if (!it) {
+                Toast.makeText(this, "Error getting user details", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

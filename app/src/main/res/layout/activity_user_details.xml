@@ -91,6 +91,7 @@
                         android:text="@string/user_details_activity_label_username" />
 
                     <TextView
+                        android:id="@+id/user_details_username_tv"
                         style="@style/UserDetailsTextStyle"
                         android:text="@string/user_details_activity_text_username"
                         tools:text="\@username" />
@@ -129,6 +130,7 @@
                         android:text="@string/user_details_activity_label_name" />
 
                     <TextView
+                        android:id="@+id/user_details_name_tv"
                         style="@style/UserDetailsTextStyle"
                         android:text="@string/user_details_activity_label_name" />
                 </LinearLayout>
@@ -165,6 +167,7 @@
                         android:text="@string/user_details_activity_label_bio" />
 
                     <TextView
+                        android:id="@+id/user_details_bio_tv"
                         style="@style/UserDetailsTextStyle"
                         android:text="@string/user_details_activity_label_bio" />
                 </LinearLayout>

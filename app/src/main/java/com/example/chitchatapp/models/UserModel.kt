@@ -7,4 +7,6 @@ data class UserModel(
     val profileImage: String,
     val bio: String,
     val status: String,
-)
+) {
+    constructor() : this("", "", "", "", "", "")
+}

@@ -15,7 +15,7 @@ class FireStoreRegister {
                 if (!it) {
                     val data = UserModel(
                         user.uid,
-                        user.displayName!!,
+                        "",
                         user.displayName!!,
                         user.photoUrl.toString(),
                         "",
