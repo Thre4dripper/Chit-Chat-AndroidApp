@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.repository.AuthRepository
+import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserDetailsRepository
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
@@ -30,4 +31,9 @@ class HomeViewModel : ViewModel() {
     ) {
         AuthRepository.onSignInResult(res, onSuccess)
     }
+
+    fun checkInitialRegistration(
+        onSuccess: (Boolean) -> Unit,
+    ) =
+        HomeRepository.checkInitialRegistration(onSuccess)
 }

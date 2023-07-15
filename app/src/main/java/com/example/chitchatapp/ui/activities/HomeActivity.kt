@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.databinding.ActivityHomeBinding
-import com.example.chitchatapp.firebase.firestore.FirestoreUtils
 import com.example.chitchatapp.viewModels.HomeViewModel
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -57,7 +56,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //checking if user has completed profile or not
-        FirestoreUtils.checkInitialRegisteredUser(viewModel.getCurrentUser()!!) {
+        viewModel.checkInitialRegistration {
             binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
             binding.loadingLottie.visibility = View.GONE
         }

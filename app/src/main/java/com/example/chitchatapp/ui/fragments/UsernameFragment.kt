@@ -1,24 +1,26 @@
 package com.example.chitchatapp.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.chitchatapp.Constants
 import com.example.chitchatapp.databinding.FragmentUsernameBinding
-import com.example.chitchatapp.firebase.firestore.FirestoreUtils
 import com.example.chitchatapp.store.UserDetails
-import com.google.firebase.auth.FirebaseAuth
+import com.example.chitchatapp.viewModels.UserDetailsViewModel
 
 class UsernameFragment : Fragment() {
     private lateinit var binding: FragmentUsernameBinding
-    val auth = FirebaseAuth.getInstance()
+    private lateinit var userDetailsViewModel: UserDetailsViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentUsernameBinding.inflate(inflater, container, false)
+        userDetailsViewModel = ViewModelProvider(this)[UserDetailsViewModel::class.java]
         return binding.root
     }
 
@@ -51,29 +53,21 @@ class UsernameFragment : Fragment() {
         binding.usernameSaveBtn.visibility = View.GONE
         val username = binding.usernameEt.text.toString()
 
-        FirestoreUtils.checkAvailableUsername(username) {
-            if (it) {
-                FirestoreUtils.updateUsername(username, auth.currentUser!!) { isSuccessful ->
-                    if (isSuccessful) {
-                        requireActivity().finish()
+        userDetailsViewModel.updateUsername(username) { message ->
+            if (message == Constants.USERNAME_UPDATED_SUCCESSFULLY) {
+                //saving username in shared preferences
+                UserDetails.saveUsername(requireActivity(), username)
 
-                        //saving username in shared preferences
-                        UserDetails.saveUsername(requireActivity(), username)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Something went wrong",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    binding.usernameProgressBar.visibility = View.GONE
-                    binding.usernameSaveBtn.visibility = View.VISIBLE
-                }
+                requireActivity().finish()
             } else {
-                binding.usernameEt.error = "Username already taken"
-                binding.usernameProgressBar.visibility = View.GONE
-                binding.usernameSaveBtn.visibility = View.VISIBLE
+                Toast.makeText(
+                    requireContext(),
+                    "Something went wrong",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+            binding.usernameProgressBar.visibility = View.GONE
+            binding.usernameSaveBtn.visibility = View.VISIBLE
         }
     }
 }
