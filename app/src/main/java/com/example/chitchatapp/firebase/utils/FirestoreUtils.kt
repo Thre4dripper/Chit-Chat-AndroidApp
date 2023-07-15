@@ -62,10 +62,17 @@ class FirestoreUtils {
             isInitial: (Boolean) -> Unit
         ) {
             firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user!!.uid)
-                .get().addOnSuccessListener {
-                    isInitial(it.exists())
-                }.addOnFailureListener {
-                    isInitial(false)
+                .addSnapshotListener { snapshot, e ->
+                    if (e != null) {
+                        isInitial(false)
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        isInitial(true)
+                    } else {
+                        isInitial(false)
+                    }
                 }
         }
 
