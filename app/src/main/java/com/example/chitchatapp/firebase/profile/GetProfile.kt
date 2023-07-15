@@ -1,23 +1,20 @@
 package com.example.chitchatapp.firebase.profile
 
-import android.content.Context
 import com.example.chitchatapp.Constants
 import com.example.chitchatapp.models.UserModel
-import com.example.chitchatapp.store.UserDetails
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
 class GetProfile {
     companion object {
         fun getProfile(
-            context: Context,
             firestore: FirebaseFirestore,
             user: FirebaseUser?,
+            username: String,
             profile: (UserModel?) -> Unit
         ) {
             getProfileFromUidDoc(firestore, user?.uid) { uidDocProfile ->
                 if (uidDocProfile == null) {
-                    val username = UserDetails.getUsername(context) ?: ""
                     getProfileFromUsernameDoc(firestore, username) { usernameDocProfile ->
                         profile(usernameDocProfile)
                     }
