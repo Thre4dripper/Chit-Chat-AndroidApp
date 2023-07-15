@@ -26,8 +26,9 @@ class HomeActivity : AppCompatActivity() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        if (viewModel.getCurrentUser() == null)
+        if (viewModel.getCurrentUser() == null && !viewModel.isFirebaseUILaunched) {
             signInLauncher.launch(viewModel.signInUser())
+        }
 
         //all the click listeners
         binding.profileImageBtn.setOnClickListener {

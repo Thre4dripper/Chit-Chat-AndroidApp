@@ -6,14 +6,15 @@ import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.HomeRepository
-import com.example.chitchatapp.repository.UserDetailsRepository
 import com.example.chitchatapp.store.UserDetails
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    val userDetails = UserDetailsRepository.userDetails
+    private val TAG = "HomeViewModel"
+
+    var isFirebaseUILaunched = false
 
     init {
         val currentUser = getCurrentUser()
@@ -31,10 +32,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun signInUser(): Intent {
+        isFirebaseUILaunched = true
         return AuthRepository.signInUser()
     }
 
     fun signOutUser(context: Context, onSuccess: (Boolean) -> Unit) {
+        isFirebaseUILaunched = false
         AuthRepository.signOutUser(context, onSuccess)
     }
 
