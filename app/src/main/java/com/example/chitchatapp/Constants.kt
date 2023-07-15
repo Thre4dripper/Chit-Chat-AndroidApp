@@ -6,6 +6,11 @@ class Constants {
         const val FIRESTORE_USER_COLLECTION = "Users"
         const val FIRESTORE_REGISTERED_UID_COLLECTION = "RegisteredUIDs"
 
+        //update user details constants
+        const val USERNAME_ALREADY_EXISTS = "Username already exists"
+        const val USERNAME_UPDATED_SUCCESSFULLY = "Username updated"
+        const val ERROR_UPDATING_USERNAME = "Error updating username"
+
         //for passing set user details fragment
         const val FRAGMENT_TYPE = "fragment_type"
         const val FRAGMENT_USERNAME = "fragment_username"
