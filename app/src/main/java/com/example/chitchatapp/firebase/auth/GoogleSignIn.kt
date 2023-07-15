@@ -1,4 +1,4 @@
-package com.example.chitchatapp.firebase
+package com.example.chitchatapp.firebase.auth
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
@@ -8,7 +8,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class Auth {
+class GoogleSignIn {
     companion object {
         private const val TAG = "Auth"
         fun googleSignIn(): Intent {

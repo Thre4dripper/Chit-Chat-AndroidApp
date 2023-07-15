@@ -1,22 +1,25 @@
-package com.example.chitchatapp.firebase.firestore
+package com.example.chitchatapp.firebase.auth
 
 import com.example.chitchatapp.Constants
+import com.example.chitchatapp.models.UserModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class RegisterUser {
+class FireStoreRegister {
     companion object {
         fun registerInitialUser(user: FirebaseUser, onSuccess: (Boolean) -> Unit) {
             val firestore = Firebase.firestore
 
             checkUserCompleteRegistration(user) {
                 if (!it) {
-                    val data = hashMapOf(
-                        "username" to "",
-                        "name" to user.displayName,
-                        "bio" to "",
-                        "profileImage" to user.photoUrl.toString(),
+                    val data = UserModel(
+                        user.uid,
+                        user.displayName!!,
+                        user.displayName!!,
+                        user.photoUrl.toString(),
+                        "",
+                        ""
                     )
                     firestore.collection(Constants.FIRESTORE_USER_COLLECTION)
                         .document(user.uid)

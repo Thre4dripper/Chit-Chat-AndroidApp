@@ -2,18 +2,18 @@ package com.example.chitchatapp.repository
 
 import android.content.Context
 import android.content.Intent
-import com.example.chitchatapp.firebase.Auth
-import com.example.chitchatapp.firebase.firestore.RegisterUser
+import com.example.chitchatapp.firebase.auth.GoogleSignIn
+import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 
 class AuthRepository {
     companion object {
         fun signInUser(): Intent {
-            return Auth.googleSignIn()
+            return GoogleSignIn.googleSignIn()
         }
 
         fun signOutUser(context: Context, onSuccess: (Boolean) -> Unit) {
-            Auth.signOut(context) {
+            GoogleSignIn.signOut(context) {
                 onSuccess(it)
             }
         }
@@ -22,9 +22,9 @@ class AuthRepository {
             res: FirebaseAuthUIAuthenticationResult,
             onSuccess: (Boolean) -> Unit,
         ) {
-            Auth.onSignInResult(res) { it ->
+            GoogleSignIn.onSignInResult(res) { it ->
                 if (it != null) {
-                    RegisterUser.registerInitialUser(it) { isRegistered ->
+                    FireStoreRegister.registerInitialUser(it) { isRegistered ->
                         onSuccess(isRegistered)
                     }
                 } else {
