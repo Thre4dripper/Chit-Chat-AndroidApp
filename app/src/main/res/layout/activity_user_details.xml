@@ -93,7 +93,6 @@
                     <TextView
                         android:id="@+id/user_details_username_tv"
                         style="@style/UserDetailsTextStyle"
-                        android:text="@string/user_details_activity_text_username"
                         tools:text="\@username" />
                 </LinearLayout>
 

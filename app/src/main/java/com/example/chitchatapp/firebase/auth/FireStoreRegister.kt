@@ -3,13 +3,17 @@ package com.example.chitchatapp.firebase.auth
 import com.example.chitchatapp.Constants
 import com.example.chitchatapp.models.UserModel
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class FireStoreRegister {
     companion object {
-        fun registerInitialUser(user: FirebaseUser, onSuccess: (Boolean) -> Unit) {
-            val firestore = Firebase.firestore
+        fun registerInitialUser(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser,
+            onSuccess: (Boolean) -> Unit
+        ) {
 
             checkUserCompleteRegistration(user) {
                 if (!it) {

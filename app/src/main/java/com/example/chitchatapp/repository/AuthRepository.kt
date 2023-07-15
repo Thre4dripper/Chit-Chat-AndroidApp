@@ -5,6 +5,7 @@ import android.content.Intent
 import com.example.chitchatapp.firebase.auth.GoogleSignIn
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthRepository {
     companion object {
@@ -22,9 +23,10 @@ class AuthRepository {
             res: FirebaseAuthUIAuthenticationResult,
             onSuccess: (Boolean) -> Unit,
         ) {
-            GoogleSignIn.onSignInResult(res) { it ->
-                if (it != null) {
-                    FireStoreRegister.registerInitialUser(it) { isRegistered ->
+            val firestore = FirebaseFirestore.getInstance()
+            GoogleSignIn.onSignInResult(res) { firebaseUser ->
+                if (firebaseUser != null) {
+                    FireStoreRegister.registerInitialUser(firestore, firebaseUser) { isRegistered ->
                         onSuccess(isRegistered)
                     }
                 } else {

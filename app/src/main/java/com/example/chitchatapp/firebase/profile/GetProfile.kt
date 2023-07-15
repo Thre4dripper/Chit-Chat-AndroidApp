@@ -9,9 +9,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class GetProfile {
     companion object {
-        fun getProfile(context: Context, user: FirebaseUser?, profile: (UserModel?) -> Unit) {
-            val firestore = FirebaseFirestore.getInstance()
-
+        fun getProfile(
+            context: Context,
+            firestore: FirebaseFirestore,
+            user: FirebaseUser?,
+            profile: (UserModel?) -> Unit
+        ) {
             getProfileFromUidDoc(firestore, user?.uid) { uidDocProfile ->
                 if (uidDocProfile == null) {
                     val username = UserDetails.getUsername(context) ?: ""

@@ -20,6 +20,10 @@
     <string name="user_details_activity_edit_name">Edit Name</string>
     <string name="user_details_activity_edit_bio">Edit Bio</string>
 
+    <string name="user_details_activity_no_username">No Username</string>
+    <string name="user_details_activity_no_name">No Name</string>
+    <string name="user_details_activity_no_bio">No Bio</string>
+
     //Username Fragment
     <string name="username_fragment_label">Username</string>
     <string name="username_fragment_text_set_username">Set Username</string>

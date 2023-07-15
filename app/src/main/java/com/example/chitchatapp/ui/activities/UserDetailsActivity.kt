@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -23,9 +24,9 @@ class UserDetailsActivity : AppCompatActivity() {
 
         initBackButtons()
         getProfile(binding)
-//        setUsername(binding)
-//        setName(binding)
-//        setBio(binding)
+        setUsernameBtn(binding)
+        setNameBtn(binding)
+        setBioBtn(binding)
     }
 
     private fun initBackButtons() {
@@ -47,9 +48,27 @@ class UserDetailsActivity : AppCompatActivity() {
                     .circleCrop()
                     .into(binding.userDetailsProfileIv)
 
-                binding.userDetailsUsernameTv.text = it.username
-                binding.userDetailsNameTv.text = it.name
-                binding.userDetailsBioTv.text = it.bio
+                binding.userDetailsUsernameTv.apply {
+                    text = it.username
+                    if (it.username == "") {
+                        text = getString(R.string.user_details_activity_no_username)
+                        setTextColor(ContextCompat.getColor(context, R.color.red))
+                    }
+                }
+                binding.userDetailsNameTv.apply {
+                    text = it.name
+                    if (it.name == "") {
+                        text = getString(R.string.user_details_activity_no_name)
+                        setTextColor(ContextCompat.getColor(context, R.color.lightGrey))
+                    }
+                }
+                binding.userDetailsBioTv.apply {
+                    text = it.bio
+                    if (it.bio == "") {
+                        text = getString(R.string.user_details_activity_no_bio)
+                        setTextColor(ContextCompat.getColor(context, R.color.lightGrey))
+                    }
+                }
             }
         }
 
@@ -60,7 +79,7 @@ class UserDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUsername(binding: ActivityUserDetailsBinding) {
+    private fun setUsernameBtn(binding: ActivityUserDetailsBinding) {
         binding.userDetailsEditUsername.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_USERNAME)
@@ -68,7 +87,7 @@ class UserDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setName(binding: ActivityUserDetailsBinding) {
+    private fun setNameBtn(binding: ActivityUserDetailsBinding) {
         binding.userDetailsEditName.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_NAME)
@@ -76,7 +95,7 @@ class UserDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBio(binding: ActivityUserDetailsBinding) {
+    private fun setBioBtn(binding: ActivityUserDetailsBinding) {
         binding.userDetailsEditBio.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_BIO)
