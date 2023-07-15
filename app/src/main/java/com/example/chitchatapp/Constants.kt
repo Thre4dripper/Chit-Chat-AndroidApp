@@ -6,6 +6,13 @@ class Constants {
         const val FIRESTORE_USER_COLLECTION = "Users"
         const val FIRESTORE_REGISTERED_UID_COLLECTION = "RegisteredUIDs"
 
+        //firestore document fields
+//        const val FIRESTORE_USER_ID = "uid"
+//        const val FIRESTORE_USER_NAME = "name"
+        const val FIRESTORE_USER_USERNAME = "username"
+//        const val FIRESTORE_USER_PHOTO_URL = "profileImage"
+//        const val FIRESTORE_USER_BIO = "bio"
+
         //update user details constants
         const val USERNAME_ALREADY_EXISTS = "Username already exists"
         const val USERNAME_UPDATED_SUCCESSFULLY = "Username updated"

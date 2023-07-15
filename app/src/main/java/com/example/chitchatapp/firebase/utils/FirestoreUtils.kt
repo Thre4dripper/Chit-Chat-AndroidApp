@@ -8,6 +8,35 @@ class FirestoreUtils {
     companion object {
         private const val TAG = "FirestoreUtils"
 
+        fun deleteFirestoreDocument(
+            firestore: FirebaseFirestore,
+            collection: String,
+            document: String,
+            success: (Boolean) -> Unit
+        ) {
+            firestore.collection(collection).document(document).delete()
+                .addOnSuccessListener {
+                    success(true)
+                }.addOnFailureListener {
+                    success(false)
+                }
+        }
+
+        fun updateRegisteredUIDCollection(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser?,
+            username: String,
+            success: (Boolean) -> Unit
+        ) {
+            firestore.collection(Constants.FIRESTORE_REGISTERED_UID_COLLECTION)
+                .document(user!!.uid).set(hashMapOf(Constants.FIRESTORE_USER_USERNAME to username))
+                .addOnSuccessListener {
+                    success(true)
+                }.addOnFailureListener {
+                    success(false)
+                }
+        }
+
         /**
          * Function to Check if the user is already initial registered as uid document in firestore
          */

@@ -45,43 +45,38 @@ class FireStoreRegister {
             }
 
             firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user!!.uid).get()
-                .addOnSuccessListener {
-                    val userMap = it.data
-                    userMap?.set("username", username)
+                .addOnSuccessListener { uidDoc ->
+                    val userMap = uidDoc.data
+                    userMap?.set(Constants.FIRESTORE_USER_USERNAME, username)
                     firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
                         .set(userMap!!).addOnSuccessListener {
-                            deleteUidDoc(firestore, user, username, callback)
+
+                            //delete user document with uid as document id
+                            FirestoreUtils.deleteFirestoreDocument(
+                                firestore,
+                                Constants.FIRESTORE_USER_COLLECTION,
+                                user.uid
+                            ) { isDeleted ->
+                                if (isDeleted) {
+                                    FirestoreUtils.updateRegisteredUIDCollection(
+                                        firestore,
+                                        user,
+                                        username
+                                    )
+                                    { isUpdated ->
+                                        callback(
+                                            if (isUpdated) Constants.USERNAME_UPDATED_SUCCESSFULLY
+                                            else Constants.ERROR_UPDATING_USERNAME
+                                        )
+                                    }
+                                } else {
+                                    callback(Constants.ERROR_UPDATING_USERNAME)
+                                }
+                            }
+
                         }.addOnFailureListener {
                             callback(Constants.ERROR_UPDATING_USERNAME)
                         }
-                }.addOnFailureListener {
-                    callback(Constants.ERROR_UPDATING_USERNAME)
-                }
-        }
-
-        private fun deleteUidDoc(
-            firestore: FirebaseFirestore,
-            user: FirebaseUser?,
-            username: String,
-            callback: (String) -> Unit
-        ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user!!.uid).delete()
-                .addOnSuccessListener {
-                    markRegisteredUsername(firestore, user, username, callback)
-                }.addOnFailureListener {
-                    callback(Constants.ERROR_UPDATING_USERNAME)
-                }
-        }
-
-        private fun markRegisteredUsername(
-            firestore: FirebaseFirestore,
-            user: FirebaseUser?,
-            username: String,
-            callback: (String) -> Unit
-        ) {
-            firestore.collection(Constants.FIRESTORE_REGISTERED_UID_COLLECTION).document(user!!.uid)
-                .set(hashMapOf("username" to username)).addOnSuccessListener {
-                    callback(Constants.USERNAME_UPDATED_SUCCESSFULLY)
                 }.addOnFailureListener {
                     callback(Constants.ERROR_UPDATING_USERNAME)
                 }

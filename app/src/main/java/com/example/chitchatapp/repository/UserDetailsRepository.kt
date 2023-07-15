@@ -45,9 +45,12 @@ class UserDetailsRepository {
                 }
 
                 val prevUsername = userDetails.value?.username
-                UpdateProfile.updateUsername(firestore, prevUsername, username) { message ->
+                UpdateProfile.updateUsername(firestore,user, prevUsername, username) { message ->
                     callback(message)
                 }
+
+                //updating in livedata
+                userDetails.value = userDetails.value?.copy(username = username)
             }
         }
     }

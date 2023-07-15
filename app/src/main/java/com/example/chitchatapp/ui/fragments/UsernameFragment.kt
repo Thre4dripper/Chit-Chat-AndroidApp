@@ -42,10 +42,11 @@ class UsernameFragment : Fragment() {
     }
 
     private fun getUsername() {
-        val cachedUsername = UserDetails.getUsername(requireActivity())
-
-        if (!cachedUsername.isNullOrEmpty())
-            binding.usernameEt.setText(cachedUsername)
+        userDetailsViewModel.userDetails.observe(viewLifecycleOwner) { userDetails ->
+            if (userDetails != null) {
+                binding.usernameEt.setText(userDetails.username)
+            }
+        }
     }
 
     private fun saveUsername() {
