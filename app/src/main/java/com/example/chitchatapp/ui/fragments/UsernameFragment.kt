@@ -13,6 +13,8 @@ import com.example.chitchatapp.store.UserDetails
 import com.example.chitchatapp.viewModels.UserDetailsViewModel
 
 class UsernameFragment : Fragment() {
+    private val TAG = "UsernameFragment"
+
     private lateinit var binding: FragmentUsernameBinding
     private lateinit var userDetailsViewModel: UserDetailsViewModel
     override fun onCreateView(

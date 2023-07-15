@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class FireStoreRegister {
     companion object {
+        private const val TAG = "FireStoreRegister"
         fun registerInitialUser(
             firestore: FirebaseFirestore, user: FirebaseUser, onSuccess: (Boolean) -> Unit
         ) {
@@ -16,19 +17,19 @@ class FireStoreRegister {
                 if (it) {
                     return@checkCompleteRegistration
                 }
+
+                val data = UserModel(
+                    user.uid, "", user.displayName!!, user.photoUrl.toString(), "", ""
+                )
+
+                //register user with uid as document id
+                firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user.uid)
+                    .set(data).addOnSuccessListener {
+                        onSuccess(true)
+                    }.addOnFailureListener {
+                        onSuccess(false)
+                    }
             }
-
-            val data = UserModel(
-                user.uid, "", user.displayName!!, user.photoUrl.toString(), "", ""
-            )
-
-            //register user with uid as document id
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user.uid)
-                .set(data).addOnSuccessListener {
-                    onSuccess(true)
-                }.addOnFailureListener {
-                    onSuccess(false)
-                }
         }
 
         fun registerCompleteUser(
@@ -42,37 +43,68 @@ class FireStoreRegister {
                     callback(Constants.USERNAME_ALREADY_EXISTS)
                     return@checkAvailableUsername
                 }
-            }
 
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user!!.uid).get()
-                .addOnSuccessListener { uidDoc ->
-                    val userMap = uidDoc.data
-                    userMap?.set(Constants.FIRESTORE_USER_USERNAME, username)
-                    firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
-                        .set(userMap!!).addOnSuccessListener {
+                //get data from uid document
+                getDataFromUIDDocument(firestore, user!!) { userMap ->
+                    if (userMap == null) {
+                        callback(Constants.ERROR_UPDATING_USERNAME)
+                        return@getDataFromUIDDocument
+                    }
+                    userMap[Constants.FIRESTORE_USER_USERNAME] = username
 
-                            //delete user document with uid as document id
-                            deleteUIDDocument(firestore, user) { isDeleted ->
-                                if (isDeleted) {
-
-                                    //register user with username as document id
-                                    registerInUIDCollection(firestore, user, username)
-                                    { isRegistered ->
-                                        callback(
-                                            if (isRegistered) Constants.USERNAME_UPDATED_SUCCESSFULLY
-                                            else Constants.ERROR_UPDATING_USERNAME
-                                        )
-                                    }
-                                } else {
-                                    callback(Constants.ERROR_UPDATING_USERNAME)
-                                }
+                    //create new document with username as document id
+                    createNewUsernameDocument(firestore, username, userMap) { isCreated ->
+                        if (!isCreated) {
+                            callback(Constants.ERROR_UPDATING_USERNAME)
+                            return@createNewUsernameDocument
+                        }
+                        //delete user document with uid as document id
+                        deleteUIDDocument(firestore, user) { isDeleted ->
+                            if (!isDeleted) {
+                                callback(Constants.ERROR_UPDATING_USERNAME)
+                                return@deleteUIDDocument
                             }
 
-                        }.addOnFailureListener {
-                            callback(Constants.ERROR_UPDATING_USERNAME)
+                            //register user with username as document id
+                            registerInUIDCollection(firestore, user, username)
+                            { isRegistered ->
+                                callback(
+                                    if (isRegistered) Constants.USERNAME_UPDATED_SUCCESSFULLY
+                                    else Constants.ERROR_UPDATING_USERNAME
+                                )
+                            }
                         }
+                    }
+                }
+            }
+        }
+
+
+        private fun getDataFromUIDDocument(
+            firestore: FirebaseFirestore,
+            user: FirebaseUser,
+            callback: (HashMap<String, Any>?) -> Unit
+        ) {
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user.uid).get()
+                .addOnSuccessListener {
+                    val userMap = it.data
+                    callback(userMap as HashMap<String, Any>?)
                 }.addOnFailureListener {
-                    callback(Constants.ERROR_UPDATING_USERNAME)
+                    callback(null)
+                }
+        }
+
+        private fun createNewUsernameDocument(
+            firestore: FirebaseFirestore,
+            username: String,
+            userMap: HashMap<String, Any>,
+            callback: (Boolean) -> Unit
+        ) {
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
+                .set(userMap).addOnSuccessListener {
+                    callback(true)
+                }.addOnFailureListener {
+                    callback(false)
                 }
         }
 

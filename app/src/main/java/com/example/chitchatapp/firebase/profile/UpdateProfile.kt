@@ -19,28 +19,32 @@ class UpdateProfile {
                     callback(Constants.USERNAME_ALREADY_EXISTS)
                     return@checkAvailableUsername
                 }
-            }
 
-            getDataFromUsernameDocument(firestore, prevUsername!!) { userMap ->
-                userMap?.set(Constants.FIRESTORE_USER_USERNAME, username)
+                getDataFromUsernameDocument(firestore, prevUsername!!) { userMap ->
+                    if (userMap == null) {
+                        callback(Constants.ERROR_UPDATING_USERNAME)
+                        return@getDataFromUsernameDocument
+                    }
+                    userMap[Constants.FIRESTORE_USER_USERNAME] = username
 
-                //update username
-                createNewUsernameDocument(firestore, username, userMap!!) { isCreated ->
-                    if (isCreated) {
+                    //create new document with username as document id
+                    createNewUsernameDocument(firestore, username, userMap) { isCreated ->
+                        if (isCreated) {
 
-                        //delete previous username document
-                        deletePreviousUsernameDocument(firestore, prevUsername) { isDeleted ->
-                            if (isDeleted) {
+                            //delete previous username document
+                            deletePreviousUsernameDocument(firestore, prevUsername) { isDeleted ->
+                                if (isDeleted) {
 
-                                //update registered uid collection
-                                updateUIDCollection(firestore, user, username) { isUpdated ->
-                                    callback(
-                                        if (isUpdated) Constants.USERNAME_UPDATED_SUCCESSFULLY
-                                        else Constants.ERROR_UPDATING_USERNAME
-                                    )
+                                    //update registered uid collection
+                                    updateUIDCollection(firestore, user, username) { isUpdated ->
+                                        callback(
+                                            if (isUpdated) Constants.USERNAME_UPDATED_SUCCESSFULLY
+                                            else Constants.ERROR_UPDATING_USERNAME
+                                        )
+                                    }
+                                } else {
+                                    callback(Constants.ERROR_UPDATING_USERNAME)
                                 }
-                            } else {
-                                callback(Constants.ERROR_UPDATING_USERNAME)
                             }
                         }
                     }
@@ -58,7 +62,7 @@ class UpdateProfile {
                     val userMap = it.data
                     callback(userMap as HashMap<String, Any>?)
                 }.addOnFailureListener {
-                    callback(HashMap())
+                    callback(null)
                 }
         }
 

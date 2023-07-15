@@ -38,16 +38,12 @@ class UserDetailsRepository {
 
             FirestoreUtils.checkCompleteRegistration(firestore, user) { isComplete ->
                 if (!isComplete) {
-                    FireStoreRegister.registerCompleteUser(firestore, user, username) { message ->
-                        callback(message)
-                    }
+                    FireStoreRegister.registerCompleteUser(firestore, user, username, callback)
                     return@checkCompleteRegistration
                 }
 
                 val prevUsername = userDetails.value?.username
-                UpdateProfile.updateUsername(firestore,user, prevUsername, username) { message ->
-                    callback(message)
-                }
+                UpdateProfile.updateUsername(firestore, user, prevUsername, username, callback)
 
                 //updating in livedata
                 userDetails.value = userDetails.value?.copy(username = username)
