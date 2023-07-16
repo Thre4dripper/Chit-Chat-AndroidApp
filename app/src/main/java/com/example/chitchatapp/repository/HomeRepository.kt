@@ -16,7 +16,7 @@ class HomeRepository {
 
             CrudUtils.getFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                Constants.FIRESTORE_REGISTERED_UID_COLLECTION,
                 user!!.uid,
                 onSuccess = { data ->
                     onSuccess(data?.get(Constants.FIRESTORE_USER_USERNAME) as String?)

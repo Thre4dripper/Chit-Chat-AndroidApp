@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UserDetailsRepository {
     companion object {
+        private const val TAG = "UserDetailsRepository"
         val userDetails = MutableLiveData<UserModel>()
 
         fun getUserDetails(context: Context, onSuccess: (Boolean) -> Unit) {

@@ -8,18 +8,20 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class GoogleSignIn {
+class FirebaseUISignIn {
     companion object {
         private const val TAG = "Auth"
-        fun googleSignIn(): Intent {
+        fun signIn(): Intent {
             val providers = arrayListOf(
                 AuthUI.IdpConfig.GoogleBuilder().build(),
+                AuthUI.IdpConfig.GitHubBuilder().build(),
             )
 
             return AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAlwaysShowSignInMethodScreen(true)
                 .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
                 .build()
         }
 

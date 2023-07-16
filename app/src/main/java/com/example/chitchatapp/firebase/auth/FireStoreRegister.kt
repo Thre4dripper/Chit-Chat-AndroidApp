@@ -16,6 +16,7 @@ class FireStoreRegister {
             //check if user is already registered
             Utils.checkCompleteRegistration(firestore, user) {
                 if (it) {
+                    onSuccess(true)
                     return@checkCompleteRegistration
                 }
 
