@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class GetProfile {
     companion object {
+        private const val TAG = "GetProfile"
         fun getProfile(
             firestore: FirebaseFirestore,
             user: FirebaseUser?,

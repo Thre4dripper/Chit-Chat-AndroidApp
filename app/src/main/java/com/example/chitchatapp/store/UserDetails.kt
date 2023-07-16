@@ -9,7 +9,7 @@ class UserDetails {
         private const val PREF_NAME = "name"
         private const val PREF_BIO = "bio"
 
-        fun saveUsername(context: Context, username: String) {
+        fun saveUsername(context: Context, username: String?) {
             val sharedPreferences =
                 context.getSharedPreferences(PREF_INSTANCE, Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()

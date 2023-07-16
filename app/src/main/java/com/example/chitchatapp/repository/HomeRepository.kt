@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeRepository {
     companion object {
+        private val TAG = "HomeRepository"
         fun getUsername(
             onSuccess: (String?) -> Unit,
         ) {

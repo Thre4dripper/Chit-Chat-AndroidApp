@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Transformations
+import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserDetailsRepository
@@ -23,14 +24,20 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var isFirebaseUILaunched = false
 
     init {
-        val currentUser = getCurrentUser()
-        if (currentUser != null) {
-            HomeRepository.getUsername { username ->
-                if (username != null) {
-                    UserDetails.saveUsername(application.applicationContext, username)
-                }
-            }
-            UserDetailsRepository.getUserDetails(application.applicationContext) {}
+        initUserDetails()
+    }
+
+    /**
+     * Init user details on app launch
+     */
+    private fun initUserDetails() {
+        getCurrentUser() ?: return
+        HomeRepository.getUsername { username ->
+            if (username == null)
+                return@getUsername
+
+            UserDetails.saveUsername(getApplication<Application>().applicationContext, username)
+            UserDetailsRepository.getUserDetails(getApplication<Application>().applicationContext) {}
         }
     }
 
@@ -45,6 +52,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun signOutUser(context: Context, onSuccess: (Boolean) -> Unit) {
         isFirebaseUILaunched = false
+
+        //clear all data on sign out
+        AddChatsRepository.searchResult.value = ArrayList()
+        UserDetailsRepository.userDetails.value = null
+        UserDetails.saveUsername(context, null)
         AuthRepository.signOutUser(context, onSuccess)
     }
 
@@ -52,6 +64,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         res: FirebaseAuthUIAuthenticationResult,
         onSuccess: (Boolean) -> Unit,
     ) {
+        //init user details on sign in
+        initUserDetails()
         AuthRepository.onSignInResult(res, onSuccess)
     }
 
