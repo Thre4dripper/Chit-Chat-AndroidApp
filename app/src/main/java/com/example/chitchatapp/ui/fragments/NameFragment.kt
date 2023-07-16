@@ -54,6 +54,13 @@ class NameFragment : Fragment() {
         binding.nameSaveBtn.visibility = View.GONE
         val name = binding.nameEt.text.toString().trim()
 
+        if(name.isEmpty()){
+            binding.nameEt.error = "Name cannot be empty"
+            binding.nameProgressBar.visibility = View.GONE
+            binding.nameSaveBtn.visibility = View.VISIBLE
+            return
+        }
+
         userDetailsViewModel.updateName(requireContext(), name) { message ->
             if (message == Constants.NAME_UPDATED_SUCCESSFULLY) {
                 requireActivity().finish()

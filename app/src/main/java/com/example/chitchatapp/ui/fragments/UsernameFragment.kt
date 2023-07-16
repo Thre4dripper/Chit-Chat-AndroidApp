@@ -55,14 +55,44 @@ class UsernameFragment : Fragment() {
         binding.usernameSaveBtn.visibility = View.GONE
         val username = binding.usernameEt.text.toString().trim()
 
-        userDetailsViewModel.updateUsername(username) { message ->
-            if (message == Constants.USERNAME_UPDATED_SUCCESSFULLY) {
-                //saving username in shared preferences
-                UserDetails.saveUsername(requireActivity(), username)
+        if (username.isEmpty()) {
+            binding.usernameEt.error = "Username cannot be empty"
+            binding.usernameProgressBar.visibility = View.GONE
+            binding.usernameSaveBtn.visibility = View.VISIBLE
+            return
+        }
 
-                requireActivity().finish()
-            } else {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        if (username.length < 4) {
+            binding.usernameEt.error = "Username must be at least 4 characters long"
+            binding.usernameProgressBar.visibility = View.GONE
+            binding.usernameSaveBtn.visibility = View.VISIBLE
+            return
+        }
+
+        val regex = Regex("[a-zA-Z0-9_]+")
+        if (!regex.matches(username)) {
+            binding.usernameEt.error = "Username can only contain letters, numbers, underscores"
+            binding.usernameProgressBar.visibility = View.GONE
+            binding.usernameSaveBtn.visibility = View.VISIBLE
+            return
+        }
+
+        userDetailsViewModel.updateUsername(username) { message ->
+            when (message) {
+                Constants.USERNAME_UPDATED_SUCCESSFULLY -> {
+                    //saving username in shared preferences
+                    UserDetails.saveUsername(requireActivity(), username)
+
+                    requireActivity().finish()
+                }
+
+                Constants.USERNAME_ALREADY_EXISTS -> {
+                    binding.usernameEt.error = message
+                }
+
+                else -> {
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
             }
             binding.usernameProgressBar.visibility = View.GONE
             binding.usernameSaveBtn.visibility = View.VISIBLE
