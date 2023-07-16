@@ -5,6 +5,7 @@ class Constants {
         //firestore collection names
         const val FIRESTORE_USER_COLLECTION = "Users"
         const val FIRESTORE_REGISTERED_UID_COLLECTION = "RegisteredUIDs"
+        const val FIRESTORE_CHATS_COLLECTION = "Chats"
 
         //firebase storage folder names
         const val FIREBASE_STORAGE_PROFILE_IMAGES = "ProfileImages"

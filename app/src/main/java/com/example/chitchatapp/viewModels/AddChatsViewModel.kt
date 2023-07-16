@@ -9,4 +9,9 @@ class AddChatsViewModel : ViewModel() {
     fun searchUsers(
         searchQuery: String,
     ) = AddChatsRepository.searchUsers(searchQuery)
+
+    fun addChat(
+        chatUserId: String,
+        onSuccess: (Boolean) -> Unit,
+    ) = AddChatsRepository.addChat(chatUserId, onSuccess)
 }
