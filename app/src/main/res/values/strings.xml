@@ -6,6 +6,7 @@
     //HomeActivity
     <string name="home_activity_desc_logout_btn">Logout</string>
     <string name="home_activity_complete_profile_btn">Complete Profile</string>
+    <string name="home_activity_add_friends_btn">Add Friends</string>
 
     //User Details Activity
     <string name="user_details_activity_text_back_btn">Back</string>

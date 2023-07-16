@@ -36,6 +36,15 @@
             app:layout_constraintTop_toTopOf="@+id/textView"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <ProgressBar
+            android:id="@+id/home_profile_image_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/profile_image_btn"
+            app:layout_constraintEnd_toEndOf="@+id/profile_image_btn"
+            app:layout_constraintStart_toStartOf="@+id/profile_image_btn"
+            app:layout_constraintTop_toTopOf="@+id/profile_image_btn" />
+
         <ImageView
             android:id="@+id/logout_btn"
             android:layout_width="32dp"
@@ -97,6 +106,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_activity_complete_profile_btn"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_friends_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/add_friends" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_friends_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_activity_add_friends_btn"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

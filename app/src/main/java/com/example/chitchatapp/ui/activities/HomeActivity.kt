@@ -41,17 +41,18 @@ class HomeActivity : AppCompatActivity() {
 
         binding.loadingLottie.visibility = View.VISIBLE
         setProfileImage()
-        initCompleteProfileLayout(binding)
+        initHomeLottieLayouts(binding)
     }
 
-    private fun initCompleteProfileLayout(binding: ActivityHomeBinding) {
+    private fun initHomeLottieLayouts(binding: ActivityHomeBinding) {
         //do nothing, after sign in this func will be called again
         if (viewModel.getCurrentUser() == null) {
             binding.completeProfileLl.visibility = View.GONE
+            binding.addFriendsLl.visibility = View.GONE
             return
         }
 
-        //initially setting visibility to gone
+        //initially setting complete profile layout visibility to gone
         binding.completeProfileLl.visibility = View.GONE
         binding.completeProfileBtn.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
@@ -59,9 +60,16 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //initially setting add friends layout visibility to gone
+        binding.addFriendsLl.visibility = View.GONE
+        binding.addFriendsBtn.setOnClickListener {
+            //add friends activity
+        }
+
         //checking if user has completed profile or not
         viewModel.checkInitialRegistration {
             binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
+            binding.addFriendsLl.visibility = if (!it) View.VISIBLE else View.GONE
             binding.loadingLottie.visibility = View.GONE
         }
     }
@@ -97,7 +105,7 @@ class HomeActivity : AppCompatActivity() {
             if (it) {
                 setProfileImage()
                 //after sign in, initCompleteProfile will be called again
-                initCompleteProfileLayout(binding)
+                initHomeLottieLayouts(binding)
             } else {
                 showSignInFailedDialog()
             }
@@ -105,7 +113,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setProfileImage() {
+        binding.homeProfileImageProgressBar.visibility = View.VISIBLE
         viewModel.profileImage.observe(this) {
+            binding.homeProfileImageProgressBar.visibility = View.GONE
             Glide.with(this)
                 .load(it)
                 .placeholder(R.drawable.ic_profile)
