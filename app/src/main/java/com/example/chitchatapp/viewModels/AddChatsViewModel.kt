@@ -8,7 +8,5 @@ class AddChatsViewModel : ViewModel() {
 
     fun searchUsers(
         searchQuery: String,
-    ) {
-        AddChatsRepository.searchUsers(searchQuery)
-    }
+    ) = AddChatsRepository.searchUsers(searchQuery)
 }
