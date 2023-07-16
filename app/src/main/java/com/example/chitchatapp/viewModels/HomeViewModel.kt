@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Transformations
 import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.HomeRepository
+import com.example.chitchatapp.repository.UserDetailsRepository
 import com.example.chitchatapp.store.UserDetails
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +15,10 @@ import com.google.firebase.auth.FirebaseUser
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "HomeViewModel"
+
+    val profileImage = Transformations.map(UserDetailsRepository.userDetails) {
+        it?.profileImage
+    }
 
     var isFirebaseUILaunched = false
 
@@ -24,6 +30,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     UserDetails.saveUsername(application.applicationContext, username)
                 }
             }
+            UserDetailsRepository.getUserDetails(application.applicationContext) {}
         }
     }
 

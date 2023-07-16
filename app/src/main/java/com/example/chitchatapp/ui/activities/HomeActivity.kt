@@ -105,11 +105,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setProfileImage() {
-        Glide.with(this)
-            .load(viewModel.getCurrentUser()?.photoUrl)
-            .placeholder(R.drawable.ic_profile)
-            .circleCrop()
-            .into(binding.profileImageBtn)
+        viewModel.profileImage.observe(this) {
+            Glide.with(this)
+                .load(it)
+                .placeholder(R.drawable.ic_profile)
+                .circleCrop()
+                .into(binding.profileImageBtn)
+        }
     }
 
     /**
