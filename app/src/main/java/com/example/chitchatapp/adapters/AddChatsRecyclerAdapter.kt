@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.AddChatInterface
 import com.example.chitchatapp.databinding.ItemAddChatResultBinding
 import com.example.chitchatapp.models.UserModel
 
-class AddChatsRecyclerAdapter :
+class AddChatsRecyclerAdapter(private var addChatInterface: AddChatInterface) :
     ListAdapter<UserModel, AddChatsRecyclerAdapter.SearchUsersViewHolder>(AddChatsDiffCallback()) {
 
 
@@ -27,7 +28,8 @@ class AddChatsRecyclerAdapter :
         holder.bind(searchResult)
     }
 
-    inner class SearchUsersViewHolder(itemView: View) : ViewHolder(itemView) {
+    inner class SearchUsersViewHolder(itemView: View) :
+        ViewHolder(itemView) {
         private val binding = ItemAddChatResultBinding.bind(itemView)
 
         fun bind(user: UserModel) {
@@ -42,6 +44,10 @@ class AddChatsRecyclerAdapter :
             binding.itemAddChatsTextUsername.text =
                 context.getString(R.string.item_add_chats_text_username, user.username)
             binding.itemAddChatsTextName.text = user.name
+
+            binding.itemAddChatsMessageBtn.setOnClickListener {
+                addChatInterface.onAddChat(user)
+            }
         }
     }
 
