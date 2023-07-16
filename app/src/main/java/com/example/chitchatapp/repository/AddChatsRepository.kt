@@ -3,6 +3,7 @@ package com.example.chitchatapp.repository
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.firebase.user.FirestoreSearchUsers
 import com.example.chitchatapp.models.UserModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddChatsRepository {
@@ -13,8 +14,9 @@ class AddChatsRepository {
             searchQuery: String,
         ) {
             val firestore = FirebaseFirestore.getInstance()
+            val loggedInUser = FirebaseAuth.getInstance().currentUser
 
-            FirestoreSearchUsers.searchUsers(firestore, searchQuery) {
+            FirestoreSearchUsers.searchUsers(firestore, loggedInUser, searchQuery) {
                 searchResult.value = it as ArrayList<UserModel>
             }
         }
