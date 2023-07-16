@@ -37,6 +37,15 @@
             app:layout_constraintTop_toBottomOf="@+id/user_details_back_btn_tv"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <ProgressBar
+            android:id="@+id/user_details_profile_Image_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/user_details_profile_iv"
+            app:layout_constraintEnd_toEndOf="@+id/user_details_profile_iv"
+            app:layout_constraintStart_toStartOf="@+id/user_details_profile_iv"
+            app:layout_constraintTop_toTopOf="@+id/user_details_profile_iv" />
+
         <TextView
             android:id="@+id/user_details_set_profile_image"
             android:layout_width="wrap_content"
