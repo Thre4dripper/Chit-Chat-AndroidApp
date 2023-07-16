@@ -4,54 +4,9 @@ import com.example.chitchatapp.Constants
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
-class FirestoreUtils {
+class Utils {
     companion object {
         private const val TAG = "FirestoreUtils"
-
-        fun getUsernameFromUIDCollection(
-            firestore: FirebaseFirestore,
-            user: FirebaseUser?,
-            onSuccess: (String?) -> Unit,
-        ) {
-            firestore.collection(Constants.FIRESTORE_REGISTERED_UID_COLLECTION)
-                .document(user!!.uid)
-                .get()
-                .addOnSuccessListener {
-                    val username = it.getString(Constants.FIRESTORE_USER_USERNAME)
-                    onSuccess(username)
-                }.addOnFailureListener {
-                    onSuccess(null)
-                }
-        }
-
-        fun deleteFirestoreDocument(
-            firestore: FirebaseFirestore,
-            collection: String,
-            document: String,
-            success: (Boolean) -> Unit
-        ) {
-            firestore.collection(collection).document(document).delete()
-                .addOnSuccessListener {
-                    success(true)
-                }.addOnFailureListener {
-                    success(false)
-                }
-        }
-
-        fun updateRegisteredUIDCollection(
-            firestore: FirebaseFirestore,
-            user: FirebaseUser?,
-            username: String,
-            success: (Boolean) -> Unit
-        ) {
-            firestore.collection(Constants.FIRESTORE_REGISTERED_UID_COLLECTION)
-                .document(user!!.uid).set(hashMapOf(Constants.FIRESTORE_USER_USERNAME to username))
-                .addOnSuccessListener {
-                    success(true)
-                }.addOnFailureListener {
-                    success(false)
-                }
-        }
 
         /**
          * Function to Check if the user is already initial registered as uid document in firestore

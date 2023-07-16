@@ -1,7 +1,8 @@
 package com.example.chitchatapp.firebase.profile
 
 import com.example.chitchatapp.Constants
-import com.example.chitchatapp.firebase.utils.FirestoreUtils
+import com.example.chitchatapp.firebase.utils.CrudUtils
+import com.example.chitchatapp.firebase.utils.Utils
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -12,12 +13,12 @@ class UpdateProfile {
          */
         fun updateUsername(
             firestore: FirebaseFirestore,
-            user: FirebaseUser?,
+            user: FirebaseUser,
             prevUsername: String?,
             username: String,
             callback: (String) -> Unit
         ) {
-            FirestoreUtils.checkAvailableUsername(firestore, username) { isAvailable ->
+            Utils.checkAvailableUsername(firestore, username) { isAvailable ->
                 if (!isAvailable) {
                     callback(Constants.USERNAME_ALREADY_EXISTS)
                     return@checkAvailableUsername
@@ -55,18 +56,22 @@ class UpdateProfile {
             }
         }
 
+
+        /**
+         * PRIVATE FUNCTIONS POINTING TO CRUD UTILS
+         */
         private fun getDataFromUsernameDocument(
             firestore: FirebaseFirestore,
             username: String,
             callback: (HashMap<String, Any>?) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username).get()
-                .addOnSuccessListener {
-                    val userMap = it.data
-                    callback(userMap as HashMap<String, Any>?)
-                }.addOnFailureListener {
-                    callback(null)
-                }
+            CrudUtils.getFirestoreDocument(
+                firestore,
+                Constants.FIRESTORE_USER_COLLECTION,
+                username
+            ) { userMap ->
+                callback(userMap)
+            }
         }
 
         private fun createNewUsernameDocument(
@@ -75,21 +80,20 @@ class UpdateProfile {
             userMap: HashMap<String, Any>,
             callback: (Boolean) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
-                .set(userMap).addOnSuccessListener {
-                    callback(true)
-                }.addOnFailureListener {
-                    callback(false)
-                }
+            CrudUtils.createFirestoreDocument(
+                firestore,
+                Constants.FIRESTORE_USER_COLLECTION,
+                username,
+                userMap
+            ) { isCreated ->
+                callback(isCreated)
+            }
         }
 
-        /**
-         * PRIVATE FUNCTIONS POINTING TO FIRESTORE UTILS
-         */
         private fun deletePreviousUsernameDocument(
             firestore: FirebaseFirestore, prevUsername: String, callback: (Boolean) -> Unit
         ) {
-            FirestoreUtils.deleteFirestoreDocument(
+            CrudUtils.deleteFirestoreDocument(
                 firestore,
                 Constants.FIRESTORE_USER_COLLECTION,
                 prevUsername
@@ -100,11 +104,18 @@ class UpdateProfile {
 
         private fun updateUIDCollection(
             firestore: FirebaseFirestore,
-            user: FirebaseUser?,
+            user: FirebaseUser,
             username: String,
             callback: (Boolean) -> Unit
         ) {
-            FirestoreUtils.updateRegisteredUIDCollection(firestore, user, username) { isUpdated ->
+            val data = hashMapOf<String, Any>()
+            data[Constants.FIRESTORE_USER_USERNAME] = username
+            CrudUtils.updateFirestoreDocument(
+                firestore,
+                Constants.FIRESTORE_REGISTERED_UID_COLLECTION,
+                user.uid,
+                data
+            ) { isUpdated ->
                 callback(isUpdated)
             }
         }
