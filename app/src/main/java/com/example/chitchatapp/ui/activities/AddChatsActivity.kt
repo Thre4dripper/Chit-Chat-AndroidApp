@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.AddChatsRecyclerAdapter
 import com.example.chitchatapp.databinding.ActivityAddChatsBinding
@@ -37,7 +39,11 @@ class AddChatsActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         addChatsAdapter = AddChatsRecyclerAdapter()
-        binding.addChatsRv.adapter = addChatsAdapter
+        binding.addChatsRv.apply {
+            adapter = addChatsAdapter
+            addItemDecoration(DividerItemDecoration(this@AddChatsActivity, DividerItemDecoration.VERTICAL))
+            layoutManager = LinearLayoutManager(this@AddChatsActivity)
+        }
 
         viewModel.searchedUsers.observe(this) {
             binding.addChatsLottie.visibility =
