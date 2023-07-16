@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.chitchatapp.Constants
 import com.example.chitchatapp.R
 import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.example.chitchatapp.viewModels.HomeViewModel
@@ -53,7 +54,9 @@ class HomeActivity : AppCompatActivity() {
         //initially setting visibility to gone
         binding.completeProfileLl.visibility = View.GONE
         binding.completeProfileBtn.setOnClickListener {
-            startActivity(Intent(this, UserDetailsActivity::class.java))
+            val intent = Intent(this, SetDetailsActivity::class.java)
+            intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_USERNAME)
+            startActivity(intent)
         }
 
         //checking if user has completed profile or not

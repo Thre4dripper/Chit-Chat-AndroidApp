@@ -26,10 +26,6 @@ class UserDetailsActivity : AppCompatActivity() {
         initBackButtons()
         getProfile(binding)
 
-        setProfileImageBtn(binding)
-        setUsernameBtn(binding)
-        setNameBtn(binding)
-        setBioBtn(binding)
     }
 
     private fun initBackButtons() {
@@ -76,6 +72,12 @@ class UserDetailsActivity : AppCompatActivity() {
                         setTextColor(ContextCompat.getColor(context, R.color.lightGrey))
                     }
                 }
+
+                //check if username is set, if not, disable all buttons except username button
+                setProfileImageBtn(binding, it.username != "")
+                setUsernameBtn(binding)
+                setNameBtn(binding, it.username != "")
+                setBioBtn(binding, it.username != "")
             }
         }
 
@@ -86,8 +88,17 @@ class UserDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setProfileImageBtn(binding: ActivityUserDetailsBinding) {
+    private fun setProfileImageBtn(
+        binding: ActivityUserDetailsBinding,
+        isUsernameSet: Boolean
+    ) {
         binding.userDetailsSetProfileImage.setOnClickListener {
+            if (!isUsernameSet) {
+                Toast.makeText(this, "Set username first", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"
             imageRequest.launch(intent)
@@ -118,16 +129,28 @@ class UserDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setNameBtn(binding: ActivityUserDetailsBinding) {
+    private fun setNameBtn(binding: ActivityUserDetailsBinding, isUsernameSet: Boolean) {
         binding.userDetailsEditName.setOnClickListener {
+            if (!isUsernameSet) {
+                Toast.makeText(this, "Set username first", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_NAME)
             startActivity(intent)
         }
     }
 
-    private fun setBioBtn(binding: ActivityUserDetailsBinding) {
+    private fun setBioBtn(binding: ActivityUserDetailsBinding, isUsernameSet: Boolean) {
         binding.userDetailsEditBio.setOnClickListener {
+            if (!isUsernameSet) {
+                Toast.makeText(this, "Set username first", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_BIO)
             startActivity(intent)
