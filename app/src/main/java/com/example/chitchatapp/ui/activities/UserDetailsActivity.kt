@@ -3,6 +3,7 @@ package com.example.chitchatapp.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -24,6 +25,8 @@ class UserDetailsActivity : AppCompatActivity() {
 
         initBackButtons()
         getProfile(binding)
+
+        setProfileImageBtn(binding)
         setUsernameBtn(binding)
         setNameBtn(binding)
         setBioBtn(binding)
@@ -82,6 +85,30 @@ class UserDetailsActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun setProfileImageBtn(binding: ActivityUserDetailsBinding) {
+        binding.userDetailsSetProfileImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            imageRequest.launch(intent)
+        }
+    }
+
+    private val imageRequest =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val imageUri = result.data?.data
+                if (imageUri != null) {
+                    viewModel.updateProfilePicture(this, imageUri) {
+                        Toast.makeText(this, it, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                } else {
+                    Toast.makeText(this, "Error getting image", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
 
     private fun setUsernameBtn(binding: ActivityUserDetailsBinding) {
         binding.userDetailsEditUsername.setOnClickListener {

@@ -1,6 +1,7 @@
 package com.example.chitchatapp.viewModels
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.repository.UserDetailsRepository
 
@@ -27,4 +28,10 @@ class UserDetailsViewModel : ViewModel() {
         bio: String,
         callback: (String) -> Unit,
     ) = UserDetailsRepository.updateBio(context, bio, callback)
+
+    fun updateProfilePicture(
+        context: Context,
+        profilePicture: Uri,
+        callback: (String) -> Unit,
+    ) = UserDetailsRepository.updateProfilePicture(context, profilePicture, callback)
 }

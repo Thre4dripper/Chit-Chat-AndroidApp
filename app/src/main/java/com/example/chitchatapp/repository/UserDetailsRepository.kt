@@ -1,15 +1,19 @@
 package com.example.chitchatapp.repository
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.example.chitchatapp.Constants
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.example.chitchatapp.firebase.profile.GetProfile
 import com.example.chitchatapp.firebase.profile.UpdateProfile
+import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.store.UserDetails
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class UserDetailsRepository {
     companion object {
@@ -86,6 +90,32 @@ class UserDetailsRepository {
                 //updating in livedata
                 userDetails.value = userDetails.value?.copy(bio = bio)
                 callback(it)
+            }
+        }
+
+        fun updateProfilePicture(
+            context: Context,
+            profilePicture: Uri,
+            callback: (String) -> Unit,
+        ) {
+            val storage = FirebaseStorage.getInstance()
+            val firestore = FirebaseFirestore.getInstance()
+            val username = UserDetails.getUsername(context) ?: ""
+
+            StorageUtils.getUrlFromStorage(
+                storage,
+                "${Constants.FIREBASE_STORAGE_PROFILE_IMAGES}/$username",
+                profilePicture
+            ) { url ->
+                if (url != null) {
+                    UpdateProfile.updateProfilePicture(firestore, username, url) {
+                        //updating in livedata
+                        userDetails.value = userDetails.value?.copy(profileImage = url)
+                        callback(it)
+                    }
+                } else {
+                    callback(Constants.ERROR_UPDATING_PROFILE_PICTURE)
+                }
             }
         }
     }

@@ -53,7 +53,10 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
     //firebase auth
-    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    //firebase storage
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
     //firebase firestore
     implementation("com.google.firebase:firebase-firestore-ktx")

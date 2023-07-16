@@ -153,5 +153,23 @@ class UpdateProfile {
                     callback(Constants.ERROR_UPDATING_BIO)
                 }
         }
+
+        /**
+         * Function to update profile picture
+         */
+        fun updateProfilePicture(
+            firestore: FirebaseFirestore,
+            username: String,
+            profilePicture: String,
+            callback: (String) -> Unit
+        ) {
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
+                .update(Constants.FIRESTORE_USER_PHOTO_URL, profilePicture)
+                .addOnSuccessListener {
+                    callback(Constants.PROFILE_PICTURE_UPDATED_SUCCESSFULLY)
+                }.addOnFailureListener {
+                    callback(Constants.ERROR_UPDATING_PROFILE_PICTURE)
+                }
+        }
     }
 }
