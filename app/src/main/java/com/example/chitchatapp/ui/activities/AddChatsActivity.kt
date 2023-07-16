@@ -2,12 +2,13 @@ package com.example.chitchatapp.ui.activities
 
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.AddChatsRecyclerAdapter
 import com.example.chitchatapp.databinding.ActivityAddChatsBinding
 import com.example.chitchatapp.viewModels.AddChatsViewModel
 
@@ -16,6 +17,8 @@ class AddChatsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddChatsBinding
     private lateinit var viewModel: AddChatsViewModel
+
+    private lateinit var addChatsAdapter: AddChatsRecyclerAdapter
 
     private lateinit var debounceHandler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,13 +31,18 @@ class AddChatsActivity : AppCompatActivity() {
         }
         binding.addChatsSearchEt.requestFocus()
 
-        searchListener()
+        initRecyclerView()
         searchUsers()
     }
 
-    private fun searchListener() {
+    private fun initRecyclerView() {
+        addChatsAdapter = AddChatsRecyclerAdapter()
+        binding.addChatsRv.adapter = addChatsAdapter
+
         viewModel.searchedUsers.observe(this) {
-            Toast.makeText(this, "Search result: ${it.size}", Toast.LENGTH_SHORT).show()
+            binding.addChatsLottie.visibility =
+                if (it.isEmpty()) View.VISIBLE else View.GONE
+            addChatsAdapter.submitList(it)
         }
     }
 

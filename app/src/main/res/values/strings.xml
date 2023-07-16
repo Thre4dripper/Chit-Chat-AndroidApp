@@ -47,7 +47,7 @@
 
     //Item Add Chats Search Result
     <string name="item_add_chats_desc_profile_image">Profile Image</string>
-    <string name="item_add_chats_text_username">\@Username</string>
+    <string name="item_add_chats_text_username">\@%s</string>
     <string name="item_add_chats_text_name">Name</string>
     <string name="item_add_chats_desc_message_btn">Message</string>
 </resources>
