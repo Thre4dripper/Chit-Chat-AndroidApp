@@ -6,7 +6,7 @@
     //HomeActivity
     <string name="home_activity_desc_logout_btn">Logout</string>
     <string name="home_activity_complete_profile_btn">Complete Profile</string>
-    <string name="home_activity_add_friends_btn">Add Friends</string>
+    <string name="home_activity_add_chats_btn">Add Chats</string>
 
     //User Details Activity
     <string name="user_details_activity_text_back_btn">Back</string>
@@ -39,4 +39,8 @@
     <string name="bio_fragment_label">Bio</string>
     <string name="bio_fragment_text_set_bio">Set Bio</string>
     <string name="bio_fragment_instructions">You can add something about yourself. It will appear on your profile. Anyone who visits your profile will be able to see it.</string>
+
+    //Add Chats Activity
+    <string name="add_chats_activity_desc_back_btn">Back</string>
+    <string name="add_chats_activity_search_hint">Search…</string>
 </resources>

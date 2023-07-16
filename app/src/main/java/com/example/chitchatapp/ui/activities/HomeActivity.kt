@@ -48,7 +48,7 @@ class HomeActivity : AppCompatActivity() {
         //do nothing, after sign in this func will be called again
         if (viewModel.getCurrentUser() == null) {
             binding.completeProfileLl.visibility = View.GONE
-            binding.addFriendsLl.visibility = View.GONE
+            binding.addChatsLl.visibility = View.GONE
             return
         }
 
@@ -61,15 +61,15 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //initially setting add friends layout visibility to gone
-        binding.addFriendsLl.visibility = View.GONE
-        binding.addFriendsBtn.setOnClickListener {
-            //add friends activity
+        binding.addChatsLl.visibility = View.GONE
+        binding.addChatsBtn.setOnClickListener {
+            startActivity(Intent(this, AddChatsActivity::class.java))
         }
 
         //checking if user has completed profile or not
         viewModel.checkInitialRegistration {
             binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
-            binding.addFriendsLl.visibility = if (!it) View.VISIBLE else View.GONE
+            binding.addChatsLl.visibility = if (!it) View.VISIBLE else View.GONE
             binding.loadingLottie.visibility = View.GONE
         }
     }

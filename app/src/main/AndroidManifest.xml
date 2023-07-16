@@ -13,9 +13,13 @@
         android:theme="@style/Theme.ChitChat"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.AddChatsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
             android:name=".ui.activities.SetDetailsActivity"
-            android:windowSoftInputMode="stateVisible"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.activities.UserDetailsActivity"
             android:exported="false" />
@@ -28,7 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
