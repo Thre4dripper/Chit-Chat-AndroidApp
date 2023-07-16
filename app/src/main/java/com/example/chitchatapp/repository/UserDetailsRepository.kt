@@ -40,17 +40,51 @@ class UserDetailsRepository {
 
             FirestoreUtils.checkCompleteRegistration(firestore, user) { isComplete ->
                 if (!isComplete) {
-                    FireStoreRegister.registerCompleteUser(firestore, user, username, callback)
-                    //updating in livedata
-                    userDetails.value = userDetails.value?.copy(username = username)
+                    FireStoreRegister.registerCompleteUser(firestore, user, username) {
+                        //updating in livedata
+                        userDetails.value = userDetails.value?.copy(username = username)
+                        callback(it)
+                    }
                     return@checkCompleteRegistration
                 }
 
                 val prevUsername = userDetails.value?.username
-                UpdateProfile.updateUsername(firestore, user, prevUsername, username, callback)
+                UpdateProfile.updateUsername(firestore, user, prevUsername, username) {
+                    //updating in livedata
+                    userDetails.value = userDetails.value?.copy(username = username)
+                    callback(it)
+                }
 
+            }
+        }
+
+        fun updateName(
+            context: Context,
+            name: String,
+            callback: (String) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val username = UserDetails.getUsername(context) ?: ""
+
+            UpdateProfile.updateName(firestore, username, name) {
                 //updating in livedata
-                userDetails.value = userDetails.value?.copy(username = username)
+                userDetails.value = userDetails.value?.copy(name = name)
+                callback(it)
+            }
+        }
+
+        fun updateBio(
+            context: Context,
+            bio: String,
+            callback: (String) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val username = UserDetails.getUsername(context) ?: ""
+
+            UpdateProfile.updateBio(firestore, username, bio) {
+                //updating in livedata
+                userDetails.value = userDetails.value?.copy(bio = bio)
+                callback(it)
             }
         }
     }

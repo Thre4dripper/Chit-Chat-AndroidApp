@@ -15,4 +15,16 @@ class UserDetailsViewModel : ViewModel() {
         username: String,
         callback: (String) -> Unit,
     ) = UserDetailsRepository.updateUsername(username, callback)
+
+    fun updateName(
+        context: Context,
+        name: String,
+        callback: (String) -> Unit,
+    ) = UserDetailsRepository.updateName(context, name, callback)
+
+    fun updateBio(
+        context: Context,
+        bio: String,
+        callback: (String) -> Unit,
+    ) = UserDetailsRepository.updateBio(context, bio, callback)
 }

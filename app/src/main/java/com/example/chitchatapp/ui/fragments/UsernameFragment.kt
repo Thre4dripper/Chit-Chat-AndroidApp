@@ -18,8 +18,7 @@ class UsernameFragment : Fragment() {
     private lateinit var binding: FragmentUsernameBinding
     private lateinit var userDetailsViewModel: UserDetailsViewModel
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentUsernameBinding.inflate(inflater, container, false)
         userDetailsViewModel = ViewModelProvider(this)[UserDetailsViewModel::class.java]
@@ -54,7 +53,7 @@ class UsernameFragment : Fragment() {
     private fun saveUsername() {
         binding.usernameProgressBar.visibility = View.VISIBLE
         binding.usernameSaveBtn.visibility = View.GONE
-        val username = binding.usernameEt.text.toString()
+        val username = binding.usernameEt.text.toString().trim()
 
         userDetailsViewModel.updateUsername(username) { message ->
             if (message == Constants.USERNAME_UPDATED_SUCCESSFULLY) {
@@ -63,11 +62,7 @@ class UsernameFragment : Fragment() {
 
                 requireActivity().finish()
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Something went wrong",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
             binding.usernameProgressBar.visibility = View.GONE
             binding.usernameSaveBtn.visibility = View.VISIBLE

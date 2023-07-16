@@ -7,6 +7,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UpdateProfile {
     companion object {
+        /**
+         * Function to update username
+         */
         fun updateUsername(
             firestore: FirebaseFirestore,
             user: FirebaseUser?,
@@ -104,6 +107,40 @@ class UpdateProfile {
             FirestoreUtils.updateRegisteredUIDCollection(firestore, user, username) { isUpdated ->
                 callback(isUpdated)
             }
+        }
+
+        /**
+         * Function to update name
+         */
+        fun updateName(
+            firestore: FirebaseFirestore,
+            username: String,
+            name: String,
+            callback: (String) -> Unit
+        ) {
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
+                .update(Constants.FIRESTORE_USER_NAME, name).addOnSuccessListener {
+                    callback(Constants.NAME_UPDATED_SUCCESSFULLY)
+                }.addOnFailureListener {
+                    callback(Constants.ERROR_UPDATING_NAME)
+                }
+        }
+
+        /**
+         * Function to update bio
+         */
+        fun updateBio(
+            firestore: FirebaseFirestore,
+            username: String,
+            bio: String,
+            callback: (String) -> Unit
+        ) {
+            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
+                .update(Constants.FIRESTORE_USER_BIO, bio).addOnSuccessListener {
+                    callback(Constants.BIO_UPDATED_SUCCESSFULLY)
+                }.addOnFailureListener {
+                    callback(Constants.ERROR_UPDATING_BIO)
+                }
         }
     }
 }
