@@ -43,4 +43,11 @@
     //Add Chats Activity
     <string name="add_chats_activity_desc_back_btn">Back</string>
     <string name="add_chats_activity_search_hint">Search…</string>
+    <string name="add_chats_activity_instructions">Search for people by their username. You can search for multiple people at the same time.</string>
+
+    //Item Add Chats Search Result
+    <string name="item_add_chats_desc_profile_image">Profile Image</string>
+    <string name="item_add_chats_text_username">\@Username</string>
+    <string name="item_add_chats_text_name">Name</string>
+    <string name="item_add_chats_desc_message_btn">Message</string>
 </resources>

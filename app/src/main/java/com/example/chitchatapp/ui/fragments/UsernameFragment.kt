@@ -69,6 +69,13 @@ class UsernameFragment : Fragment() {
             return
         }
 
+        if (username.length > 15) {
+            binding.usernameEt.error = "Username must be at most 15 characters long"
+            binding.usernameProgressBar.visibility = View.GONE
+            binding.usernameSaveBtn.visibility = View.VISIBLE
+            return
+        }
+
         val regex = Regex("[a-zA-Z0-9_]+")
         if (!regex.matches(username)) {
             binding.usernameEt.error = "Username can only contain letters, numbers, underscores"
