@@ -15,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class HomeRepository {
     companion object {
         private val TAG = "HomeRepository"
-        val homeChats = MutableLiveData<List<ChatModel>>(listOf())
+        val homeChats = MutableLiveData<List<ChatModel>?>(null)
         fun getUsername(
             onSuccess: (String?) -> Unit,
         ) {

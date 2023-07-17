@@ -43,43 +43,32 @@ class HomeActivity : AppCompatActivity() {
 
         binding.loadingLottie.visibility = View.VISIBLE
         setProfileImage()
-        initHomeLottieLayouts(binding)
-        getChats()
+        initHomeLottieLayouts()
     }
 
-    private fun initHomeLottieLayouts(binding: ActivityHomeBinding) {
-        //do nothing, after sign in this func will be called again
-        if (viewModel.getCurrentUser() == null) {
-            binding.completeProfileLl.visibility = View.GONE
-            binding.addChatsLl.visibility = View.GONE
-            return
-        }
-
-        //initially setting complete profile layout visibility to gone
+    private fun initHomeLottieLayouts() {
+        //hide all the layouts
         binding.completeProfileLl.visibility = View.GONE
+        binding.addChatsLl.visibility = View.GONE
+
+        //do nothing, after sign in this func will be called again
+        if (viewModel.getCurrentUser() == null) return
+
         binding.completeProfileBtn.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
             intent.putExtra(Constants.FRAGMENT_TYPE, FragmentType.FRAGMENT_USERNAME.name)
             startActivity(intent)
         }
 
-        //initially setting add friends layout visibility to gone
-        binding.addChatsLl.visibility = View.GONE
         binding.addChatsBtn.setOnClickListener {
             startActivity(Intent(this, AddChatsActivity::class.java))
         }
 
         //checking if user has completed profile or not
-        viewModel.checkInitialRegistration {
+        viewModel.checkInitialRegistration { isInitial ->
             binding.loadingLottie.visibility = View.GONE
-
-            binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
-            binding.addChatsLl.visibility =
-                if (!it && viewModel.homeChats.value!!.isEmpty()) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+            binding.completeProfileLl.visibility = if (isInitial) View.VISIBLE else View.GONE
+            if (!isInitial) getChats()
         }
     }
 
@@ -114,7 +103,7 @@ class HomeActivity : AppCompatActivity() {
             if (it) {
                 setProfileImage()
                 //after sign in, initCompleteProfile will be called again
-                initHomeLottieLayouts(binding)
+                initHomeLottieLayouts()
             } else {
                 showSignInFailedDialog()
             }
@@ -156,9 +145,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun getChats() {
-        binding.addChatsLl.visibility = View.GONE
+        binding.loadingLottie.visibility = View.VISIBLE
         viewModel.homeChats.observe(this) {
             Log.d(TAG, "getChats: $it")
+            if (it != null) {
+                binding.addChatsLl.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+                binding.loadingLottie.visibility = View.GONE
+            }
         }
 
         viewModel.getChats(this)

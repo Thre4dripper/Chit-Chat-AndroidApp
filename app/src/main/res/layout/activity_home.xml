@@ -80,8 +80,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading"
-                app:lottie_speed="0.5" />
+                app:lottie_rawRes="@raw/loading" />
 
             <LinearLayout
                 android:id="@+id/complete_profile_ll"

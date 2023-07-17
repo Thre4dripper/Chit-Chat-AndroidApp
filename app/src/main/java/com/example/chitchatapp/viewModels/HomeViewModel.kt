@@ -26,7 +26,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var isFirebaseUILaunched = false
 
     private val _homeChats = HomeRepository.homeChats
-    val homeChats: LiveData<List<ChatModel>>
+    val homeChats: LiveData<List<ChatModel>?>
         get() = _homeChats
 
     init {
