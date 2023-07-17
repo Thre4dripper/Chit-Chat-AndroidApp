@@ -1,5 +1,6 @@
 package com.example.chitchatapp.adapters
 
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,35 +51,15 @@ class HomeChatsRecyclerAdapter(private var loggedInUsername: String) :
                 } else {
                     chatModel.chatUsername1
                 }
+                itemHomeChatUsername.text = loggedInUsername
 
-                val time = chatModel.chatMessages.last().chatMessageTime.seconds
-                //formatting time
-                val timeInMilliSeconds = time * 1000L
-                val currentTime = System.currentTimeMillis()
-                val difference = currentTime - timeInMilliSeconds
-                val seconds = difference / 1000
-                val minutes = seconds / 60
-                val hours = minutes / 60
-                val days = hours / 24
-                val weeks = days / 7
-                val months = weeks / 4
-                val years = months / 12
-
-                if (seconds < 60) {
-                    itemHomeChatTime.text = "$seconds seconds ago"
-                } else if (minutes < 60) {
-                    itemHomeChatTime.text = "$minutes minutes ago"
-                } else if (hours < 24) {
-                    itemHomeChatTime.text = "$hours hours ago"
-                } else if (days < 7) {
-                    itemHomeChatTime.text = "$days days ago"
-                } else if (weeks < 4) {
-                    itemHomeChatTime.text = "$weeks weeks ago"
-                } else if (months < 12) {
-                    itemHomeChatTime.text = "$months months ago"
-                } else {
-                    itemHomeChatTime.text = "$years years ago"
-                }
+                val date = chatModel.chatMessages.last().chatMessageTime.toDate()
+                val time = DateUtils.getRelativeTimeSpanString(
+                    date.time,
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS
+                )
+                itemHomeChatMessageTime.text = time
 
                 itemHomeChatMessage.text = chatModel.chatMessages.last().chatMessage?.trim() ?: ""
             }

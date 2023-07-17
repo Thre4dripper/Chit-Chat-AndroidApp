@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.HomeChatsRecyclerAdapter
@@ -155,6 +156,12 @@ class HomeActivity : AppCompatActivity() {
 
             binding.homeChatRv.apply {
                 homeChatsAdapter = HomeChatsRecyclerAdapter(it.username)
+                addItemDecoration(
+                    DividerItemDecoration(
+                        this@HomeActivity,
+                        DividerItemDecoration.VERTICAL
+                    )
+                )
                 adapter = homeChatsAdapter
             }
 
