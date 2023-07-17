@@ -14,4 +14,17 @@ data class ChatMessageModel(
     val chatMessageSeen: Boolean,
     val chatMessageFrom: String,
     val chatMessageTo: String,
-)
+) {
+    constructor() : this(
+        "",
+        ChatMessageEnums.ChatMessageTypeFirstMessage,
+        "",
+        "",
+        "",
+        null,
+        Timestamp.now(),
+        false,
+        "",
+        "",
+    )
+}

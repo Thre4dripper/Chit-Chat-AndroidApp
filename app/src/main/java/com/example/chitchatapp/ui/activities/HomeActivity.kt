@@ -2,6 +2,7 @@ package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -42,6 +43,7 @@ class HomeActivity : AppCompatActivity() {
         binding.loadingLottie.visibility = View.VISIBLE
         setProfileImage()
         initHomeLottieLayouts(binding)
+        getChats()
     }
 
     private fun initHomeLottieLayouts(binding: ActivityHomeBinding) {
@@ -68,9 +70,15 @@ class HomeActivity : AppCompatActivity() {
 
         //checking if user has completed profile or not
         viewModel.checkInitialRegistration {
-            binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
-            binding.addChatsLl.visibility = if (!it) View.VISIBLE else View.GONE
             binding.loadingLottie.visibility = View.GONE
+
+            binding.completeProfileLl.visibility = if (it) View.VISIBLE else View.GONE
+            binding.addChatsLl.visibility =
+                if (!it && viewModel.homeChats.value!!.isEmpty()) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
         }
     }
 
@@ -144,5 +152,14 @@ class HomeActivity : AppCompatActivity() {
                 finish()
             }
             .show()
+    }
+
+    private fun getChats() {
+        binding.addChatsLl.visibility = View.GONE
+        viewModel.homeChats.observe(this) {
+            Log.d(TAG, "getChats: $it")
+        }
+
+        viewModel.getChats(this)
     }
 }

@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.HomeRepository
@@ -22,6 +24,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     var isFirebaseUILaunched = false
+
+    private val _homeChats = HomeRepository.homeChats
+    val homeChats: LiveData<List<ChatModel>>
+        get() = _homeChats
 
     init {
         initUserDetails()
@@ -73,4 +79,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         onSuccess: (Boolean) -> Unit,
     ) =
         HomeRepository.checkInitialRegistration(onSuccess)
+
+    fun getChats(
+        context: Context
+    ) = HomeRepository.getChats(context)
 }
