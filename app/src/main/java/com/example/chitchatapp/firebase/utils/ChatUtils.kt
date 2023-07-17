@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUtils {
     companion object {
-        fun getChatDocId(
+        fun getDMChatDocId(
             chatUserId1: String,
             chatUserId2: String,
         ): String {
@@ -21,7 +21,7 @@ class ChatUtils {
             chatUserId2: String,
             callback: (Boolean) -> Unit,
         ) {
-            val chatDocId = getChatDocId(chatUserId1, chatUserId2)
+            val chatDocId = getDMChatDocId(chatUserId1, chatUserId2)
             firestore.collection(FirestoreCollections.CHATS_COLLECTION)
                 .document(chatDocId)
                 .get()

@@ -33,10 +33,10 @@ class HomeChatsRecyclerAdapter(private var loggedInUsername: String) :
         fun bind(chatModel: ChatModel) {
             val context = itemView.context
 
-            val profileImage = if (chatModel.chatUsername1 == loggedInUsername) {
-                chatModel.chatProfileImage2
+            val profileImage = if (chatModel.dmChatUser1.username == loggedInUsername) {
+                chatModel.dmChatUser2.profileImage
             } else {
-                chatModel.chatProfileImage1
+                chatModel.dmChatUser1.profileImage
             }
 
             Glide.with(context)
@@ -46,12 +46,12 @@ class HomeChatsRecyclerAdapter(private var loggedInUsername: String) :
                 .into(binding.itemHomeChatProfileImage)
 
             binding.apply {
-                loggedInUsername = if (chatModel.chatUsername1 == loggedInUsername) {
-                    chatModel.chatUsername2
+                val username = if (chatModel.dmChatUser1.username == loggedInUsername) {
+                    chatModel.dmChatUser2.username
                 } else {
-                    chatModel.chatUsername1
+                    chatModel.dmChatUser1.username
                 }
-                itemHomeChatUsername.text = loggedInUsername
+                itemHomeChatUsername.text = username
 
                 val date = chatModel.chatMessages.last().chatMessageTime.toDate()
                 val time = DateUtils.getRelativeTimeSpanString(
