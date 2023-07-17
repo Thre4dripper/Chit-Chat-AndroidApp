@@ -11,7 +11,7 @@
         tools:context=".ui.activities.HomeActivity">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/home_activity_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -33,7 +33,7 @@
             android:contentDescription="@string/home_activity_desc_logout_btn"
             android:focusable="true"
             app:layout_constraintEnd_toStartOf="@+id/logout_btn"
-            app:layout_constraintTop_toTopOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="@+id/home_activity_title"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ProgressBar
@@ -56,7 +56,7 @@
             android:focusable="true"
             android:src="@drawable/ic_logout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView" />
+            app:layout_constraintTop_toTopOf="@+id/home_activity_title" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,7 +68,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+            app:layout_constraintTop_toBottomOf="@+id/home_activity_title">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/home_chat_rv"
@@ -150,6 +150,69 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/home_add_chat_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/fabColor"
+                android:contentDescription="@string/home_activity_fab_add_chat"
+                android:src="@drawable/ic_add_chat"
+                app:layout_constraintBottom_toTopOf="@+id/home_add_group_fab"
+                app:layout_constraintEnd_toEndOf="@+id/home_add_group_fab"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/home_add_chat_fab_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/home_activity_fab_add_chat"
+                android:textColor="@color/lightGrey"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/home_add_chat_fab"
+                app:layout_constraintEnd_toStartOf="@+id/home_add_chat_fab"
+                app:layout_constraintTop_toTopOf="@+id/home_add_chat_fab" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/home_add_group_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/fabColor"
+                android:contentDescription="@string/home_activity_fab_add_group"
+                android:src="@drawable/ic_add_group"
+                app:layout_constraintBottom_toTopOf="@+id/home_action_fab"
+                app:layout_constraintEnd_toEndOf="@+id/home_action_fab"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/home_add_group_fab_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/home_activity_fab_add_group"
+                android:textColor="@color/lightGrey"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/home_add_group_fab"
+                app:layout_constraintEnd_toStartOf="@+id/home_add_group_fab"
+                app:layout_constraintTop_toTopOf="@+id/home_add_group_fab" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/home_action_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/fabColor"
+                android:gravity="center"
+                android:text="@string/home_activity_fab_close"
+                android:textColor="@color/white"
+                app:icon="@drawable/ic_close"
+                app:iconTint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

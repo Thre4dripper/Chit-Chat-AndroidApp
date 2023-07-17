@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -47,6 +48,7 @@ class HomeActivity : AppCompatActivity() {
         binding.loadingLottie.visibility = View.VISIBLE
         setProfileImage()
         initHomeLottieLayouts()
+        initHomeFabs()
     }
 
     private fun initHomeLottieLayouts() {
@@ -75,6 +77,46 @@ class HomeActivity : AppCompatActivity() {
             //this will handle get wont be fetched when user is initial
             if (!isInitial) getChats()
         }
+    }
+
+    private fun initHomeFabs() {
+        //initially hide all the fabs and text views
+        binding.homeActionFab.shrink()
+        binding.homeAddChatFab.hide()
+        binding.homeAddGroupFab.hide()
+        binding.homeAddChatFabTv.visibility = View.GONE
+        binding.homeAddGroupFabTv.visibility = View.GONE
+
+        binding.homeActionFab.icon = ContextCompat.getDrawable(this, R.drawable.ic_add)
+
+        binding.homeActionFab.setOnClickListener {
+            if (binding.homeAddChatFab.isOrWillBeHidden) {
+                binding.homeAddChatFab.show()
+                binding.homeAddGroupFab.show()
+                binding.homeActionFab.extend()
+                binding.homeAddChatFabTv.visibility = View.VISIBLE
+                binding.homeAddGroupFabTv.visibility = View.VISIBLE
+
+                binding.homeActionFab.icon = ContextCompat.getDrawable(this, R.drawable.ic_close)
+            } else {
+                binding.homeAddChatFab.hide()
+                binding.homeAddGroupFab.hide()
+                binding.homeActionFab.shrink()
+                binding.homeAddChatFabTv.visibility = View.GONE
+                binding.homeAddGroupFabTv.visibility = View.GONE
+
+                binding.homeActionFab.icon = ContextCompat.getDrawable(this, R.drawable.ic_add)
+            }
+        }
+
+        binding.homeAddChatFab.setOnClickListener {
+            startActivity(Intent(this, AddChatsActivity::class.java))
+        }
+
+        //Todo
+//        binding.homeAddGroupFab.setOnClickListener {
+//            startActivity(Intent(this, AddGroupActivity::class.java))
+//        }
     }
 
     /**
