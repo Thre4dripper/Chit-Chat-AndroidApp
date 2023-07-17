@@ -1,6 +1,9 @@
 package com.example.chitchatapp.firebase.profile
 
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.ErrorMessages
+import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.constants.SuccessMessages
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.firebase.utils.CrudUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.google.firebase.auth.FirebaseUser
@@ -20,16 +23,16 @@ class UpdateProfile {
         ) {
             Utils.checkAvailableUsername(firestore, username) { isAvailable ->
                 if (!isAvailable) {
-                    callback(Constants.USERNAME_ALREADY_EXISTS)
+                    callback(ErrorMessages.USERNAME_ALREADY_EXISTS)
                     return@checkAvailableUsername
                 }
 
                 getDataFromUsernameDocument(firestore, prevUsername!!) { userMap ->
                     if (userMap == null) {
-                        callback(Constants.ERROR_UPDATING_USERNAME)
+                        callback(ErrorMessages.ERROR_UPDATING_USERNAME)
                         return@getDataFromUsernameDocument
                     }
-                    userMap[Constants.FIRESTORE_USER_USERNAME] = username
+                    userMap[UserConstants.USERNAME] = username
 
                     //create new document with username as document id
                     createNewUsernameDocument(firestore, username, userMap) { isCreated ->
@@ -42,12 +45,12 @@ class UpdateProfile {
                                     //update registered uid collection
                                     updateUIDCollection(firestore, user, username) { isUpdated ->
                                         callback(
-                                            if (isUpdated) Constants.USERNAME_UPDATED_SUCCESSFULLY
-                                            else Constants.ERROR_UPDATING_USERNAME
+                                            if (isUpdated) SuccessMessages.USERNAME_UPDATED_SUCCESSFULLY
+                                            else ErrorMessages.ERROR_UPDATING_USERNAME
                                         )
                                     }
                                 } else {
-                                    callback(Constants.ERROR_UPDATING_USERNAME)
+                                    callback(ErrorMessages.ERROR_UPDATING_USERNAME)
                                 }
                             }
                         }
@@ -67,7 +70,7 @@ class UpdateProfile {
         ) {
             CrudUtils.getFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                FirestoreCollections.USERS_COLLECTION,
                 username
             ) { userMap ->
                 callback(userMap)
@@ -82,7 +85,7 @@ class UpdateProfile {
         ) {
             CrudUtils.createFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                FirestoreCollections.USERS_COLLECTION,
                 username,
                 userMap
             ) { isCreated ->
@@ -95,7 +98,7 @@ class UpdateProfile {
         ) {
             CrudUtils.deleteFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                FirestoreCollections.USERS_COLLECTION,
                 prevUsername
             ) { isDeleted ->
                 callback(isDeleted)
@@ -109,10 +112,10 @@ class UpdateProfile {
             callback: (Boolean) -> Unit
         ) {
             val data = hashMapOf<String, Any>()
-            data[Constants.FIRESTORE_USER_USERNAME] = username
+            data[UserConstants.USERNAME] = username
             CrudUtils.updateFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_REGISTERED_UID_COLLECTION,
+                FirestoreCollections.REGISTERED_IDS_COLLECTION,
                 user.uid,
                 data
             ) { isUpdated ->
@@ -129,11 +132,11 @@ class UpdateProfile {
             name: String,
             callback: (String) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
-                .update(Constants.FIRESTORE_USER_NAME, name).addOnSuccessListener {
-                    callback(Constants.NAME_UPDATED_SUCCESSFULLY)
+            firestore.collection(FirestoreCollections.USERS_COLLECTION).document(username)
+                .update(UserConstants.NAME, name).addOnSuccessListener {
+                    callback(SuccessMessages.NAME_UPDATED_SUCCESSFULLY)
                 }.addOnFailureListener {
-                    callback(Constants.ERROR_UPDATING_NAME)
+                    callback(ErrorMessages.ERROR_UPDATING_NAME)
                 }
         }
 
@@ -146,11 +149,11 @@ class UpdateProfile {
             bio: String,
             callback: (String) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
-                .update(Constants.FIRESTORE_USER_BIO, bio).addOnSuccessListener {
-                    callback(Constants.BIO_UPDATED_SUCCESSFULLY)
+            firestore.collection(FirestoreCollections.USERS_COLLECTION).document(username)
+                .update(UserConstants.BIO, bio).addOnSuccessListener {
+                    callback(SuccessMessages.BIO_UPDATED_SUCCESSFULLY)
                 }.addOnFailureListener {
-                    callback(Constants.ERROR_UPDATING_BIO)
+                    callback(ErrorMessages.ERROR_UPDATING_BIO)
                 }
         }
 
@@ -163,12 +166,12 @@ class UpdateProfile {
             profilePicture: String,
             callback: (String) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(username)
-                .update(Constants.FIRESTORE_USER_PHOTO_URL, profilePicture)
+            firestore.collection(FirestoreCollections.USERS_COLLECTION).document(username)
+                .update(UserConstants.PROFILE_IMAGE, profilePicture)
                 .addOnSuccessListener {
-                    callback(Constants.PROFILE_PICTURE_UPDATED_SUCCESSFULLY)
+                    callback(SuccessMessages.PROFILE_PICTURE_UPDATED_SUCCESSFULLY)
                 }.addOnFailureListener {
-                    callback(Constants.ERROR_UPDATING_PROFILE_PICTURE)
+                    callback(ErrorMessages.ERROR_UPDATING_PROFILE_PICTURE)
                 }
         }
     }

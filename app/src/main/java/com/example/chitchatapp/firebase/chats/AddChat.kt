@@ -1,7 +1,7 @@
 package com.example.chitchatapp.firebase.chats
 
-import com.example.chitchatapp.Constants
-import com.example.chitchatapp.enums.ChatMessageEnums
+import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.ChatModel
@@ -30,7 +30,7 @@ class AddChat {
                 listOf(
                     ChatMessageModel(
                         chatDocId,
-                        ChatMessageEnums.ChatMessageTypeFirstMessage,
+                        ChatMessageType.TypeFirstMessage,
                         "Hi, I am ${loggedInUser?.displayName.toString()}.",
                         null,
                         null,
@@ -43,7 +43,7 @@ class AddChat {
                 )
             )
 
-            firestore.collection(Constants.FIRESTORE_CHATS_COLLECTION).document(chatDocId)
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatDocId)
                 .set(data)
                 .addOnSuccessListener {
                     onSuccess(true)

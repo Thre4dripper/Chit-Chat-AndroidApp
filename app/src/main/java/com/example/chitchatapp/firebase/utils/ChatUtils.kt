@@ -1,6 +1,6 @@
 package com.example.chitchatapp.firebase.utils
 
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.FirestoreCollections
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUtils {
@@ -22,7 +22,7 @@ class ChatUtils {
             callback: (Boolean) -> Unit,
         ) {
             val chatDocId = getChatDocId(chatUserId1, chatUserId2)
-            firestore.collection(Constants.FIRESTORE_CHATS_COLLECTION)
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION)
                 .document(chatDocId)
                 .get()
                 .addOnSuccessListener {

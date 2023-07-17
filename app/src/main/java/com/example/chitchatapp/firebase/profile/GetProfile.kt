@@ -1,6 +1,6 @@
 package com.example.chitchatapp.firebase.profile
 
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.models.UserModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,7 +30,7 @@ class GetProfile {
             uid: String?,
             profile: (UserModel?) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION)
+            firestore.collection(FirestoreCollections.USERS_COLLECTION)
                 .document(uid!!)
                 .get()
                 .addOnSuccessListener {
@@ -47,7 +47,7 @@ class GetProfile {
             username: String,
             profile: (UserModel?) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION)
+            firestore.collection(FirestoreCollections.USERS_COLLECTION)
                 .document(username)
                 .get()
                 .addOnSuccessListener {

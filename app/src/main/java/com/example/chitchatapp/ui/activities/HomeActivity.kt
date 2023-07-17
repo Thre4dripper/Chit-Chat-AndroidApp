@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.chitchatapp.Constants
 import com.example.chitchatapp.R
+import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.databinding.ActivityHomeBinding
+import com.example.chitchatapp.enums.FragmentType
 import com.example.chitchatapp.viewModels.HomeViewModel
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -58,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
         binding.completeProfileLl.visibility = View.GONE
         binding.completeProfileBtn.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
-            intent.putExtra(Constants.FRAGMENT_TYPE, Constants.FRAGMENT_USERNAME)
+            intent.putExtra(Constants.FRAGMENT_TYPE, FragmentType.FRAGMENT_USERNAME.name)
             startActivity(intent)
         }
 

@@ -1,6 +1,9 @@
 package com.example.chitchatapp.firebase.auth
 
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.ErrorMessages
+import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.constants.SuccessMessages
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.firebase.utils.CrudUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
@@ -25,7 +28,8 @@ class FireStoreRegister {
                 )
 
                 //register user with uid as document id
-                firestore.collection(Constants.FIRESTORE_USER_COLLECTION).document(user.uid)
+                firestore.collection(FirestoreCollections.USERS_COLLECTION)
+                    .document(user.uid)
                     .set(data).addOnSuccessListener {
                         onSuccess(true)
                     }.addOnFailureListener {
@@ -42,28 +46,28 @@ class FireStoreRegister {
         ) {
             Utils.checkAvailableUsername(firestore, username) { isAvailable ->
                 if (!isAvailable) {
-                    callback(Constants.USERNAME_ALREADY_EXISTS)
+                    callback(ErrorMessages.USERNAME_ALREADY_EXISTS)
                     return@checkAvailableUsername
                 }
 
                 //get data from uid document
                 getDataFromUIDDocument(firestore, user!!) { userMap ->
                     if (userMap == null) {
-                        callback(Constants.ERROR_UPDATING_USERNAME)
+                        callback(ErrorMessages.ERROR_UPDATING_USERNAME)
                         return@getDataFromUIDDocument
                     }
-                    userMap[Constants.FIRESTORE_USER_USERNAME] = username
+                    userMap[UserConstants.USERNAME] = username
 
                     //create new document with username as document id
                     createNewUsernameDocument(firestore, username, userMap) { isCreated ->
                         if (!isCreated) {
-                            callback(Constants.ERROR_UPDATING_USERNAME)
+                            callback(ErrorMessages.ERROR_UPDATING_USERNAME)
                             return@createNewUsernameDocument
                         }
                         //delete user document with uid as document id
                         deleteUIDDocument(firestore, user) { isDeleted ->
                             if (!isDeleted) {
-                                callback(Constants.ERROR_UPDATING_USERNAME)
+                                callback(ErrorMessages.ERROR_UPDATING_USERNAME)
                                 return@deleteUIDDocument
                             }
 
@@ -71,8 +75,8 @@ class FireStoreRegister {
                             registerInUIDCollection(firestore, user, username)
                             { isRegistered ->
                                 callback(
-                                    if (isRegistered) Constants.USERNAME_UPDATED_SUCCESSFULLY
-                                    else Constants.ERROR_UPDATING_USERNAME
+                                    if (isRegistered) SuccessMessages.USERNAME_UPDATED_SUCCESSFULLY
+                                    else ErrorMessages.ERROR_UPDATING_USERNAME
                                 )
                             }
                         }
@@ -91,7 +95,7 @@ class FireStoreRegister {
         ) {
             CrudUtils.getFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                FirestoreCollections.USERS_COLLECTION,
                 user.uid
             ) { userMap ->
                 callback(userMap)
@@ -106,7 +110,7 @@ class FireStoreRegister {
         ) {
             CrudUtils.createFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                FirestoreCollections.USERS_COLLECTION,
                 username,
                 userMap
             ) { isCreated ->
@@ -121,7 +125,7 @@ class FireStoreRegister {
         ) {
             CrudUtils.deleteFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_USER_COLLECTION,
+                FirestoreCollections.USERS_COLLECTION,
                 user.uid
             ) { isDeleted ->
                 callback(isDeleted)
@@ -135,10 +139,10 @@ class FireStoreRegister {
             callback: (Boolean) -> Unit
         ) {
             val data = hashMapOf<String, Any>()
-            data[Constants.FIRESTORE_USER_USERNAME] = username
+            data[UserConstants.USERNAME] = username
             CrudUtils.updateFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_REGISTERED_UID_COLLECTION,
+                FirestoreCollections.REGISTERED_IDS_COLLECTION,
                 user.uid,
                 data
             ) { isUpdated ->

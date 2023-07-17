@@ -3,7 +3,8 @@ package com.example.chitchatapp.repository
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.ErrorMessages
+import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.example.chitchatapp.firebase.profile.GetProfile
 import com.example.chitchatapp.firebase.profile.UpdateProfile
@@ -104,7 +105,7 @@ class UserDetailsRepository {
 
             StorageUtils.getUrlFromStorage(
                 storage,
-                "${Constants.FIREBASE_STORAGE_PROFILE_IMAGES}/$username",
+                "${StorageFolders.PROFILE_IMAGES_FOLDER}/$username",
                 profilePicture
             ) { url ->
                 if (url != null) {
@@ -114,7 +115,7 @@ class UserDetailsRepository {
                         callback(it)
                     }
                 } else {
-                    callback(Constants.ERROR_UPDATING_PROFILE_PICTURE)
+                    callback(ErrorMessages.ERROR_UPDATING_PROFILE_PICTURE)
                 }
             }
         }

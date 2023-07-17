@@ -1,7 +1,9 @@
 package com.example.chitchatapp.firebase.chats
 
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.ChatConstants
+import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.models.ChatModel
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 
 class GetChats {
@@ -13,23 +15,21 @@ class GetChats {
             username: String,
             onSuccess: (List<ChatModel>) -> Unit,
         ) {
-            firestore.collection(Constants.FIRESTORE_CHATS_COLLECTION)
-                .where(Filter.or(
-                    Filter.equalTo("chatUsername1", username),
-                    Filter.equalTo("chatUsername2", username)
-                ))
-                .get()
-                .addOnSuccessListener { result ->
-                    val chats = mutableListOf<ChatModel>()
-                    for (document in result) {
-                        val chat = document.toObject(ChatModel::class.java)
-                        chats.add(chat)
-                    }
-                    onSuccess(chats)
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION).where(
+                Filter.or(
+                    Filter.equalTo(ChatConstants.CHAT_USERNAME_1, username),
+                    Filter.equalTo(ChatConstants.CHAT_USERNAME_2, username)
+                )
+            ).get().addOnSuccessListener { result ->
+                val chats = mutableListOf<ChatModel>()
+                for (document in result) {
+                    val chat = document.toObject(ChatModel::class.java)
+                    chats.add(chat)
                 }
-                .addOnFailureListener {
-                    onSuccess(listOf())
-                }
+                onSuccess(chats)
+            }.addOnFailureListener {
+                onSuccess(listOf())
+            }
         }
     }
 }

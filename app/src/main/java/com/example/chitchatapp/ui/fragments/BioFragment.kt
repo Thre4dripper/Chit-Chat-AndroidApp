@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.SuccessMessages
 import com.example.chitchatapp.databinding.FragmentBioBinding
 import com.example.chitchatapp.viewModels.UserDetailsViewModel
 
@@ -56,7 +56,7 @@ class BioFragment : Fragment() {
         val bio = binding.bioEt.text.toString().trim()
 
         userDetailsViewModel.updateBio(requireContext(), bio) { message ->
-            if (message == Constants.BIO_UPDATED_SUCCESSFULLY) {
+            if (message == SuccessMessages.BIO_UPDATED_SUCCESSFULLY) {
                 requireActivity().finish()
             } else {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

@@ -2,7 +2,8 @@ package com.example.chitchatapp.repository
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.utils.CrudUtils
 import com.example.chitchatapp.firebase.utils.Utils
@@ -23,10 +24,10 @@ class HomeRepository {
 
             CrudUtils.getFirestoreDocument(
                 firestore,
-                Constants.FIRESTORE_REGISTERED_UID_COLLECTION,
+                FirestoreCollections.REGISTERED_IDS_COLLECTION,
                 user!!.uid,
                 onSuccess = { data ->
-                    onSuccess(data?.get(Constants.FIRESTORE_USER_USERNAME) as String?)
+                    onSuccess(data?.get(UserConstants.USERNAME) as String?)
                 }
             )
         }

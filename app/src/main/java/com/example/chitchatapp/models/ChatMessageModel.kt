@@ -1,11 +1,11 @@
 package com.example.chitchatapp.models
 
-import com.example.chitchatapp.enums.ChatMessageEnums
+import com.example.chitchatapp.enums.ChatMessageType
 import com.google.firebase.Timestamp
 
 data class ChatMessageModel(
     val chatMessageId: String,
-    val chatMessageType: ChatMessageEnums,
+    val chatMessageType: ChatMessageType,
     val chatMessage: String?,
     val chatMessageImage: String?,
     val chatMessageSticker: String?,
@@ -17,7 +17,7 @@ data class ChatMessageModel(
 ) {
     constructor() : this(
         "",
-        ChatMessageEnums.ChatMessageTypeFirstMessage,
+        ChatMessageType.TypeFirstMessage,
         "",
         "",
         "",

@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.ErrorMessages
+import com.example.chitchatapp.constants.SuccessMessages
 import com.example.chitchatapp.databinding.FragmentUsernameBinding
 import com.example.chitchatapp.store.UserDetails
 import com.example.chitchatapp.viewModels.UserDetailsViewModel
@@ -86,14 +87,14 @@ class UsernameFragment : Fragment() {
 
         userDetailsViewModel.updateUsername(username) { message ->
             when (message) {
-                Constants.USERNAME_UPDATED_SUCCESSFULLY -> {
+                SuccessMessages.USERNAME_UPDATED_SUCCESSFULLY -> {
                     //saving username in shared preferences
                     UserDetails.saveUsername(requireActivity(), username)
 
                     requireActivity().finish()
                 }
 
-                Constants.USERNAME_ALREADY_EXISTS -> {
+                ErrorMessages.USERNAME_ALREADY_EXISTS -> {
                     binding.usernameEt.error = message
                 }
 

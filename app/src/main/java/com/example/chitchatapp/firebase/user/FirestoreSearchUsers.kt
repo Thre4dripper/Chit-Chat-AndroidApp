@@ -1,6 +1,7 @@
 package com.example.chitchatapp.firebase.user
 
-import com.example.chitchatapp.Constants
+import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.models.UserModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,8 +14,8 @@ class FirestoreSearchUsers {
             searchQuery: String,
             searchResult: (List<UserModel>) -> Unit
         ) {
-            firestore.collection(Constants.FIRESTORE_USER_COLLECTION)
-                .orderBy(Constants.FIRESTORE_USER_USERNAME)
+            firestore.collection(FirestoreCollections.USERS_COLLECTION)
+                .orderBy(UserConstants.USERNAME)
                 .startAt(searchQuery)
                 .endAt(searchQuery + "\uf8ff")
                 .get()
