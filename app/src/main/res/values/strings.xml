@@ -50,4 +50,12 @@
     <string name="item_add_chats_text_username">\@%s</string>
     <string name="item_add_chats_text_name">Name</string>
     <string name="item_add_chats_desc_message_btn">Message</string>
+
+    //Item Home Chat
+    <string name="item_home_chat_desc_profile_image">@string/item_add_chats_desc_profile_image</string>
+    <string name="item_home_chat_text_username">@string/item_add_chats_text_username</string>
+    <string name="item_home_chat_text_message">Message</string>
+    <string name="item_home_chat_text_time">10:00 AM</string>
+    <string name="item_home_chat_text_unread_count">2</string>
+
 </resources>
