@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.HomeRepository
@@ -19,10 +19,9 @@ import com.google.firebase.auth.FirebaseUser
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "HomeViewModel"
 
-    val profileImage = Transformations.map(UserDetailsRepository.userDetails) {
-        it?.profileImage
-    }
-
+    private val _userDetails = UserDetailsRepository.userDetails
+    val userDetails: LiveData<UserModel?>
+        get() = _userDetails
     var isFirebaseUILaunched = false
 
     private val _homeChats = HomeRepository.homeChats

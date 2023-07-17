@@ -19,7 +19,7 @@ import com.google.firebase.storage.FirebaseStorage
 class UserDetailsRepository {
     companion object {
         private const val TAG = "UserDetailsRepository"
-        val userDetails = MutableLiveData<UserModel>()
+        val userDetails = MutableLiveData<UserModel?>(null)
 
         fun getUserDetails(context: Context, onSuccess: (Boolean) -> Unit) {
             val firestore = FirebaseFirestore.getInstance()
