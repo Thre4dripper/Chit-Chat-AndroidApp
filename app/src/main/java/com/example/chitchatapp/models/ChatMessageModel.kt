@@ -11,7 +11,7 @@ data class ChatMessageModel(
     val chatMessageSticker: String?,
     val chatMessageReply: ChatMessageModel?,
     val chatMessageTime: Timestamp,
-    val chatMessageSeen: Boolean,
+    val chatMessageSeen: List<String>,
     val chatMessageFrom: String,
     val chatMessageTo: String,
 ) {
@@ -23,7 +23,7 @@ data class ChatMessageModel(
         "",
         null,
         Timestamp.now(),
-        false,
+        listOf(""),
         "",
         "",
     )

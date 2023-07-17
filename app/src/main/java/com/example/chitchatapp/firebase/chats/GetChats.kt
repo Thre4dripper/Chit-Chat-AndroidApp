@@ -20,15 +20,21 @@ class GetChats {
                     Filter.equalTo(ChatConstants.CHAT_USERNAME_1, username),
                     Filter.equalTo(ChatConstants.CHAT_USERNAME_2, username)
                 )
-            ).get().addOnSuccessListener { result ->
+            ).addSnapshotListener { value, error ->
+                if (error != null) {
+                    onSuccess(listOf())
+                    return@addSnapshotListener
+                }
+
                 val chats = mutableListOf<ChatModel>()
-                for (document in result) {
-                    val chat = document.toObject(ChatModel::class.java)
+                for (doc in value!!) {
+                    val chat = doc.toObject(ChatModel::class.java)
                     chats.add(chat)
                 }
-                onSuccess(chats)
-            }.addOnFailureListener {
-                onSuccess(listOf())
+
+                val sortedChats =
+                    chats.sortedByDescending { it.chatMessages.last().chatMessageTime }
+                onSuccess(sortedChats)
             }
         }
     }

@@ -62,6 +62,13 @@ class HomeChatsRecyclerAdapter(private var loggedInUsername: String) :
                 itemHomeChatMessageTime.text = time
 
                 itemHomeChatMessage.text = chatModel.chatMessages.last().chatMessage?.trim() ?: ""
+
+                val unreadMessages = chatModel.chatMessages.filter {
+                    !it.chatMessageSeen.contains(loggedInUsername)
+                }.size
+                itemHomeChatCountTv.text = unreadMessages.toString()
+                itemHomeChatCountCv.visibility = if (unreadMessages > 0) View.VISIBLE else View.GONE
+
             }
         }
     }

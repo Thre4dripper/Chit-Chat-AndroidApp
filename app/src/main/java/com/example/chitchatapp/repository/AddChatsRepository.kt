@@ -40,16 +40,7 @@ class AddChatsRepository {
                     return@checkIfChatExists
                 }
                 //otherwise add new chat
-                AddChat.addNewChat(firestore, loggedInUser, newChatUser, currentUser!!) { newChat ->
-                    if (newChat == null) return@addNewChat
-
-                    //add new chat to homeChats
-                    val oldHomeChats = ChatsRepository.homeChats.value?.toMutableList()
-                    val newChatsList = oldHomeChats?.toMutableList() ?: mutableListOf()
-                    newChatsList.add(newChat)
-                    ChatsRepository.homeChats.value = newChatsList
-                    onSuccess(true)
-                }
+                AddChat.addNewChat(firestore, loggedInUser, newChatUser, currentUser!!,onSuccess)
             }
         }
     }
