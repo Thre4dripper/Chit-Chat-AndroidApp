@@ -4,6 +4,7 @@ import com.example.chitchatapp.Constants
 import com.example.chitchatapp.enums.ChatMessageEnums
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatMessageModel
+import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
@@ -19,9 +20,14 @@ class AddChat {
             onSuccess: (Boolean) -> Unit,
         ) {
             val chatDocId = ChatUtils.getChatDocId(loggedInUser?.uid.toString(), newChatUser.uid)
-
-            val data = hashMapOf(
-                "chats" to listOf(
+            val data = ChatModel(
+                chatDocId,
+                senderUser.username,
+                newChatUser.username,
+                senderUser.profileImage,
+                newChatUser.profileImage,
+                false,
+                listOf(
                     ChatMessageModel(
                         chatDocId,
                         ChatMessageEnums.ChatMessageTypeFirstMessage,
