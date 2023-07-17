@@ -14,6 +14,10 @@ class GetChats {
             onSuccess: (List<ChatModel>) -> Unit,
         ) {
             firestore.collection(Constants.FIRESTORE_CHATS_COLLECTION)
+                .where(Filter.or(
+                    Filter.equalTo("chatUsername1", username),
+                    Filter.equalTo("chatUsername2", username)
+                ))
                 .get()
                 .addOnSuccessListener { result ->
                     val chats = mutableListOf<ChatModel>()
