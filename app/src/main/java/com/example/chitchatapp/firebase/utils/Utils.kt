@@ -62,15 +62,5 @@ class Utils {
                     available(false)
                 }
         }
-
-        fun getChatDocId(
-            chatUserId1: String,
-            chatUserId2: String,
-        ): String {
-            return if (chatUserId1 < chatUserId2)
-                "$chatUserId1-$chatUserId2"
-            else
-                "$chatUserId2-$chatUserId1"
-        }
     }
 }

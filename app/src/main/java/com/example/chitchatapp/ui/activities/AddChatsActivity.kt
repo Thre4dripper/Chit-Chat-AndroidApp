@@ -92,6 +92,7 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
         //start chat activity
         viewModel.addChat(user) {
             Toast.makeText(this, "Chat added", Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 }

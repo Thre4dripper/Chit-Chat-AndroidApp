@@ -3,6 +3,7 @@ package com.example.chitchatapp.repository
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.firebase.chats.AddChat
 import com.example.chitchatapp.firebase.user.FirestoreSearchUsers
+import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,15 +29,21 @@ class AddChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = FirebaseAuth.getInstance().currentUser
-
             val currentUser = UserDetailsRepository.userDetails.value
-            AddChat.addNewChat(
-                firestore,
-                loggedInUser,
-                newChatUser,
-                currentUser!!,
-                onSuccess
-            )
+
+            // Check if chat already exists
+            ChatUtils.checkIfChatExists(
+                firestore, loggedInUser!!.uid, newChatUser.uid
+            ) {
+                if (it) {
+                    onSuccess(true)
+                    return@checkIfChatExists
+                }
+                //otherwise add new chat
+                AddChat.addNewChat(
+                    firestore, loggedInUser, newChatUser, currentUser!!, onSuccess
+                )
+            }
         }
     }
 }
