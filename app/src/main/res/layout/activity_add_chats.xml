@@ -75,8 +75,8 @@
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/add_chats_loading_lottie"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
