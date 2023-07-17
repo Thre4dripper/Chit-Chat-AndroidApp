@@ -44,10 +44,10 @@ class AddChatsRepository {
                     if (newChat == null) return@addNewChat
 
                     //add new chat to homeChats
-                    val oldHomeChats = HomeRepository.homeChats.value?.toMutableList()
+                    val oldHomeChats = ChatsRepository.homeChats.value?.toMutableList()
                     val newChatsList = oldHomeChats?.toMutableList() ?: mutableListOf()
                     newChatsList.add(newChat)
-                    HomeRepository.homeChats.value = newChatsList
+                    ChatsRepository.homeChats.value = newChatsList
                     onSuccess(true)
                 }
             }

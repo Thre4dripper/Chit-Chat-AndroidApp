@@ -9,6 +9,7 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
+import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserDetailsRepository
 import com.example.chitchatapp.store.UserDetails
@@ -24,7 +25,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         get() = _userDetails
     var isFirebaseUILaunched = false
 
-    private val _homeChats = HomeRepository.homeChats
+    private val _homeChats = ChatsRepository.homeChats
     val homeChats: LiveData<List<ChatModel>?>
         get() = _homeChats
 
@@ -61,6 +62,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         //clear all data on sign out
         AddChatsRepository.searchResult.value = ArrayList()
         UserDetailsRepository.userDetails.value = null
+        ChatsRepository.homeChats.value = null
         UserDetails.saveUsername(context, null)
         AuthRepository.signOutUser(context, onSuccess)
     }
@@ -81,5 +83,5 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getChats(
         context: Context
-    ) = HomeRepository.getChats(context)
+    ) = ChatsRepository.getAllUserChats(context)
 }
