@@ -23,7 +23,7 @@ class AddChatsRepository {
         }
 
         fun addChat(
-            chatUserId: String,
+            newChatUser: UserModel,
             onSuccess: (Boolean) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
@@ -33,8 +33,8 @@ class AddChatsRepository {
             AddChat.addNewChat(
                 firestore,
                 loggedInUser,
-                chatUserId,
-                currentUser!!.username,
+                newChatUser,
+                currentUser!!,
                 onSuccess
             )
         }

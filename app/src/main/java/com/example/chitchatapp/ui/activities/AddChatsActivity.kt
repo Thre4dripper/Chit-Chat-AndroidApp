@@ -81,7 +81,7 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
 
     override fun onAddChat(user: UserModel) {
         //start chat activity
-        viewModel.addChat(user.uid) {
+        viewModel.addChat(user) {
             Toast.makeText(this, "Chat added", Toast.LENGTH_SHORT).show()
         }
     }

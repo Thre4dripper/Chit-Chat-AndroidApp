@@ -1,6 +1,7 @@
 package com.example.chitchatapp.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
 
 class AddChatsViewModel : ViewModel() {
@@ -11,7 +12,7 @@ class AddChatsViewModel : ViewModel() {
     ) = AddChatsRepository.searchUsers(searchQuery)
 
     fun addChat(
-        chatUserId: String,
+        newChatUser: UserModel,
         onSuccess: (Boolean) -> Unit,
-    ) = AddChatsRepository.addChat(chatUserId, onSuccess)
+    ) = AddChatsRepository.addChat(newChatUser, onSuccess)
 }
