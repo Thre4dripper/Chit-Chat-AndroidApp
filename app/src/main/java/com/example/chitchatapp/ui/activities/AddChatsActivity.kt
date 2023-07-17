@@ -57,13 +57,20 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
             binding.addChatsLottie.visibility =
                 if (it.isEmpty()) View.VISIBLE else View.GONE
             addChatsAdapter.submitList(it)
+
+            //hiding loading lottie
+            binding.addChatsLoadingLottie.visibility = View.GONE
         }
     }
 
     private fun searchUsers() {
+        //initial work
         debounceHandler = Handler(mainLooper)
-        binding.addChatsSearchEt.addTextChangedListener(onTextChanged = { text, _, _, _ ->
+        viewModel.searchUsers("")
+        binding.addChatsLoadingLottie.visibility = View.GONE
 
+
+        binding.addChatsSearchEt.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             //removing all callbacks and messages from the handler
             debounceHandler.removeCallbacksAndMessages(null)
 
@@ -72,9 +79,11 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
 
             //adding a delay of 500ms to the callback
             debounceHandler.postDelayed({
-                if (text.toString().isNotEmpty()) {
-                    viewModel.searchUsers(text.toString())
-                }
+                binding.addChatsLoadingLottie.visibility = View.VISIBLE
+                binding.addChatsLottie.visibility = View.GONE
+                addChatsAdapter.submitList(listOf())
+
+                viewModel.searchUsers(text.toString())
             }, 500)
         })
     }
