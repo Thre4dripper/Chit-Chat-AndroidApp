@@ -54,7 +54,7 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
         }
 
         viewModel.searchedUsers.observe(this) {
-            binding.addChatsLottie.visibility =
+            binding.addChatsNoResultsLottie.visibility =
                 if (it.isEmpty()) View.VISIBLE else View.GONE
             addChatsAdapter.submitList(it)
 
@@ -67,7 +67,8 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
         //initial work
         debounceHandler = Handler(mainLooper)
         viewModel.searchUsers("")
-        binding.addChatsLoadingLottie.visibility = View.GONE
+        binding.addChatsNoResultsLottie.visibility = View.GONE
+        binding.addChatsLoadingLottie.visibility = View.VISIBLE
 
 
         binding.addChatsSearchEt.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -80,7 +81,7 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
             //adding a delay of 500ms to the callback
             debounceHandler.postDelayed({
                 binding.addChatsLoadingLottie.visibility = View.VISIBLE
-                binding.addChatsLottie.visibility = View.GONE
+                binding.addChatsNoResultsLottie.visibility = View.GONE
                 addChatsAdapter.submitList(listOf())
 
                 viewModel.searchUsers(text.toString())

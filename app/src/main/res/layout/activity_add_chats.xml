@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/add_chats_lottie"
+                android:id="@+id/add_chats_no_results_lottie"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -83,8 +83,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading"
-                app:lottie_speed="0.5" />
+                app:lottie_rawRes="@raw/loading" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/add_chats_rv"

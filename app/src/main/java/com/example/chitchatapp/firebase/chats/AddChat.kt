@@ -17,7 +17,7 @@ class AddChat {
             loggedInUser: FirebaseUser?,
             newChatUser: UserModel,
             senderUser: UserModel,
-            onSuccess: (Boolean) -> Unit,
+            onSuccess: (addedChat: ChatModel?) -> Unit,
         ) {
             val chatDocId = ChatUtils.getChatDocId(loggedInUser?.uid.toString(), newChatUser.uid)
             val data = ChatModel(
@@ -46,10 +46,10 @@ class AddChat {
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatDocId)
                 .set(data)
                 .addOnSuccessListener {
-                    onSuccess(true)
+                    onSuccess(data)
                 }
                 .addOnFailureListener {
-                    onSuccess(false)
+                    onSuccess(null)
                 }
         }
     }

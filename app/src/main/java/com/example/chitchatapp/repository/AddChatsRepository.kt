@@ -34,15 +34,22 @@ class AddChatsRepository {
             // Check if chat already exists
             ChatUtils.checkIfChatExists(
                 firestore, loggedInUser!!.uid, newChatUser.uid
-            ) {
-                if (it) {
+            ) { isExist ->
+                if (isExist) {
                     onSuccess(true)
                     return@checkIfChatExists
                 }
                 //otherwise add new chat
-                AddChat.addNewChat(
-                    firestore, loggedInUser, newChatUser, currentUser!!, onSuccess
-                )
+                AddChat.addNewChat(firestore, loggedInUser, newChatUser, currentUser!!) { newChat ->
+                    if (newChat == null) return@addNewChat
+
+                    //add new chat to homeChats
+                    val oldHomeChats = HomeRepository.homeChats.value?.toMutableList()
+                    val newChatsList = oldHomeChats?.toMutableList() ?: mutableListOf()
+                    newChatsList.add(newChat)
+                    HomeRepository.homeChats.value = newChatsList
+                    onSuccess(true)
+                }
             }
         }
     }
