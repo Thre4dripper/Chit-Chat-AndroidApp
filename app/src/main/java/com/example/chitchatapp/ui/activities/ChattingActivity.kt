@@ -1,8 +1,8 @@
 package com.example.chitchatapp.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -11,8 +11,10 @@ import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
+import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 
+@Suppress("DEPRECATION")
 class ChattingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChattingBinding
     private lateinit var viewModel: ChattingViewModel
@@ -23,7 +25,14 @@ class ChattingActivity : AppCompatActivity() {
 
         val chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME) ?: ""
-        getChatDetails(chatId, loggedInUsername)
+
+        val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
+
+        //user model is null when the user is adding a new chat
+        if (userModel != null)
+            createNewChat(userModel)
+        else
+            getChatDetails(chatId, loggedInUsername)
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
@@ -46,5 +55,22 @@ class ChattingActivity : AppCompatActivity() {
             }
         }
         viewModel.getChatDetails(chatId)
+    }
+
+    private fun createNewChat(userModel: UserModel) {
+        binding.loadingLottie.visibility = View.VISIBLE
+
+        //set the header with available details so far
+        binding.chattingUsername.text = userModel.username
+        Glide
+            .with(this)
+            .load(userModel.profileImage)
+            .placeholder(R.drawable.ic_profile)
+            .circleCrop()
+            .into(binding.chattingProfileImage)
+
+        viewModel.createNewChat(userModel) {
+            binding.loadingLottie.visibility = View.GONE
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.example.chitchatapp.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.AddChatsRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.AddChatInterface
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityAddChatsBinding
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.AddChatsViewModel
@@ -89,11 +90,12 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
         })
     }
 
-    override fun onAddChat(user: UserModel) {
+    override fun onAddChat(userModel: UserModel) {
         //start chat activity
-        viewModel.addChat(user) {
-            Toast.makeText(this, "Chat added", Toast.LENGTH_SHORT).show()
-            finish()
-        }
+        val intent = Intent(this, ChattingActivity::class.java)
+        intent.putExtra(UserConstants.USER_MODEL, userModel)
+        startActivity(intent)
+        finish()
+        viewModel.addChat(userModel) {}
     }
 }
