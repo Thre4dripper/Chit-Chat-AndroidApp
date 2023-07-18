@@ -61,4 +61,11 @@
     <string name="item_home_chat_text_time">10:00 AM</string>
     <string name="item_home_chat_text_unread_count">2</string>
 
+    //Chatting Activity
+    <string name="chatting_activity_desc_back_btn">Back</string>
+    <string name="chatting_activity_desc_profile_image">@string/item_add_chats_desc_profile_image</string>
+    <string name="chatting_activity_text_username">@string/item_add_chats_text_username</string>
+    <string name="chatting_activity_text_last_seen">Last Seen %s</string>
+    <string name="chatting_activity_desc_menu">Menu</string>
+
 </resources>

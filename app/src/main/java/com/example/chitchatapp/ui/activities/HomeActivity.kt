@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.HomeChatsRecyclerAdapter
+import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.example.chitchatapp.enums.FragmentType
@@ -19,7 +20,7 @@ import com.example.chitchatapp.viewModels.HomeViewModel
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), ChatClickInterface {
     private val TAG = "HomeActivity"
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeViewModel
@@ -206,7 +207,7 @@ class HomeActivity : AppCompatActivity() {
             if (it == null) return@observe
 
             binding.homeChatRv.apply {
-                homeChatsAdapter = HomeChatsRecyclerAdapter(it.username)
+                homeChatsAdapter = HomeChatsRecyclerAdapter(it.username, this@HomeActivity)
                 addItemDecoration(
                     DividerItemDecoration(
                         this@HomeActivity,
@@ -219,5 +220,9 @@ class HomeActivity : AppCompatActivity() {
             //get chats when user details are fetched
             viewModel.getChats(this)
         }
+    }
+
+    override fun onChatClicked(chatId: String) {
+        startActivity(Intent(this, ChattingActivity::class.java))
     }
 }

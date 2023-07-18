@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemHomeChatBinding
 import com.example.chitchatapp.models.ChatModel
 
-class HomeChatsRecyclerAdapter(private var loggedInUsername: String) :
+class HomeChatsRecyclerAdapter(
+    private var loggedInUsername: String,
+    private var chatClickInterface: ChatClickInterface
+) :
     ListAdapter<ChatModel, HomeChatsRecyclerAdapter.ChatsViewHolder>(ChatsDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatsViewHolder {
@@ -69,6 +73,10 @@ class HomeChatsRecyclerAdapter(private var loggedInUsername: String) :
                 itemHomeChatCountTv.text = unreadMessages.toString()
                 itemHomeChatCountCv.visibility = if (unreadMessages > 0) View.VISIBLE else View.GONE
 
+            }
+
+            binding.root.setOnClickListener {
+                chatClickInterface.onChatClicked(chatModel.chatId)
             }
         }
     }
