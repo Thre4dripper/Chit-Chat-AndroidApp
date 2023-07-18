@@ -73,4 +73,8 @@
     <string name="chatting_screen_menu_wallpaper">Wallpaper</string>
     <string name="chatting_screen_menu_clear_chat">Clear Chat</string>
     <string name="chatting_screen_menu_delete_chat">Delete Chat</string>
+
+    //Item Chat
+    <string name="item_chat_text_message">Hey!!</string>
+    <string name="item_chat_text_time">10:00 AM</string>
 </resources>

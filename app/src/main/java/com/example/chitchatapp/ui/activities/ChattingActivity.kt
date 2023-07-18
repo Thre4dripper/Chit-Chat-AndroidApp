@@ -45,15 +45,14 @@ class ChattingActivity : AppCompatActivity() {
             popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                   R.id.action_view_contact -> {
-                       //TODO: open the contact details screen
-                   }
-                    R.id.action_wallpaper -> {
-                        //TODO: open the wallpaper screen
+                    R.id.action_view_contact -> {
+                        //TODO: open the contact details screen
                     }
+
                     R.id.action_clear_chat -> {
                         //TODO: clear the chat
                     }
+
                     R.id.action_delete_chat -> {
                         //TODO: delete the chat
                     }

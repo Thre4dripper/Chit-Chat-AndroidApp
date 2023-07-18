@@ -6,10 +6,6 @@
         android:title="@string/chatting_screen_menu_view_contact" />
 
     <item
-        android:id="@+id/action_wallpaper"
-        android:title="@string/chatting_screen_menu_wallpaper" />
-
-    <item
         android:id="@+id/action_clear_chat"
         android:title="@string/chatting_screen_menu_clear_chat" />
 
