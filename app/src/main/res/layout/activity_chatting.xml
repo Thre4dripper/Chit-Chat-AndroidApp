@@ -74,10 +74,11 @@
             android:layout_height="0dp"
             android:layout_marginTop="12dp"
             android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/message_sending_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chatting_profile_image" />
+            app:layout_constraintTop_toBottomOf="@+id/chatting_profile_image"
+            tools:listitem="@layout/item_chat_receiver_text" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading_lottie"
@@ -90,5 +91,69 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/loading" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/message_sending_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/textColorPrimary"
+                app:layout_constraintBottom_toTopOf="@+id/send_message_et"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/add_photo_btn_ll"
+                style="@style/SendMessageLayoutActionContainerStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <ImageView
+                    android:id="@+id/photo_add_btn"
+                    style="@style/SendMessageLayoutActionBtnStyle"
+                    android:contentDescription="@string/chatting_activity_desc_browse_image"
+                    android:src="@drawable/ic_photo" />
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/send_message_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:autofillHints=""
+                android:background="@drawable/chat_et_bg"
+                android:hint="@string/chatting_activity_text_message"
+                android:inputType="textMultiLine"
+                android:minHeight="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/send_message_btn_ll"
+                app:layout_constraintStart_toEndOf="@+id/add_photo_btn_ll" />
+
+            <FrameLayout
+                android:id="@+id/send_message_btn_ll"
+                style="@style/SendMessageLayoutActionContainerStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <ImageView
+                    android:id="@+id/send_message_btn"
+                    style="@style/SendMessageLayoutActionBtnStyle"
+                    android:contentDescription="@string/chatting_activity_desc_send_message"
+                    android:src="@drawable/ic_send" />
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -55,6 +55,8 @@
         <item name="android:padding">4dp</item>
     </style>
 
+    //Fragment Style
+
     <style name="ActivityFragmentLabelStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -98,5 +100,23 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    //Fragment Styles
+    //Chatting Activity
+
+    <style name="SendMessageLayoutActionContainerStyle">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="SendMessageLayoutActionBtnStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:contentDescription">send</item>
+        <item name="android:focusable">true</item>
+        <item name="tint">@color/fabColor</item>
+    </style>
 </resources>
