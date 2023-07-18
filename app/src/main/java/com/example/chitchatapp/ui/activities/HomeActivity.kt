@@ -124,6 +124,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        @Suppress("DEPRECATION")
         if (binding.homeAddChatFab.isOrWillBeShown)
             binding.homeActionFab.performClick()
         else

@@ -2,6 +2,7 @@ package com.example.chitchatapp.ui.activities
 
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +15,6 @@ import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 
-@Suppress("DEPRECATION")
 class ChattingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChattingBinding
     private lateinit var viewModel: ChattingViewModel
@@ -26,6 +26,7 @@ class ChattingActivity : AppCompatActivity() {
         val chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME) ?: ""
 
+        @Suppress("DEPRECATION")
         val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
 
         //user model is null when the user is adding a new chat
@@ -33,6 +34,34 @@ class ChattingActivity : AppCompatActivity() {
             createNewChat(userModel)
         else
             getChatDetails(chatId, loggedInUsername)
+
+        binding.chattingBackBtn.setOnClickListener { finish() }
+        setMenu()
+    }
+
+    private fun setMenu() {
+        binding.chattingMenu.setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                   R.id.action_view_contact -> {
+                       //TODO: open the contact details screen
+                   }
+                    R.id.action_wallpaper -> {
+                        //TODO: open the wallpaper screen
+                    }
+                    R.id.action_clear_chat -> {
+                        //TODO: clear the chat
+                    }
+                    R.id.action_delete_chat -> {
+                        //TODO: delete the chat
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        }
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {

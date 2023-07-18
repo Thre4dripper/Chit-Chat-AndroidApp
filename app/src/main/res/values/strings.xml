@@ -68,4 +68,9 @@
     <string name="chatting_activity_text_last_seen">Last Seen %s</string>
     <string name="chatting_activity_desc_menu">Menu</string>
 
+    //Chatting Screen Menu
+    <string name="chatting_screen_menu_view_contact">View Contact</string>
+    <string name="chatting_screen_menu_wallpaper">Wallpaper</string>
+    <string name="chatting_screen_menu_clear_chat">Clear Chat</string>
+    <string name="chatting_screen_menu_delete_chat">Delete Chat</string>
 </resources>
