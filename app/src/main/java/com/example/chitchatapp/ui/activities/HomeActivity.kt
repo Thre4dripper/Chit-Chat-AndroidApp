@@ -119,6 +119,14 @@ class HomeActivity : AppCompatActivity() {
 //        }
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (binding.homeAddChatFab.isOrWillBeShown)
+            binding.homeActionFab.performClick()
+        else
+            super.onBackPressed()
+    }
+
     /**
      * This function will be called when user sign out from the app
      */
@@ -157,8 +165,9 @@ class HomeActivity : AppCompatActivity() {
     private fun setProfileImage() {
         binding.homeProfileImageProgressBar.visibility = View.VISIBLE
         viewModel.userDetails.observe(this) {
+            if (it == null) return@observe
             binding.homeProfileImageProgressBar.visibility = View.GONE
-            Glide.with(this).load(it?.profileImage).placeholder(R.drawable.ic_profile).circleCrop()
+            Glide.with(this).load(it.profileImage).placeholder(R.drawable.ic_profile).circleCrop()
                 .into(binding.profileImageBtn)
         }
     }
