@@ -75,6 +75,7 @@
     <string name="chatting_screen_menu_delete_chat">Delete Chat</string>
 
     //Item Chat
+    <string name="item_chat_desc_profile_image">@string/item_add_chats_desc_profile_image</string>
     <string name="item_chat_text_message">Hey!!</string>
     <string name="item_chat_text_time">10:00 AM</string>
 </resources>
