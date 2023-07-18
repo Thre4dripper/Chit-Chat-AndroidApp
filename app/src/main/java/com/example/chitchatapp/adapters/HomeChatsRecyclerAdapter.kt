@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemHomeChatBinding
+import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
 
 class HomeChatsRecyclerAdapter(
@@ -37,11 +38,10 @@ class HomeChatsRecyclerAdapter(
         fun bind(chatModel: ChatModel) {
             val context = itemView.context
 
-            val profileImage = if (chatModel.dmChatUser1.username == loggedInUsername) {
-                chatModel.dmChatUser2.profileImage
-            } else {
-                chatModel.dmChatUser1.profileImage
-            }
+            val profileImage = ChatUtils.getChatProfileImage(
+                chatModel,
+                loggedInUsername
+            )
 
             Glide.with(context)
                 .load(profileImage)
@@ -50,11 +50,10 @@ class HomeChatsRecyclerAdapter(
                 .into(binding.itemHomeChatProfileImage)
 
             binding.apply {
-                val username = if (chatModel.dmChatUser1.username == loggedInUsername) {
-                    chatModel.dmChatUser2.username
-                } else {
-                    chatModel.dmChatUser1.username
-                }
+                val username = ChatUtils.getChatUsername(
+                    chatModel,
+                    loggedInUsername
+                )
                 itemHomeChatUsername.text = username
 
                 val date = chatModel.chatMessages.last().chatMessageTime.toDate()

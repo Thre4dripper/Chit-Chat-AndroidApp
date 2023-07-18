@@ -1,76 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/homeBackground"
-    tools:context=".ui.activities.ChattingActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/add_chats_back_btn"
-        style="@style/BackButtonStyle"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/desc_back_btn"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:tint="@color/textColorPrimary" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/homeBackground"
+        tools:context=".ui.activities.ChattingActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/chatting_activity_desc_profile_image"
-        app:layout_constraintStart_toEndOf="@+id/add_chats_back_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        <ImageView
+            android:id="@+id/chatting_back_btn"
+            style="@style/BackButtonStyle"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/desc_back_btn"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="@+id/chatting_profile_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/chatting_profile_image"
+            app:tint="@color/textColorPrimary" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="@string/chatting_activity_text_username"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/imageView2"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        <ImageView
+            android:id="@+id/chatting_profile_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/chatting_activity_desc_profile_image"
+            app:layout_constraintStart_toEndOf="@+id/chatting_back_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chatting_activity_text_last_seen"
-        android:textColor="@color/lightGrey"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <TextView
+            android:id="@+id/chatting_username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/chatting_activity_text_username"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/chatting_menu"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/chatting_profile_image"
+            app:layout_constraintTop_toTopOf="@+id/chatting_profile_image" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        style="@style/BackButtonStyle"
-        android:contentDescription="@string/chatting_activity_desc_menu"
-        android:src="@drawable/ic_chat_menu"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:tint="@color/textColorPrimary" />
+        <TextView
+            android:id="@+id/chatting_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chatting_activity_text_last_seen"
+            android:textColor="@color/lightGrey"
+            app:layout_constraintBottom_toBottomOf="@+id/chatting_profile_image"
+            app:layout_constraintStart_toStartOf="@+id/chatting_username"
+            app:layout_constraintTop_toBottomOf="@+id/chatting_username" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/chatting_menu"
+            style="@style/BackButtonStyle"
+            android:contentDescription="@string/chatting_activity_desc_menu"
+            android:src="@drawable/ic_chat_menu"
+            app:layout_constraintBottom_toBottomOf="@+id/chatting_profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/chatting_profile_image"
+            app:tint="@color/textColorPrimary" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatting_rv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chatting_profile_image" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loading_lottie"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/chatting_rv"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

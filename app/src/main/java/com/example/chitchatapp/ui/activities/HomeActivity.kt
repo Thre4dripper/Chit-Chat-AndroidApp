@@ -13,7 +13,9 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.HomeChatsRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
+import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.example.chitchatapp.enums.FragmentType
 import com.example.chitchatapp.viewModels.HomeViewModel
@@ -223,6 +225,10 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     }
 
     override fun onChatClicked(chatId: String) {
-        startActivity(Intent(this, ChattingActivity::class.java))
+        val intent = Intent(this, ChattingActivity::class.java)
+        intent.putExtra(ChatConstants.CHAT_ID, chatId)
+        //username must be fetched before this
+        intent.putExtra(UserConstants.USERNAME, viewModel.userDetails.value!!.username)
+        startActivity(intent)
     }
 }

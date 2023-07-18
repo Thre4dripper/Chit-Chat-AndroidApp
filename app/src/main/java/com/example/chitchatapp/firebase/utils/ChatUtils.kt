@@ -1,6 +1,7 @@
 package com.example.chitchatapp.firebase.utils
 
 import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.models.ChatModel
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUtils {
@@ -31,6 +32,22 @@ class ChatUtils {
                 .addOnFailureListener {
                     callback(false)
                 }
+        }
+
+        fun getChatProfileImage(chatModel: ChatModel, loggedInUsername: String): String {
+            return if (chatModel.dmChatUser1.username == loggedInUsername) {
+                chatModel.dmChatUser2.profileImage
+            } else {
+                chatModel.dmChatUser1.profileImage
+            }
+        }
+
+        fun getChatUsername(chatModel: ChatModel, loggedInUsername: String): String {
+            return if (chatModel.dmChatUser1.username == loggedInUsername) {
+                chatModel.dmChatUser2.username
+            } else {
+                chatModel.dmChatUser1.username
+            }
         }
     }
 }
