@@ -96,6 +96,22 @@ class ChattingRecyclerAdapter(
             binding.itemChatRightTextMessage.text = chatMessageModel.chatMessage
             binding.itemChatRightTextTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
+
+            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatMessageStatusIv)
+
+            val senderUsername = ChatUtils.getChatUsername(chatModel, loggedInUsername)
+            binding.itemChatMessageStatusIv.visibility =
+                if (chatMessageModel.chatMessageSeen.contains(senderUsername)) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
         }
     }
 

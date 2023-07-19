@@ -40,17 +40,17 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/ic_seen"
+            android:src="@drawable/ic_profile"
             app:layout_constraintBottom_toBottomOf="@+id/item_chat_right_text_time"
             app:layout_constraintEnd_toStartOf="@+id/item_chat_right_text_time"
             app:layout_constraintTop_toTopOf="@+id/item_chat_right_text_time"
-            app:tint="@color/red"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/item_chat_right_text_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="@string/item_chat_text_time"
             android:textColor="@color/red"
             android:textSize="12sp"
