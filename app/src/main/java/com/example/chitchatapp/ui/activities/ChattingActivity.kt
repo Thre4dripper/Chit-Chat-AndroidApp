@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.ChattingRecyclerAdapter
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
@@ -18,6 +19,8 @@ import com.example.chitchatapp.viewModels.ChattingViewModel
 class ChattingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChattingBinding
     private lateinit var viewModel: ChattingViewModel
+
+    private lateinit var chattingAdapter: ChattingRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chatting)
@@ -80,9 +83,24 @@ class ChattingActivity : AppCompatActivity() {
                 val headerUsername = ChatUtils.getChatUsername(it, loggedInUsername)
 
                 binding.chattingUsername.text = headerUsername
+
+                getChatMessages()
             }
         }
         viewModel.getChatDetails(chatId)
+    }
+
+    private fun getChatMessages() {
+        binding.chattingRv.apply {
+            chattingAdapter = ChattingRecyclerAdapter()
+            adapter = chattingAdapter
+        }
+        viewModel.chatDetails.observe(this) {
+            if (it != null) {
+                val messages = it.chatMessages
+                chattingAdapter.submitList(messages)
+            }
+        }
     }
 
     private fun createNewChat(userModel: UserModel) {

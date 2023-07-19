@@ -10,6 +10,7 @@ import com.example.chitchatapp.models.UserModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.UUID
 
 class AddChat {
     companion object {
@@ -34,7 +35,7 @@ class AddChat {
                 false,
                 listOf(
                     ChatMessageModel(
-                        chatDocId,
+                        UUID.randomUUID().toString(),
                         ChatMessageType.TypeFirstMessage,
                         "Hi, I am ${loggedInUser?.displayName.toString()}.",
                         null,
