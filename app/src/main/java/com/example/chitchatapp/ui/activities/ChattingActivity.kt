@@ -28,7 +28,6 @@ class ChattingActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
 
         val chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
-        val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME) ?: ""
 
         @Suppress("DEPRECATION")
         val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
@@ -41,7 +40,7 @@ class ChattingActivity : AppCompatActivity() {
         if (userModel != null)
             createNewChat(userModel)
         else
-            getChatDetails(chatId, loggedInUsername)
+            getChatDetails(chatId)
 
         binding.chattingBackBtn.setOnClickListener { finish() }
         setMenu()
@@ -71,7 +70,16 @@ class ChattingActivity : AppCompatActivity() {
         }
     }
 
-    private fun getChatDetails(chatId: String, loggedInUsername: String) {
+    private fun getChatDetails(chatId: String) {
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+
+        //this may never happen
+        if (loggedInUsername == null) {
+            Toast.makeText(this, "Error getting logged in username", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getChatDetails(chatId).observe(this) {
             if (it != null) {
@@ -120,7 +128,7 @@ class ChattingActivity : AppCompatActivity() {
                 finish()
             }
             //otherwise if chat already exists then it will be that chat id
-            getChatDetails(it!!, userModel.username)
+            getChatDetails(it!!)
         }
     }
 }

@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
-import com.example.chitchatapp.databinding.ItemChatReceiverTextBinding
-import com.example.chitchatapp.databinding.ItemChatSenderTextBinding
+import com.example.chitchatapp.databinding.ItemChatLeftTextBinding
+import com.example.chitchatapp.databinding.ItemChatRightTextBinding
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
@@ -21,11 +21,12 @@ class ChattingRecyclerAdapter(
     private var chatModel: ChatModel
 ) :
     ListAdapter<ChatMessageModel, ViewHolder>(ChatMessageDiffCallback()) {
+    private val TAG = "ChattingRecyclerAdapter"
 
     companion object {
         const val VIEW_TYPE_FIRST_MESSAGE = 0
-        const val VIEW_TYPE_SENDER_MESSAGE = 1
-        const val VIEW_TYPE_RECEIVER_MESSAGE = 2
+        const val VIEW_TYPE_LEFT_MESSAGE = 1
+        const val VIEW_TYPE_RIGHT_MESSAGE = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,16 +37,16 @@ class ChattingRecyclerAdapter(
                 HelloMessageViewHolder(view)
             }
 
-            VIEW_TYPE_RECEIVER_MESSAGE -> {
+            VIEW_TYPE_RIGHT_MESSAGE -> {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_chat_receiver_text, parent, false)
-                ReceiverTextViewHolder(view)
+                    .inflate(R.layout.item_chat_right_text, parent, false)
+                RightTextViewHolder(view)
             }
 
-            VIEW_TYPE_SENDER_MESSAGE -> {
+            VIEW_TYPE_LEFT_MESSAGE -> {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_chat_sender_text, parent, false)
-                SenderTextViewHolder(view)
+                    .inflate(R.layout.item_chat_left_text, parent, false)
+                LeftTextViewHolder(view)
             }
 
             else -> null!!
@@ -56,13 +57,13 @@ class ChattingRecyclerAdapter(
         val item = getItem(position)
         when (holder.itemViewType) {
             VIEW_TYPE_FIRST_MESSAGE -> {}
-            VIEW_TYPE_SENDER_MESSAGE -> {
-                val viewHolder = holder as SenderTextViewHolder
+            VIEW_TYPE_LEFT_MESSAGE -> {
+                val viewHolder = holder as LeftTextViewHolder
                 viewHolder.bind(item)
             }
 
-            VIEW_TYPE_RECEIVER_MESSAGE -> {
-                val viewHolder = holder as ReceiverTextViewHolder
+            VIEW_TYPE_RIGHT_MESSAGE -> {
+                val viewHolder = holder as RightTextViewHolder
                 viewHolder.bind(item)
             }
         }
@@ -76,10 +77,10 @@ class ChattingRecyclerAdapter(
             }
 
             ChatMessageType.TypeMessage -> {
-                return if (item.chatMessageTo == loggedInUsername) {
-                    VIEW_TYPE_RECEIVER_MESSAGE
+                return if (item.chatMessageFrom == loggedInUsername) {
+                    VIEW_TYPE_RIGHT_MESSAGE
                 } else {
-                    VIEW_TYPE_SENDER_MESSAGE
+                    VIEW_TYPE_LEFT_MESSAGE
                 }
             }
 
@@ -88,18 +89,18 @@ class ChattingRecyclerAdapter(
     }
 
     inner class HelloMessageViewHolder(itemView: View) : ViewHolder(itemView)
-    inner class ReceiverTextViewHolder(itemView: View) : ViewHolder(itemView) {
-        private var binding = ItemChatReceiverTextBinding.bind(itemView)
+    inner class RightTextViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatRightTextBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
-            binding.itemChatReceiverTextMessage.text = chatMessageModel.chatMessage
-            binding.itemChatReceiverTextTime.text =
+            binding.itemChatRightTextMessage.text = chatMessageModel.chatMessage
+            binding.itemChatRightTextTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
         }
     }
 
-    inner class SenderTextViewHolder(itemView: View) : ViewHolder(itemView) {
-        private var binding = ItemChatSenderTextBinding.bind(itemView)
+    inner class LeftTextViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatLeftTextBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
             val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
@@ -108,10 +109,10 @@ class ChattingRecyclerAdapter(
                 .load(senderImage)
                 .circleCrop()
                 .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatSenderIv)
+                .into(binding.itemChatLeftIv)
 
-            binding.itemChatSenderTextMessage.text = chatMessageModel.chatMessage
-            binding.itemChatSenderTextTime.text =
+            binding.itemChatLeftTextMessage.text = chatMessageModel.chatMessage
+            binding.itemChatLeftTextTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
         }
     }

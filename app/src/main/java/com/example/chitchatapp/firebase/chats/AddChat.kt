@@ -18,15 +18,15 @@ class AddChat {
             firestore: FirebaseFirestore,
             loggedInUser: FirebaseUser?,
             newChatUser: UserModel,
-            senderUser: UserModel,
+            currentUser: UserModel,
             chatId: (String?) -> Unit,
         ) {
             val chatDocId = ChatUtils.getDMChatDocId(loggedInUser?.uid.toString(), newChatUser.uid)
             val data = ChatModel(
                 chatDocId,
                 DMChatUserModel(
-                    senderUser.username,
-                    senderUser.profileImage
+                    currentUser.username,
+                    currentUser.profileImage
                 ),
                 DMChatUserModel(
                     newChatUser.username,
@@ -42,8 +42,8 @@ class AddChat {
                         null,
                         null,
                         Timestamp.now(),
-                        listOf(senderUser.username),
-                        senderUser.username,
+                        listOf(currentUser.username),
+                        currentUser.username,
                         newChatUser.username,
                     ),
                     ChatMessageModel(
@@ -54,8 +54,8 @@ class AddChat {
                         null,
                         null,
                         Timestamp.now(),
-                        listOf(senderUser.username),
-                        senderUser.username,
+                        listOf(currentUser.username),
+                        currentUser.username,
                         newChatUser.username,
                     )
                 )
