@@ -13,7 +13,6 @@ import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
-import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 
@@ -69,7 +68,7 @@ class ChattingActivity : AppCompatActivity() {
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
         binding.loadingLottie.visibility = View.VISIBLE
-        viewModel.chatDetails.observe(this) {
+        viewModel.getChatDetails(chatId).observe(this) {
             if (it != null) {
                 binding.loadingLottie.visibility = View.GONE
 
@@ -85,21 +84,12 @@ class ChattingActivity : AppCompatActivity() {
 
                 binding.chattingUsername.text = headerUsername
 
-                getChatMessages(loggedInUsername, it)
-            }
-        }
-        viewModel.getChatDetails(chatId)
-    }
-
-    private fun getChatMessages(loggedInUsername: String, chatModel: ChatModel) {
-        binding.chattingRv.apply {
-            chattingAdapter = ChattingRecyclerAdapter(loggedInUsername, chatModel)
-            adapter = chattingAdapter
-        }
-        viewModel.chatDetails.observe(this) {
-            if (it != null) {
-                val messages = it.chatMessages
-                chattingAdapter.submitList(messages)
+                //init the recycler view
+                binding.chattingRv.apply {
+                    chattingAdapter = ChattingRecyclerAdapter(loggedInUsername, it)
+                    adapter = chattingAdapter
+                }
+                chattingAdapter.submitList(it.chatMessages)
             }
         }
     }
