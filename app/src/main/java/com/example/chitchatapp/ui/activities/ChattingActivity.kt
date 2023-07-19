@@ -13,6 +13,7 @@ import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
+import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 
@@ -84,15 +85,15 @@ class ChattingActivity : AppCompatActivity() {
 
                 binding.chattingUsername.text = headerUsername
 
-                getChatMessages()
+                getChatMessages(loggedInUsername, it)
             }
         }
         viewModel.getChatDetails(chatId)
     }
 
-    private fun getChatMessages() {
+    private fun getChatMessages(loggedInUsername: String, chatModel: ChatModel) {
         binding.chattingRv.apply {
-            chattingAdapter = ChattingRecyclerAdapter()
+            chattingAdapter = ChattingRecyclerAdapter(loggedInUsername, chatModel)
             adapter = chattingAdapter
         }
         viewModel.chatDetails.observe(this) {

@@ -1,6 +1,5 @@
 package com.example.chitchatapp.adapters
 
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,14 +54,8 @@ class HomeChatsRecyclerAdapter(
                     loggedInUsername
                 )
                 itemHomeChatUsername.text = username
-
-                val date = chatModel.chatMessages.last().chatMessageTime.toDate()
-                val time = DateUtils.getRelativeTimeSpanString(
-                    date.time,
-                    System.currentTimeMillis(),
-                    DateUtils.MINUTE_IN_MILLIS
-                )
-                itemHomeChatMessageTime.text = time
+                itemHomeChatMessageTime.text =
+                    ChatUtils.getChatTime(chatModel.chatMessages.last().chatMessageTime)
 
                 itemHomeChatMessage.text = chatModel.chatMessages.last().chatMessage?.trim() ?: ""
 

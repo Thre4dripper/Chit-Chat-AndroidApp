@@ -37,6 +37,18 @@ class AddChat {
                     ChatMessageModel(
                         UUID.randomUUID().toString(),
                         ChatMessageType.TypeFirstMessage,
+                        null,
+                        null,
+                        null,
+                        null,
+                        Timestamp.now(),
+                        listOf(senderUser.username),
+                        senderUser.username,
+                        newChatUser.username,
+                    ),
+                    ChatMessageModel(
+                        UUID.randomUUID().toString(),
+                        ChatMessageType.TypeMessage,
                         "Hi, I am ${loggedInUser?.displayName.toString()}.",
                         null,
                         null,
