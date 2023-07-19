@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
 
-class AddChat {
+class AddNewChat {
     companion object {
         fun addNewChat(
             firestore: FirebaseFirestore,

@@ -1,7 +1,7 @@
 package com.example.chitchatapp.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.example.chitchatapp.firebase.chats.AddChat
+import com.example.chitchatapp.firebase.chats.AddNewChat
 import com.example.chitchatapp.firebase.user.FirestoreSearchUsers
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.UserModel
@@ -41,7 +41,7 @@ class AddChatsRepository {
                     return@checkIfChatExists
                 }
                 //otherwise add new chat
-                AddChat.addNewChat(firestore, loggedInUser, newChatUser, currentUser!!, chatId)
+                AddNewChat.addNewChat(firestore, loggedInUser, newChatUser, currentUser!!, chatId)
             }
         }
     }

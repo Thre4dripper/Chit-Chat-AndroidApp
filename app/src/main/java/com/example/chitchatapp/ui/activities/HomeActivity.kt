@@ -83,6 +83,9 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     }
 
     private fun initHomeFabs() {
+        //hide action fab initially, this will be shown when chats are fetched
+        binding.homeActionFab.visibility = View.GONE
+
         //initially hide all the fabs and text views
         binding.homeActionFab.shrink()
         binding.homeAddChatFab.hide()
@@ -202,6 +205,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
                 homeChatsAdapter.submitList(it)
 
                 binding.addChatsLl.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+                binding.homeActionFab.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
                 binding.loadingLottie.visibility = View.GONE
             }
         }
