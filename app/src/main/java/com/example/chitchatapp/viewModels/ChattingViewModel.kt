@@ -48,4 +48,9 @@ class ChattingViewModel : ViewModel() {
         val to = ChatUtils.getChatUsername(chatModel, from)
         ChatsRepository.sendTextMessage(chatModel, text, from, to, chatMessageId)
     }
+
+    fun updateSeen(context: Context, chatId: String, onSuccess: (Boolean) -> Unit) {
+        val chatModel = getChatDetails(chatId) ?: return
+        ChatsRepository.updateSeen(context, chatModel, onSuccess)
+    }
 }

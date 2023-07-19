@@ -107,7 +107,7 @@ class ChattingRecyclerAdapter(
 
             val senderUsername = ChatUtils.getChatUsername(chatModel, loggedInUsername)
             binding.itemChatMessageStatusIv.visibility =
-                if (chatMessageModel.chatMessageSeen.contains(senderUsername)) {
+                if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
                     View.GONE

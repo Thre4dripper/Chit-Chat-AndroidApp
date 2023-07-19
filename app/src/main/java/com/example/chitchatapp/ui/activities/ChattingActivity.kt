@@ -107,6 +107,8 @@ class ChattingActivity : AppCompatActivity() {
 
                 //submit the live list to the adapter
                 chattingAdapter.submitList(it.chatMessages) {
+                    //when the list is submitted, then update the seen status
+                    viewModel.updateSeen(this, chatId) {}
                     //scroll to the bottom of the recycler view
                     binding.chattingRv.scrollToPosition(it.chatMessages.size - 1)
                 }
