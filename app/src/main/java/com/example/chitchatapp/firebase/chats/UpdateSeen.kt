@@ -12,23 +12,23 @@ class UpdateSeen {
             loggedInUser: String,
             onSuccess: (Boolean) -> Unit,
         ) {
-            val existingMessages = chatModel.chatMessages
-            val newList = existingMessages.toMutableList()
-            for (i in newList.indices) {
-                val message = newList[i]
-                if (message.chatMessageFrom != loggedInUser) {
+            val oldMessagesList = chatModel.chatMessages
+            val newMessagesList = oldMessagesList.toMutableList()
+            for (i in newMessagesList.indices) {
+                val message = newMessagesList[i]
+                if (message.from != loggedInUser) {
                     val seenBy = message.seenBy.toMutableList()
                     if (!seenBy.contains(loggedInUser)) {
                         seenBy.add(loggedInUser)
                     }
-                    newList[i] = message.copy(
+                    newMessagesList[i] = message.copy(
                         seenBy = seenBy
                     )
                 }
             }
             //no worry, firestore will merge the data, and only update the chatMessages field
             val updatedChatModel = chatModel.copy(
-                chatMessages = newList
+                chatMessages = newMessagesList
             )
 
             firestore.collection(FirestoreCollections.CHATS_COLLECTION)

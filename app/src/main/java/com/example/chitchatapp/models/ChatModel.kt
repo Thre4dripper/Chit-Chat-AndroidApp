@@ -1,5 +1,7 @@
 package com.example.chitchatapp.models
 
+import com.example.chitchatapp.enums.UserStatus
+
 data class ChatModel(
     val chatId: String,
     val dmChatUser1: DMChatUserModel,
@@ -19,6 +21,7 @@ data class ChatModel(
 data class DMChatUserModel(
     val username: String,
     val profileImage: String,
+    val status: UserStatus,
 ) {
-    constructor() : this("", "")
+    constructor() : this("", "", UserStatus.Online)
 }

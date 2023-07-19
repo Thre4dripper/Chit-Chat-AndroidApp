@@ -43,7 +43,7 @@ class GetAllChats {
                 }
 
                 val sortedChats =
-                    chats.sortedByDescending { it.chatMessages.last().chatMessageTime }
+                    chats.sortedByDescending { it.chatMessages.last().time }
                 onSuccess(sortedChats)
             }
         }

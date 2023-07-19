@@ -20,9 +20,9 @@ class SendChat {
             chatMessageId: (String?) -> Unit,
         ) {
             val id = UUID.randomUUID().toString()
-            val existingMessages = chatModel.chatMessages
-            val newList = existingMessages.toMutableList()
-            newList.add(
+            val oldMessagesList = chatModel.chatMessages
+            val newMessagesList = oldMessagesList.toMutableList()
+            newMessagesList.add(
                 ChatMessageModel(
                     id,
                     ChatMessageType.TypeMessage,
@@ -38,7 +38,7 @@ class SendChat {
             )
             //no worry, firestore will merge the data, and only update the chatMessages field
             val updatedChatModel = chatModel.copy(
-                chatMessages = newList
+                chatMessages = newMessagesList
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION)
                 .document(chatModel.chatId)

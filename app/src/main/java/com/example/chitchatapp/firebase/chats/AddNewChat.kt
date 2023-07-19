@@ -2,6 +2,7 @@ package com.example.chitchatapp.firebase.chats
 
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.ChatMessageType
+import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.ChatModel
@@ -26,11 +27,13 @@ class AddNewChat {
                 chatDocId,
                 DMChatUserModel(
                     currentUser.username,
-                    currentUser.profileImage
+                    currentUser.profileImage,
+                    UserStatus.Online
                 ),
                 DMChatUserModel(
                     newChatUser.username,
-                    newChatUser.profileImage
+                    newChatUser.profileImage,
+                    UserStatus.Online
                 ),
                 false,
                 listOf(

@@ -136,6 +136,7 @@
                 android:background="@drawable/chat_et_bg"
                 android:hint="@string/chatting_activity_text_message"
                 android:inputType="textMultiLine"
+                android:maxLines="6"
                 android:minHeight="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/send_message_btn_ll"

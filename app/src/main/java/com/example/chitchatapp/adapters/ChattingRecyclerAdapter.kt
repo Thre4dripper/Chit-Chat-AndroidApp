@@ -71,13 +71,13 @@ class ChattingRecyclerAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
-        return when (item.chatMessageType) {
+        return when (item.type) {
             ChatMessageType.TypeFirstMessage -> {
                 return VIEW_TYPE_FIRST_MESSAGE
             }
 
             ChatMessageType.TypeMessage -> {
-                return if (item.chatMessageFrom == loggedInUsername) {
+                return if (item.from == loggedInUsername) {
                     VIEW_TYPE_RIGHT_MESSAGE
                 } else {
                     VIEW_TYPE_LEFT_MESSAGE
@@ -93,9 +93,9 @@ class ChattingRecyclerAdapter(
         private var binding = ItemChatRightTextBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
-            binding.itemChatRightTextMessage.text = chatMessageModel.chatMessage
+            binding.itemChatRightTextMessage.text = chatMessageModel.text
             binding.itemChatRightTextTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
+                TimeUtils.getFormattedTime(chatMessageModel.time)
 
             val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
             Glide
@@ -127,9 +127,9 @@ class ChattingRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatLeftIv)
 
-            binding.itemChatLeftTextMessage.text = chatMessageModel.chatMessage
+            binding.itemChatLeftTextMessage.text = chatMessageModel.text
             binding.itemChatLeftTextTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
+                TimeUtils.getFormattedTime(chatMessageModel.time)
         }
     }
 
@@ -138,7 +138,7 @@ class ChattingRecyclerAdapter(
             oldItem: ChatMessageModel,
             newItem: ChatMessageModel
         ): Boolean {
-            return oldItem.chatMessageId == newItem.chatMessageId
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(

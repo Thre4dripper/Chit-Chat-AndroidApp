@@ -56,9 +56,9 @@ class HomeChatsRecyclerAdapter(
                 )
                 itemHomeChatUsername.text = username
                 itemHomeChatMessageTime.text =
-                    TimeUtils.getFormattedTime(chatModel.chatMessages.last().chatMessageTime)
+                    TimeUtils.getFormattedTime(chatModel.chatMessages.last().time)
 
-                itemHomeChatMessage.text = chatModel.chatMessages.last().chatMessage?.trim() ?: ""
+                itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
 
                 val unreadMessages = chatModel.chatMessages.filter {
                     !it.seenBy.contains(loggedInUsername)
