@@ -11,6 +11,7 @@ import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemHomeChatBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
+import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatModel
 
 class HomeChatsRecyclerAdapter(
@@ -55,7 +56,7 @@ class HomeChatsRecyclerAdapter(
                 )
                 itemHomeChatUsername.text = username
                 itemHomeChatMessageTime.text =
-                    ChatUtils.getChatTime(chatModel.chatMessages.last().chatMessageTime)
+                    TimeUtils.getFormattedTime(chatModel.chatMessages.last().chatMessageTime)
 
                 itemHomeChatMessage.text = chatModel.chatMessages.last().chatMessage?.trim() ?: ""
 

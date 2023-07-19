@@ -1,9 +1,7 @@
 package com.example.chitchatapp.firebase.utils
 
-import android.text.format.DateUtils
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.models.ChatModel
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUtils {
@@ -50,17 +48,6 @@ class ChatUtils {
             } else {
                 chatModel.dmChatUser1.username
             }
-        }
-
-        fun getChatTime(timestamp: Timestamp): String {
-            val date = timestamp.toDate()
-            val time = DateUtils.getRelativeTimeSpanString(
-                date.time,
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS
-            )
-
-            return time.toString()
         }
     }
 }

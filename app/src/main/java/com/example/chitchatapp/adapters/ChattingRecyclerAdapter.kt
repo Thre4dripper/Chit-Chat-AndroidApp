@@ -12,6 +12,7 @@ import com.example.chitchatapp.databinding.ItemChatReceiverTextBinding
 import com.example.chitchatapp.databinding.ItemChatSenderTextBinding
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
+import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.ChatModel
 
@@ -93,7 +94,7 @@ class ChattingRecyclerAdapter(
         fun bind(chatMessageModel: ChatMessageModel) {
             binding.itemChatReceiverTextMessage.text = chatMessageModel.chatMessage
             binding.itemChatReceiverTextTime.text =
-                ChatUtils.getChatTime(chatMessageModel.chatMessageTime)
+                TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
         }
     }
 
@@ -111,7 +112,7 @@ class ChattingRecyclerAdapter(
 
             binding.itemChatSenderTextMessage.text = chatMessageModel.chatMessage
             binding.itemChatSenderTextTime.text =
-                ChatUtils.getChatTime(chatMessageModel.chatMessageTime)
+                TimeUtils.getFormattedTime(chatMessageModel.chatMessageTime)
         }
     }
 
