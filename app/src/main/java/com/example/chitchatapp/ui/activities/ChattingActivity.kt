@@ -3,6 +3,7 @@ package com.example.chitchatapp.ui.activities
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +33,11 @@ class ChattingActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
 
-        //user model is null when the user is adding a new chat
+        //This activity can be opened from two places
+        //1. From the chats screen
+        //2. From the add chats screen
+        //If it is opened from the chats screen, then the user model will be null
+        //If it is opened from the add chats screen, then the user model will not be null
         if (userModel != null)
             createNewChat(userModel)
         else
@@ -108,6 +113,14 @@ class ChattingActivity : AppCompatActivity() {
 
         viewModel.createNewChat(userModel) {
             binding.loadingLottie.visibility = View.GONE
+
+            //this can only be null when there is an error adding chat
+            if (it == null) {
+                Toast.makeText(this, "Error adding chat", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            //otherwise if chat already exists then it will be that chat id
+            getChatDetails(it!!, userModel.username)
         }
     }
 }

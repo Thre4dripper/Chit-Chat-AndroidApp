@@ -21,7 +21,7 @@ class ChattingViewModel : ViewModel() {
 
     fun createNewChat(
         newChatUser: UserModel,
-        onSuccess: (Boolean) -> Unit,
-    ) = AddChatsRepository.addChat(newChatUser, onSuccess)
+        chatId: (String?) -> Unit,
+    ) = AddChatsRepository.addChat(newChatUser, chatId)
 
 }

@@ -20,17 +20,20 @@ class ChatUtils {
             firestore: FirebaseFirestore,
             chatUserId1: String,
             chatUserId2: String,
-            callback: (Boolean) -> Unit,
+            chatId: (String?) -> Unit,
         ) {
             val chatDocId = getDMChatDocId(chatUserId1, chatUserId2)
             firestore.collection(FirestoreCollections.CHATS_COLLECTION)
                 .document(chatDocId)
                 .get()
                 .addOnSuccessListener {
-                    callback(it.exists())
+                    if (it.exists())
+                        chatId(it.id)
+                    else
+                        chatId(null)
                 }
                 .addOnFailureListener {
-                    callback(false)
+                    chatId(null)
                 }
         }
 

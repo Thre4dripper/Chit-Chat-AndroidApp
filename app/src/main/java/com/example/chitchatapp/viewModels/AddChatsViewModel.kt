@@ -13,6 +13,6 @@ class AddChatsViewModel : ViewModel() {
 
     fun addChat(
         newChatUser: UserModel,
-        onSuccess: (Boolean) -> Unit,
-    ) = AddChatsRepository.addChat(newChatUser, onSuccess)
+        chatId: (String?) -> Unit,
+    ) = AddChatsRepository.addChat(newChatUser, chatId)
 }
