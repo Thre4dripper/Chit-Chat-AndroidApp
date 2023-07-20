@@ -1,5 +1,6 @@
 package com.example.chitchatapp.ui.activities
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,6 +25,12 @@ import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 import com.google.firebase.Timestamp
+import com.yalantis.ucrop.UCrop
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class ChattingActivity : AppCompatActivity() {
     private val TAG = "ChattingActivity"
@@ -201,11 +208,53 @@ class ChattingActivity : AppCompatActivity() {
         }
     }
 
+    // Registers a photo picker activity launcher in single-select mode.
     private val photoPickerLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia())
         { pickedPhotoUri ->
             if (pickedPhotoUri != null) {
-                viewModel.sendImageMessage(this, chatId, pickedPhotoUri) {
+                var uri: Uri? = null
+
+                //async call to create temp file
+                CoroutineScope(Dispatchers.Main).launch {
+                    uri = Uri.fromFile(withContext(Dispatchers.IO) {
+                        val file = File.createTempFile( //creating temp file
+                            "temp", ".jpg", cacheDir
+                        )
+                        file
+                    })
+                }
+                    //on completion of async call
+                    .invokeOnCompletion {
+                        //Crop activity with source and destination uri
+                        val uCrop = UCrop.of(pickedPhotoUri, uri!!)
+                            .withMaxResultSize(1080, 1080)
+
+                        cropImageCallback.launch(uCrop.getIntent(this))
+                    }
+
+            } else {
+                binding.photoAddBtn.visibility = View.VISIBLE
+                binding.photoProgressBar.visibility = View.GONE
+            }
+        }
+
+    /**
+     * CALLBACK FOR CROPPING RECEIVED IMAGE
+     */
+    private var cropImageCallback =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val selectedImageUri = UCrop.getOutput(result.data!!)
+
+                if (selectedImageUri == null) {
+                    binding.photoAddBtn.visibility = View.VISIBLE
+                    binding.photoProgressBar.visibility = View.GONE
+                    Toast.makeText(this, "Error cropping image", Toast.LENGTH_SHORT).show()
+                    return@registerForActivityResult
+                }
+
+                viewModel.sendImageMessage(this, chatId, selectedImageUri) {
                     if (it == null) {
                         Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
                     }
@@ -215,9 +264,9 @@ class ChattingActivity : AppCompatActivity() {
             } else {
                 binding.photoAddBtn.visibility = View.VISIBLE
                 binding.photoProgressBar.visibility = View.GONE
-                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show()
             }
         }
+
 
     private fun sendMessage(message: String, chatId: String) {
         viewModel.sendTextMessage(this, chatId, message) {
