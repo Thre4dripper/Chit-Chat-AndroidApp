@@ -1,6 +1,7 @@
 package com.example.chitchatapp.viewModels
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -48,6 +49,18 @@ class ChattingViewModel : ViewModel() {
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getChatUsername(chatModel, from)
         ChatsRepository.sendTextMessage(chatModel, text, from, to, chatMessageId)
+    }
+
+    fun sendImageMessage(
+        context: Context,
+        chatId: String,
+        imageUri: Uri,
+        chatMessageId: (String?) -> Unit,
+    ) {
+        val chatModel = getChatDetails(chatId) ?: return
+        val from = getLoggedInUsername(context) ?: return
+        val to = ChatUtils.getChatUsername(chatModel, from)
+        ChatsRepository.sendImage(chatModel, imageUri, from, to, chatMessageId)
     }
 
     fun updateSeen(context: Context, chatId: String, onSuccess: (Boolean) -> Unit) {

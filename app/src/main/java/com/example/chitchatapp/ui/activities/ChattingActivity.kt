@@ -6,6 +6,8 @@ import android.os.Looper
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -187,7 +189,35 @@ class ChattingActivity : AppCompatActivity() {
                 binding.sendMessageEt.text?.clear()
             }
         }
+
+        //photo sending button
+        binding.photoProgressBar.visibility = View.GONE
+        binding.photoAddBtn.visibility = View.VISIBLE
+
+        binding.photoAddBtn.setOnClickListener {
+            binding.photoAddBtn.visibility = View.GONE
+            binding.photoProgressBar.visibility = View.VISIBLE
+            photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
     }
+
+    private val photoPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+        { pickedPhotoUri ->
+            if (pickedPhotoUri != null) {
+                viewModel.sendImageMessage(this, chatId, pickedPhotoUri) {
+                    if (it == null) {
+                        Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
+                    }
+                    binding.photoAddBtn.visibility = View.VISIBLE
+                    binding.photoProgressBar.visibility = View.GONE
+                }
+            } else {
+                binding.photoAddBtn.visibility = View.VISIBLE
+                binding.photoProgressBar.visibility = View.GONE
+                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private fun sendMessage(message: String, chatId: String) {
         viewModel.sendTextMessage(this, chatId, message) {

@@ -1,14 +1,19 @@
 package com.example.chitchatapp.repository
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.firebase.chats.GetAllChats
 import com.example.chitchatapp.firebase.chats.SendChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
 import com.example.chitchatapp.firebase.user.UpdateStatus
+import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.UUID
 
 class ChatsRepository {
     companion object {
@@ -36,6 +41,29 @@ class ChatsRepository {
             val firestore = FirebaseFirestore.getInstance()
 
             SendChat.sendTextMessage(firestore, chatModel, text, from, to, chatMessageId)
+        }
+
+        fun sendImage(
+            chatModel: ChatModel,
+            imageUri: Uri,
+            from: String,
+            to: String,
+            chatMessageId: (String?) -> Unit,
+        ) {
+            val storage = FirebaseStorage.getInstance()
+            val firestore = FirebaseFirestore.getInstance()
+
+            StorageUtils.getUrlFromStorage(
+                storage,
+                " ${StorageFolders.CHAT_IMAGES_FOLDER}/${chatModel.chatId}/${UUID.randomUUID()}",
+                imageUri
+            ) { url ->
+                if (url == null) {
+                    chatMessageId(null)
+                    return@getUrlFromStorage
+                }
+                SendChat.sendImage(firestore, chatModel, url, from, to, chatMessageId)
+            }
         }
 
         fun updateSeen(
