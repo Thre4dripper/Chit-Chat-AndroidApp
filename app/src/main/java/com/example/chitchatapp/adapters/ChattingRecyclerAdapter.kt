@@ -193,6 +193,9 @@ class ChattingRecyclerAdapter(
                 } else {
                     View.GONE
                 }
+
+            binding.itemChatRightImageTime.text =
+                TimeUtils.getFormattedTime(chatMessageModel.time)
         }
     }
 
