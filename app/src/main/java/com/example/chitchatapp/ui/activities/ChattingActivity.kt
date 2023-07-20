@@ -129,9 +129,21 @@ class ChattingActivity : AppCompatActivity() {
                 //setting the status
                 val headerStatus = ChatUtils.getChatStatus(it, loggedInUsername)
 
-                if (headerStatus == UserStatus.Online.name)
+                if (headerStatus == UserStatus.Online.name) {
+                    binding.activityChattingStatusCv.setCardBackgroundColor(
+                        resources.getColor(
+                            R.color.green,
+                            null
+                        )
+                    )
                     binding.chattingStatus.text = UserStatus.Online.name
-                else {
+                } else {
+                    binding.activityChattingStatusCv.setCardBackgroundColor(
+                        resources.getColor(
+                            R.color.yellow,
+                            null
+                        )
+                    )
                     //getting the last seen time
                     val lastSeen = headerStatus.split(" ")[1].toLong()
                     val lastSeenTime = TimeUtils.getFormattedTime(Timestamp(lastSeen, 0))
@@ -145,7 +157,11 @@ class ChattingActivity : AppCompatActivity() {
                     //when the list is submitted, then update the seen status
                     viewModel.updateSeen(this, chatId) {}
                     //scroll to the bottom of the recycler view
-                    binding.chattingRv.scrollToPosition(it.chatMessages.size - 1)
+
+                    if (!ChatUtils.isStatusChanged(it, viewModel.oldChatDetails)) {
+                        binding.chattingRv.scrollToPosition(it.chatMessages.size - 1)
+                        viewModel.oldChatDetails = it
+                    }
                 }
             }
         }

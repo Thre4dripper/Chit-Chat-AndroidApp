@@ -16,6 +16,7 @@ import com.example.chitchatapp.store.UserStore
 class ChattingViewModel : ViewModel() {
     private val TAG = "ChattingViewModel"
 
+    var oldChatDetails: ChatModel? = null
     fun getLoggedInUsername(context: Context): String? {
         return UserStore.getUsername(context)
     }
@@ -27,11 +28,14 @@ class ChattingViewModel : ViewModel() {
     }
 
     fun getLiveChatDetails(chatId: String): LiveData<ChatModel?> {
-        return Transformations.map(ChatsRepository.homeChats) {
+        val chatModel = Transformations.map(ChatsRepository.homeChats) {
             it?.find { chatModel ->
                 chatModel.chatId == chatId
             }
         } as MutableLiveData<ChatModel?>
+
+        oldChatDetails = chatModel.value
+        return chatModel
     }
 
     fun createNewChat(

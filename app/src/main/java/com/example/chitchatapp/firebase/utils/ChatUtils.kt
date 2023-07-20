@@ -60,5 +60,10 @@ class ChatUtils {
                 chatModel.dmChatUser1.status
             }
         }
+
+        fun isStatusChanged(oldChatDetails: ChatModel?, newChatDetails: ChatModel?): Boolean {
+            return oldChatDetails?.dmChatUser1?.status != newChatDetails?.dmChatUser1?.status
+                    || oldChatDetails?.dmChatUser2?.status != newChatDetails?.dmChatUser2?.status
+        }
     }
 }

@@ -47,15 +47,26 @@
             app:layout_constraintStart_toEndOf="@+id/chatting_profile_image"
             app:layout_constraintTop_toTopOf="@+id/chatting_profile_image" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/activity_chatting_status_cv"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            app:cardBackgroundColor="@color/yellow"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/chatting_profile_image"
+            app:layout_constraintStart_toStartOf="@+id/chatting_username"
+            app:layout_constraintTop_toBottomOf="@+id/chatting_username" />
+
         <TextView
             android:id="@+id/chatting_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:text="@string/chatting_activity_text_last_seen"
             android:textColor="@color/lightGrey"
-            app:layout_constraintBottom_toBottomOf="@+id/chatting_profile_image"
-            app:layout_constraintStart_toStartOf="@+id/chatting_username"
-            app:layout_constraintTop_toBottomOf="@+id/chatting_username" />
+            app:layout_constraintBottom_toBottomOf="@+id/activity_chatting_status_cv"
+            app:layout_constraintStart_toEndOf="@+id/activity_chatting_status_cv"
+            app:layout_constraintTop_toTopOf="@+id/activity_chatting_status_cv" />
 
         <ImageView
             android:id="@+id/chatting_menu"
