@@ -28,12 +28,12 @@ class AddNewChat {
                 DMChatUserModel(
                     currentUser.username,
                     currentUser.profileImage,
-                    UserStatus.Online
+                    UserStatus.Online.name
                 ),
                 DMChatUserModel(
                     newChatUser.username,
                     newChatUser.profileImage,
-                    UserStatus.Online
+                    "${UserStatus.LastSeen.name} ${Timestamp.now().seconds}"
                 ),
                 false,
                 listOf(

@@ -11,7 +11,7 @@ import com.example.chitchatapp.firebase.profile.UpdateProfile
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
-import com.example.chitchatapp.store.UserDetails
+import com.example.chitchatapp.store.UserStore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -24,7 +24,7 @@ class UserDetailsRepository {
         fun getUserDetails(context: Context, onSuccess: (Boolean) -> Unit) {
             val firestore = FirebaseFirestore.getInstance()
             val user = FirebaseAuth.getInstance().currentUser
-            val username = UserDetails.getUsername(context) ?: ""
+            val username = UserStore.getUsername(context) ?: ""
 
             GetProfile.getProfile(firestore, user, username) { profile ->
                 if (profile != null) {
@@ -70,7 +70,7 @@ class UserDetailsRepository {
             callback: (String) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            val username = UserDetails.getUsername(context) ?: ""
+            val username = UserStore.getUsername(context) ?: ""
 
             UpdateProfile.updateName(firestore, username, name) {
                 //updating in livedata
@@ -85,7 +85,7 @@ class UserDetailsRepository {
             callback: (String) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            val username = UserDetails.getUsername(context) ?: ""
+            val username = UserStore.getUsername(context) ?: ""
 
             UpdateProfile.updateBio(firestore, username, bio) {
                 //updating in livedata
@@ -101,7 +101,7 @@ class UserDetailsRepository {
         ) {
             val storage = FirebaseStorage.getInstance()
             val firestore = FirebaseFirestore.getInstance()
-            val username = UserDetails.getUsername(context) ?: ""
+            val username = UserStore.getUsername(context) ?: ""
 
             StorageUtils.getUrlFromStorage(
                 storage,

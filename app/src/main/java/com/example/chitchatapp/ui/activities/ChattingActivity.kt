@@ -1,6 +1,8 @@
 package com.example.chitchatapp.ui.activities
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -14,15 +16,21 @@ import com.example.chitchatapp.adapters.ChattingRecyclerAdapter
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
+import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
+import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
+import com.google.firebase.Timestamp
 
 class ChattingActivity : AppCompatActivity() {
+    private val TAG = "ChattingActivity"
+
     private lateinit var binding: ActivityChattingBinding
     private lateinit var viewModel: ChattingViewModel
 
     private lateinit var chattingAdapter: ChattingRecyclerAdapter
+    private lateinit var chatId: String
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +39,7 @@ class ChattingActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
 
         //getting intent data
-        val chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
+        chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
         val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
 
         val loggedInUsername = viewModel.getLoggedInUsername(this)
@@ -88,11 +96,15 @@ class ChattingActivity : AppCompatActivity() {
         }
         initSendingLayout(chatId)
 
+        //update the user status to online
+        updateUserStatus(chatId, UserStatus.Online.name)
+
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveChatDetails(chatId).observe(this) {
             if (it != null) {
                 binding.loadingLottie.visibility = View.GONE
 
+                //setting the profile image
                 val chatProfileImage = ChatUtils.getChatProfileImage(it, loggedInUsername)
                 Glide
                     .with(this)
@@ -101,9 +113,23 @@ class ChattingActivity : AppCompatActivity() {
                     .circleCrop()
                     .into(binding.chattingProfileImage)
 
+                //setting the username
                 val headerUsername = ChatUtils.getChatUsername(it, loggedInUsername)
-
                 binding.chattingUsername.text = headerUsername
+
+                //setting the status
+                val headerStatus = ChatUtils.getChatStatus(it, loggedInUsername)
+
+                if (headerStatus == UserStatus.Online.name)
+                    binding.chattingStatus.text = UserStatus.Online.name
+                else {
+                    //getting the last seen time
+                    val lastSeen = headerStatus.split(" ")[1].toLong()
+                    val lastSeenTime = TimeUtils.getFormattedTime(Timestamp(lastSeen, 0))
+
+                    binding.chattingStatus.text =
+                        getString(R.string.chatting_activity_text_last_seen, lastSeenTime)
+                }
 
                 //submit the live list to the adapter
                 chattingAdapter.submitList(it.chatMessages) {
@@ -168,6 +194,31 @@ class ChattingActivity : AppCompatActivity() {
             if (it == null) {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        //update the last seen status to last seen
+        updateUserStatus(chatId, UserStatus.LastSeen.name)
+        super.onBackPressed()
+    }
+
+    private fun updateUserStatus(chatId: String, status: String) {
+        //need to update the status to online after some delay
+        //don't know what is happening here but it will not work without this delay
+        if (status == UserStatus.Online.name) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                viewModel.updateUserStatus(this, chatId, status) {}
+            }, 4000)
+        } else {
+            //update the last seen status to last seen
+            val lastSeenTime = Timestamp.now().seconds
+            val lastSeenText = UserStatus.LastSeen.name + " " + lastSeenTime
+            Handler(Looper.getMainLooper()).postDelayed({
+                viewModel.updateUserStatus(this, chatId, lastSeenText) {}
+            }, 4000)
         }
     }
 }

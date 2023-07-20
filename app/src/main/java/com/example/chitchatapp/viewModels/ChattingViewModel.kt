@@ -10,12 +10,13 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.ChatsRepository
-import com.example.chitchatapp.store.UserDetails
+import com.example.chitchatapp.store.UserStore
 
 class ChattingViewModel : ViewModel() {
+    private val TAG = "ChattingViewModel"
 
     fun getLoggedInUsername(context: Context): String? {
-        return UserDetails.getUsername(context)
+        return UserStore.getUsername(context)
     }
 
     fun getChatDetails(chatId: String): ChatModel? {
@@ -52,5 +53,16 @@ class ChattingViewModel : ViewModel() {
     fun updateSeen(context: Context, chatId: String, onSuccess: (Boolean) -> Unit) {
         val chatModel = getChatDetails(chatId) ?: return
         ChatsRepository.updateSeen(context, chatModel, onSuccess)
+    }
+
+    fun updateUserStatus(
+        context: Context,
+        chatId: String,
+        status: String,
+        onSuccess: (String?) -> Unit
+    ) {
+        val chatModel = getChatDetails(chatId) ?: return
+        val loggedInUsername = getLoggedInUsername(context) ?: return
+        ChatsRepository.updateUserStatus(chatModel, loggedInUsername, status, onSuccess)
     }
 }

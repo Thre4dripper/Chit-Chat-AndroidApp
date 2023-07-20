@@ -52,5 +52,13 @@ class ChatUtils {
                 chatModel.dmChatUser1.username
             }
         }
+
+        fun getChatStatus(chatModel: ChatModel, loggedInUsername: String): String {
+            return if (chatModel.dmChatUser1.username == loggedInUsername) {
+                chatModel.dmChatUser2.status
+            } else {
+                chatModel.dmChatUser1.status
+            }
+        }
     }
 }

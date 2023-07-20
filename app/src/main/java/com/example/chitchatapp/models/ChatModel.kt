@@ -21,7 +21,7 @@ data class ChatModel(
 data class DMChatUserModel(
     val username: String,
     val profileImage: String,
-    val status: UserStatus,
+    val status: String,
 ) {
-    constructor() : this("", "", UserStatus.Online)
+    constructor() : this("", "", UserStatus.Online.name)
 }

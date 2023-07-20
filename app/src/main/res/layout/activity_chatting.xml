@@ -48,7 +48,7 @@
             app:layout_constraintTop_toTopOf="@+id/chatting_profile_image" />
 
         <TextView
-            android:id="@+id/chatting_action"
+            android:id="@+id/chatting_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/chatting_activity_text_last_seen"

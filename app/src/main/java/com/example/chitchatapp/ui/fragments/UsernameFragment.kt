@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.chitchatapp.constants.ErrorMessages
 import com.example.chitchatapp.constants.SuccessMessages
 import com.example.chitchatapp.databinding.FragmentUsernameBinding
-import com.example.chitchatapp.store.UserDetails
+import com.example.chitchatapp.store.UserStore
 import com.example.chitchatapp.viewModels.UserDetailsViewModel
 
 class UsernameFragment : Fragment() {
@@ -89,7 +89,7 @@ class UsernameFragment : Fragment() {
             when (message) {
                 SuccessMessages.USERNAME_UPDATED_SUCCESSFULLY -> {
                     //saving username in shared preferences
-                    UserDetails.saveUsername(requireActivity(), username)
+                    UserStore.saveUsername(requireActivity(), username)
 
                     requireActivity().finish()
                 }

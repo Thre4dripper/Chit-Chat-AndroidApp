@@ -12,7 +12,7 @@ import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserDetailsRepository
-import com.example.chitchatapp.store.UserDetails
+import com.example.chitchatapp.store.UserStore
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -42,7 +42,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             if (username == null)
                 return@getUsername
 
-            UserDetails.saveUsername(getApplication<Application>().applicationContext, username)
+            UserStore.saveUsername(getApplication<Application>().applicationContext, username)
             UserDetailsRepository.getUserDetails(getApplication<Application>().applicationContext) {}
         }
     }
@@ -63,7 +63,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         AddChatsRepository.searchResult.value = ArrayList()
         UserDetailsRepository.userDetails.value = null
         ChatsRepository.homeChats.value = null
-        UserDetails.saveUsername(context, null)
+        UserStore.saveUsername(context, null)
         AuthRepository.signOutUser(context, onSuccess)
     }
 
