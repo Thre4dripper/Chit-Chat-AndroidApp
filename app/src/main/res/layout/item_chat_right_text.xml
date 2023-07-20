@@ -14,7 +14,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/chat_message_right_bg"
+            android:background="@drawable/item_chat_text_right_bg"
             app:layout_constraintBottom_toTopOf="@+id/item_chat_right_text_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"

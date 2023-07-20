@@ -23,25 +23,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:background="@drawable/item_chat_text_left_bg"
+            android:background="@drawable/item_chat_image_left_bg"
             app:layout_constraintBottom_toTopOf="@+id/item_chat_left_text_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@+id/item_chat_left_iv"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_max="wrap"
-            app:layout_constraintWidth_percent="0.8">
+            app:layout_constraintWidth_percent="0.6">
 
-            <TextView
-                android:id="@+id/item_chat_left_text_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/item_chat_text_message"
-                android:textColor="@color/darkGrey"
+            <androidx.cardview.widget.CardView
+                style="@style/ItemChatImageCvStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    style="@style/ItemChatIvStyle"
+                    android:contentDescription="@string/item_chat_desc_image"
+                    tools:srcCompat="@tools:sample/avatars" />
+            </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
