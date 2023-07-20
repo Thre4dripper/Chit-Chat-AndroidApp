@@ -9,9 +9,11 @@
 
         <ImageView
             android:id="@+id/item_home_chat_profile_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:contentDescription="@string/item_home_chat_desc_profile_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +28,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/item_home_chat_text_username"
             android:textColor="@color/darkGrey"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/item_home_chat_message_time"
             app:layout_constraintHorizontal_bias="0"
@@ -43,18 +45,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/item_home_chat_username" />
 
+        <ImageView
+            android:id="@+id/item_home_chat_message_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_photo"
+            app:layout_constraintBottom_toBottomOf="@+id/item_home_chat_profile_image"
+            app:layout_constraintStart_toStartOf="@+id/item_home_chat_username"
+            app:layout_constraintTop_toBottomOf="@+id/item_home_chat_username"
+            app:tint="@color/lightGrey"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:id="@+id/item_home_chat_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:text="@string/item_home_chat_text_message"
             android:textColor="@color/lightGrey"
-            app:layout_constraintBottom_toBottomOf="@+id/item_home_chat_profile_image"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/item_home_chat_message_photo"
             app:layout_constraintEnd_toStartOf="@+id/item_home_chat_count_cv"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@+id/item_home_chat_profile_image"
-            app:layout_constraintTop_toBottomOf="@+id/item_home_chat_username" />
+            app:layout_constraintStart_toEndOf="@+id/item_home_chat_message_photo"
+            app:layout_constraintTop_toTopOf="@+id/item_home_chat_message_photo" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/item_home_chat_count_cv"

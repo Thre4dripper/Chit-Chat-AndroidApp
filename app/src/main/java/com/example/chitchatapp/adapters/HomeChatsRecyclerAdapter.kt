@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemHomeChatBinding
+import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatModel
@@ -58,7 +59,14 @@ class HomeChatsRecyclerAdapter(
                 itemHomeChatMessageTime.text =
                     TimeUtils.getFormattedTime(chatModel.chatMessages.last().time)
 
-                itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
+                if (chatModel.chatMessages.last().type == ChatMessageType.TypeMessage) {
+                    itemHomeChatMessagePhoto.visibility = View.GONE
+                    itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
+                }
+                else if (chatModel.chatMessages.last().type == ChatMessageType.TypeImage) {
+                    itemHomeChatMessagePhoto.visibility = View.VISIBLE
+                    itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: "Photo"
+                }
 
                 val unreadMessages = chatModel.chatMessages.filter {
                     !it.seenBy.contains(loggedInUsername)
