@@ -1,5 +1,6 @@
 package com.example.chitchatapp.ui.activities
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -16,12 +17,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.ChattingRecyclerAdapter
+import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
 import com.example.chitchatapp.constants.ChatConstants
+import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
 import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
+import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 import com.google.firebase.Timestamp
@@ -32,7 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class ChattingActivity : AppCompatActivity() {
+class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
     private val TAG = "ChattingActivity"
 
     private lateinit var binding: ActivityChattingBinding
@@ -100,7 +104,8 @@ class ChattingActivity : AppCompatActivity() {
         //init the recycler view
         val chatModel = viewModel.getChatDetails(chatId)
         binding.chattingRv.apply {
-            chattingAdapter = ChattingRecyclerAdapter(loggedInUsername, chatModel!!)
+            chattingAdapter =
+                ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChattingActivity)
             adapter = chattingAdapter
         }
         initSendingLayout(chatId)
@@ -315,5 +320,11 @@ class ChattingActivity : AppCompatActivity() {
                 viewModel.updateUserStatus(this, chatId, lastSeenText) {}
             }, 4000)
         }
+    }
+
+    override fun onImageClicked(chatMessageModel: ChatMessageModel) {
+        val intent = Intent(this, ZoomActivity::class.java)
+        intent.putExtra(Constants.ZOOM_IMAGE_URL, chatMessageModel.image)
+        startActivity(intent)
     }
 }

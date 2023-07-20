@@ -13,6 +13,9 @@
         android:theme="@style/Theme.ChitChat"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.ZoomActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.ChattingActivity"
             android:exported="false" />
         <activity

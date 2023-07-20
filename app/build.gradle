@@ -71,4 +71,7 @@ dependencies {
     //lottie
     def lottieVersion = "6.1.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    //zoomable image view
+    implementation "com.github.MikeOrtiz:TouchImageView:3.2.1"
 }

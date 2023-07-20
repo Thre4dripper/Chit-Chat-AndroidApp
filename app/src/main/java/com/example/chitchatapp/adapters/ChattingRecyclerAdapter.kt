@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
 import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
 import com.example.chitchatapp.databinding.ItemChatImageRightBinding
 import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
@@ -20,7 +21,8 @@ import com.example.chitchatapp.models.ChatModel
 
 class ChattingRecyclerAdapter(
     private var loggedInUsername: String,
-    private var chatModel: ChatModel
+    private var chatModel: ChatModel,
+    private var chatMessageClickInterface: ChatMessageClickInterface
 ) :
     ListAdapter<ChatMessageModel, ViewHolder>(ChatMessageDiffCallback()) {
     private val TAG = "ChattingRecyclerAdapter"
@@ -196,6 +198,10 @@ class ChattingRecyclerAdapter(
 
             binding.itemChatRightImageTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.time)
+
+            binding.itemChatImageRightIv.setOnClickListener {
+                chatMessageClickInterface.onImageClicked(chatMessageModel)
+            }
         }
     }
 
@@ -218,6 +224,10 @@ class ChattingRecyclerAdapter(
 
             binding.itemChatLeftImageTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.time)
+
+            binding.itemChatLeftImage.setOnClickListener {
+                chatMessageClickInterface.onImageClicked(chatMessageModel)
+            }
         }
     }
 
