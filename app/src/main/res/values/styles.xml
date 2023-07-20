@@ -129,17 +129,15 @@
     </style>
 
     <style name="ItemChatImageCvStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">180dp</item>
         <item name="android:layout_margin">6dp</item>
-        <item name="cardCornerRadius">20dp</item>
-        <item name="layout_constraintHeight_max">150dp</item>
-        <item name="layout_constraintHeight_min">70dp</item>
+        <item name="cardCornerRadius">32dp</item>
     </style>
 
     <style name="ItemChatIvStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
     </style>

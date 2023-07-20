@@ -178,6 +178,14 @@ class ChattingRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatImageRightIv)
 
+            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatMessageStatusIv)
+
             val senderUsername = ChatUtils.getChatUsername(chatModel, loggedInUsername)
             binding.itemChatMessageStatusIv.visibility =
                 if (chatMessageModel.seenBy.contains(senderUsername)) {
@@ -203,7 +211,6 @@ class ChattingRecyclerAdapter(
             Glide
                 .with(itemView.context)
                 .load(chatMessageModel.image)
-                .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatLeftImage)
 
             binding.itemChatLeftImageTime.text =
