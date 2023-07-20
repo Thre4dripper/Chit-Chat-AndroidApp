@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
-import com.example.chitchatapp.databinding.ItemChatLeftTextBinding
-import com.example.chitchatapp.databinding.ItemChatRightTextBinding
+import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
+import com.example.chitchatapp.databinding.ItemChatImageRightBinding
+import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
+import com.example.chitchatapp.databinding.ItemChatTextRightBinding
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
@@ -27,6 +29,8 @@ class ChattingRecyclerAdapter(
         const val VIEW_TYPE_FIRST_MESSAGE = 0
         const val VIEW_TYPE_LEFT_MESSAGE = 1
         const val VIEW_TYPE_RIGHT_MESSAGE = 2
+        const val VIEW_TYPE_LEFT_IMAGE = 3
+        const val VIEW_TYPE_RIGHT_IMAGE = 4
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,14 +43,26 @@ class ChattingRecyclerAdapter(
 
             VIEW_TYPE_RIGHT_MESSAGE -> {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_chat_right_text, parent, false)
+                    .inflate(R.layout.item_chat_text_right, parent, false)
                 RightTextViewHolder(view)
             }
 
             VIEW_TYPE_LEFT_MESSAGE -> {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_chat_left_text, parent, false)
+                    .inflate(R.layout.item_chat_text_left, parent, false)
                 LeftTextViewHolder(view)
+            }
+
+            VIEW_TYPE_RIGHT_IMAGE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_image_right, parent, false)
+                RightImageViewHolder(view)
+            }
+
+            VIEW_TYPE_LEFT_IMAGE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_image_left, parent, false)
+                LeftImageViewHolder(view)
             }
 
             else -> null!!
@@ -64,6 +80,16 @@ class ChattingRecyclerAdapter(
 
             VIEW_TYPE_RIGHT_MESSAGE -> {
                 val viewHolder = holder as RightTextViewHolder
+                viewHolder.bind(item)
+            }
+
+            VIEW_TYPE_LEFT_IMAGE -> {
+                val viewHolder = holder as LeftImageViewHolder
+                viewHolder.bind(item)
+            }
+
+            VIEW_TYPE_RIGHT_IMAGE -> {
+                val viewHolder = holder as RightImageViewHolder
                 viewHolder.bind(item)
             }
         }
@@ -84,13 +110,21 @@ class ChattingRecyclerAdapter(
                 }
             }
 
+            ChatMessageType.TypeImage -> {
+                return if (item.from == loggedInUsername) {
+                    VIEW_TYPE_RIGHT_IMAGE
+                } else {
+                    VIEW_TYPE_LEFT_IMAGE
+                }
+            }
+
             else -> -1
         }
     }
 
     inner class HelloMessageViewHolder(itemView: View) : ViewHolder(itemView)
     inner class RightTextViewHolder(itemView: View) : ViewHolder(itemView) {
-        private var binding = ItemChatRightTextBinding.bind(itemView)
+        private var binding = ItemChatTextRightBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
             binding.itemChatRightTextMessage.text = chatMessageModel.text
@@ -116,7 +150,7 @@ class ChattingRecyclerAdapter(
     }
 
     inner class LeftTextViewHolder(itemView: View) : ViewHolder(itemView) {
-        private var binding = ItemChatLeftTextBinding.bind(itemView)
+        private var binding = ItemChatTextLeftBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
             val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
@@ -129,6 +163,50 @@ class ChattingRecyclerAdapter(
 
             binding.itemChatLeftTextMessage.text = chatMessageModel.text
             binding.itemChatLeftTextTime.text =
+                TimeUtils.getFormattedTime(chatMessageModel.time)
+        }
+    }
+
+    inner class RightImageViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatImageRightBinding.bind(itemView)
+
+        fun bind(chatMessageModel: ChatMessageModel) {
+
+            Glide
+                .with(itemView.context)
+                .load(chatMessageModel.image)
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatImageRightIv)
+
+            val senderUsername = ChatUtils.getChatUsername(chatModel, loggedInUsername)
+            binding.itemChatMessageStatusIv.visibility =
+                if (chatMessageModel.seenBy.contains(senderUsername)) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+        }
+    }
+
+    inner class LeftImageViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatImageLeftBinding.bind(itemView)
+
+        fun bind(chatMessageModel: ChatMessageModel) {
+            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatLeftIv)
+
+            Glide
+                .with(itemView.context)
+                .load(chatMessageModel.image)
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatLeftImage)
+
+            binding.itemChatLeftImageTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.time)
         }
     }
