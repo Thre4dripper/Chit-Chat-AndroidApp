@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -328,9 +330,16 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    override fun onImageClicked(chatMessageModel: ChatMessageModel) {
+    override fun onImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView) {
         val intent = Intent(this, ZoomActivity::class.java)
         intent.putExtra(Constants.ZOOM_IMAGE_URL, chatMessageModel.image)
-        startActivity(intent)
+        val activityOptionsCompat =
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                chatImageIv,
+                getString(R.string.chatting_activity_chat_image_transition)
+            )
+
+        startActivity(intent, activityOptionsCompat.toBundle())
     }
 }

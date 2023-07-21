@@ -70,6 +70,7 @@
     <string name="chatting_activity_desc_browse_image">Browse Image</string>
     <string name="chatting_activity_text_message">Message</string>
     <string name="chatting_activity_desc_send_message">Send Message</string>
+    <string name="chatting_activity_chat_image_transition">chatImageTransition</string>
 
 
     //Chatting Screen Menu

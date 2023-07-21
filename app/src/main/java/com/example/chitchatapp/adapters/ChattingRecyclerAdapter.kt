@@ -200,7 +200,10 @@ class ChattingRecyclerAdapter(
                 TimeUtils.getFormattedTime(chatMessageModel.time)
 
             binding.itemChatImageRightIv.setOnClickListener {
-                chatMessageClickInterface.onImageClicked(chatMessageModel)
+                chatMessageClickInterface.onImageClicked(
+                    chatMessageModel,
+                    binding.itemChatImageRightIv
+                )
             }
         }
     }
@@ -226,7 +229,10 @@ class ChattingRecyclerAdapter(
                 TimeUtils.getFormattedTime(chatMessageModel.time)
 
             binding.itemChatLeftImage.setOnClickListener {
-                chatMessageClickInterface.onImageClicked(chatMessageModel)
+                chatMessageClickInterface.onImageClicked(
+                    chatMessageModel,
+                    binding.itemChatLeftImage
+                )
             }
         }
     }
