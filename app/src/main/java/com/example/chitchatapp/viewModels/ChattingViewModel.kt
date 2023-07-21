@@ -22,20 +22,19 @@ class ChattingViewModel : ViewModel() {
     }
 
     fun getChatDetails(chatId: String): ChatModel? {
-        return ChatsRepository.homeChats.value?.find { chatModel ->
+        oldChatDetails = ChatsRepository.homeChats.value?.find { chatModel ->
             chatModel.chatId == chatId
         }
+
+        return oldChatDetails
     }
 
     fun getLiveChatDetails(chatId: String): LiveData<ChatModel?> {
-        val chatModel = Transformations.map(ChatsRepository.homeChats) {
+        return Transformations.map(ChatsRepository.homeChats) {
             it?.find { chatModel ->
                 chatModel.chatId == chatId
             }
         } as MutableLiveData<ChatModel?>
-
-        oldChatDetails = chatModel.value
-        return chatModel
     }
 
     fun createNewChat(
