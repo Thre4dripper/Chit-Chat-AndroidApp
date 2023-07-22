@@ -48,23 +48,23 @@
     <string name="add_chats_activity_search_hint">Search…</string>
     <string name="add_chats_activity_instructions">Search for people by their username. You can search for multiple people at the same time.</string>
 
-    //Item Add Chats Search Result
-    <string name="item_add_chats_desc_profile_image">Profile Image</string>
-    <string name="item_add_chats_text_username">\@%s</string>
-    <string name="item_add_chats_text_name">Name</string>
-    <string name="item_add_chats_desc_message_btn">Message</string>
+    //Item Add Chats and Add Group Search Result
+    <string name="item_add_chat_or_grp_desc_profile_image">Profile Image</string>
+    <string name="item_add_chat_or_text_username">%s</string>
+    <string name="item_add_chat_or_text_name">Name</string>
+    <string name="item_add_chat_or_desc_message_btn">Message</string>
 
     //Item Home Chat
-    <string name="item_home_chat_desc_profile_image">@string/item_add_chats_desc_profile_image</string>
-    <string name="item_home_chat_text_username">@string/item_add_chats_text_username</string>
+    <string name="item_home_chat_desc_profile_image">@string/item_add_chat_or_grp_desc_profile_image</string>
+    <string name="item_home_chat_text_username">@string/item_add_chat_or_text_username</string>
     <string name="item_home_chat_text_message">Message</string>
     <string name="item_home_chat_text_time">10:00 AM</string>
     <string name="item_home_chat_text_unread_count">2</string>
 
     //Chatting Activity
     <string name="chatting_activity_desc_back_btn">Back</string>
-    <string name="chatting_activity_desc_profile_image">@string/item_add_chats_desc_profile_image</string>
-    <string name="chatting_activity_text_username">@string/item_add_chats_text_username</string>
+    <string name="chatting_activity_desc_profile_image">@string/item_add_chat_or_grp_desc_profile_image</string>
+    <string name="chatting_activity_text_username">@string/item_add_chat_or_text_username</string>
     <string name="chatting_activity_text_last_seen">Last Seen %s</string>
     <string name="chatting_activity_desc_menu">Menu</string>
     <string name="chatting_activity_desc_browse_image">Browse Image</string>
@@ -80,7 +80,7 @@
     <string name="chatting_screen_menu_delete_chat">Delete Chat</string>
 
     //Item Chat
-    <string name="item_chat_desc_profile_image">@string/item_add_chats_desc_profile_image</string>
+    <string name="item_chat_desc_profile_image">@string/item_add_chat_or_grp_desc_profile_image</string>
     <string name="item_chat_text_message">Hey!!</string>
     <string name="item_chat_text_time">10:00 AM</string>
     <string name="item_chat_desc_image">Image</string>

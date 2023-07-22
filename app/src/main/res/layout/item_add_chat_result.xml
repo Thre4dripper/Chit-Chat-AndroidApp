@@ -10,10 +10,8 @@
 
         <ImageView
             android:id="@+id/item_add_chats_profile_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="16dp"
-            android:contentDescription="@string/item_add_chats_desc_profile_image"
+            style="@style/ItemAddChatOrGroupIvStyle"
+            android:contentDescription="@string/item_add_chat_or_grp_desc_profile_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -22,29 +20,18 @@
 
         <TextView
             android:id="@+id/item_add_chats_text_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/darkGrey"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/ItemAddChatOrGroupUsernameStyle"
             app:layout_constraintBottom_toTopOf="@+id/item_add_chats_text_name"
             app:layout_constraintEnd_toStartOf="@+id/item_add_chats_message_btn"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@+id/item_add_chats_profile_image"
             app:layout_constraintTop_toTopOf="@+id/item_add_chats_profile_image"
-            tools:text="@string/item_add_chats_text_username" />
+            tools:text="@string/item_add_chat_or_text_username" />
 
         <TextView
             android:id="@+id/item_add_chats_text_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/item_add_chats_text_name"
-            android:textColor="@color/lightGrey"
-            android:textSize="16sp"
+            style="@style/ItemAddChatOrGroupNameStyle"
+            android:text="@string/item_add_chat_or_text_name"
             app:layout_constraintBottom_toBottomOf="@+id/item_add_chats_profile_image"
             app:layout_constraintEnd_toStartOf="@+id/item_add_chats_message_btn"
             app:layout_constraintHorizontal_bias="0"
@@ -58,7 +45,7 @@
             android:layout_marginEnd="24dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:contentDescription="@string/item_add_chats_desc_message_btn"
+            android:contentDescription="@string/item_add_chat_or_desc_message_btn"
             android:focusable="true"
             android:padding="4dp"
             android:src="@drawable/ic_send"

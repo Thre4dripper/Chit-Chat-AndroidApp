@@ -42,7 +42,7 @@ class AddChatsRecyclerAdapter(private var addChatInterface: AddChatInterface) :
                 .into(binding.itemAddChatsProfileImage)
 
             binding.itemAddChatsTextUsername.text =
-                context.getString(R.string.item_add_chats_text_username, user.username)
+                context.getString(R.string.item_add_chat_or_text_username, user.username)
             binding.itemAddChatsTextName.text = user.name
 
             binding.itemAddChatsMessageBtn.setOnClickListener {

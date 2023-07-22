@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F1F6FF">
+
+        <ImageView
+            android:id="@+id/item_add_group_profile_image"
+            style="@style/ItemAddChatOrGroupIvStyle"
+            android:contentDescription="@string/item_add_chat_or_grp_desc_profile_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_check"
+            app:layout_constraintBottom_toBottomOf="@+id/item_add_group_profile_image"
+            app:layout_constraintEnd_toEndOf="@+id/item_add_group_profile_image"
+            app:layout_constraintStart_toEndOf="@+id/item_add_group_profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/item_add_group_profile_image"
+            app:tint="@color/red"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/item_add_group_text_username"
+            style="@style/ItemAddChatOrGroupUsernameStyle"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/item_add_group_text_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/item_add_group_profile_image"
+            app:layout_constraintTop_toTopOf="@+id/item_add_group_profile_image"
+            tools:text="@string/item_add_chat_or_text_username" />
+
+        <TextView
+            android:id="@+id/item_add_group_text_name"
+            style="@style/ItemAddChatOrGroupNameStyle"
+            android:layout_marginEnd="16dp"
+            android:text="@string/item_add_chat_or_text_name"
+            app:layout_constraintBottom_toBottomOf="@+id/item_add_group_profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/item_add_group_profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/item_add_group_text_username" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
