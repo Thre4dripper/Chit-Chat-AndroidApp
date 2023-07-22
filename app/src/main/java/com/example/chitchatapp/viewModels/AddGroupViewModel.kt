@@ -2,16 +2,13 @@ package com.example.chitchatapp.viewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.repository.ChatsRepository
 
 class AddGroupViewModel : ViewModel() {
-    private var _searchedUsers = Transformations.map(ChatsRepository.homeChats) {
-        it
-    } as MutableLiveData<List<ChatModel>?>
+    private var _searchedUsers = MutableLiveData<List<ChatModel>>()
     val searchedUsers: LiveData<List<ChatModel>?>
         get() = _searchedUsers
 

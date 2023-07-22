@@ -43,7 +43,11 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
 
     private fun initRecyclerView(loggedInUsername: String) {
         binding.addGroupContactsRv.apply {
-            addGroupAdapter = AddGroupRecyclerAdapter(loggedInUsername, this@AddGroupActivity)
+            addGroupAdapter = AddGroupRecyclerAdapter(
+                loggedInUsername,
+                viewModel.selectedUsers,
+                this@AddGroupActivity
+            )
             adapter = addGroupAdapter
         }
 
@@ -72,5 +76,8 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
                 viewModel.addSelectedUser(it)
             }
         }
+
+        val index = viewModel.searchedUsers.value?.indexOfFirst { it.chatId == chatId }
+        addGroupAdapter.notifyItemChanged(index!!)
     }
 }

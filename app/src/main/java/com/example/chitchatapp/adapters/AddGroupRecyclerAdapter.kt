@@ -18,6 +18,7 @@ import com.google.firebase.Timestamp
 
 class AddGroupRecyclerAdapter(
     private var loggedInUsername: String,
+    private var selectedUsers: List<ChatModel>,
     private var chatClickInterface: ChatClickInterface
 ) :
     ListAdapter<ChatModel, AddGroupRecyclerAdapter.SearchUsersViewHolder>(AddGroupDiffCallback()) {
@@ -69,6 +70,9 @@ class AddGroupRecyclerAdapter(
                 binding.itemAddGroupTextStatus.text =
                     context.getString(R.string.chatting_activity_text_last_seen, time)
             }
+
+            binding.itemAddGroupCvCheck.visibility =
+                if (selectedUsers.contains(chatModel)) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
                 chatClickInterface.onChatClicked(chatModel.chatId)

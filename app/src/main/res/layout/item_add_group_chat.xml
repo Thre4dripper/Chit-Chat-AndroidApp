@@ -18,6 +18,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/item_add_group_cv_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="-16dp"
