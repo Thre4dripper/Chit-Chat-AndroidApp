@@ -119,10 +119,14 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             startActivity(Intent(this, AddChatsActivity::class.java))
         }
 
-        //Todo
-//        binding.homeAddGroupFab.setOnClickListener {
-//            startActivity(Intent(this, AddGroupActivity::class.java))
-//        }
+        binding.homeAddGroupFab.setOnClickListener {
+            val intent = Intent(this, AddGroupActivity::class.java)
+
+            // username will be available
+            // because this button will be shown only when user has completed and fetched profile
+            intent.putExtra(UserConstants.USERNAME, viewModel.userDetails.value!!.username)
+            startActivity(intent)
+        }
     }
 
     @Deprecated("Deprecated in Java")
