@@ -9,11 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.AddGroupRecyclerAdapter
+import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityAddGroupBinding
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 
-class AddGroupActivity : AppCompatActivity() {
+class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
     private val TAG = "AddGroupActivity"
 
     private lateinit var binding: ActivityAddGroupBinding
@@ -42,27 +43,34 @@ class AddGroupActivity : AppCompatActivity() {
 
     private fun initRecyclerView(loggedInUsername: String) {
         binding.addGroupContactsRv.apply {
-            addGroupAdapter = AddGroupRecyclerAdapter(loggedInUsername)
+            addGroupAdapter = AddGroupRecyclerAdapter(loggedInUsername, this@AddGroupActivity)
             adapter = addGroupAdapter
+        }
+
+        viewModel.searchedUsers.observe(this) {
+            binding.addChatsNoResultsLottie.visibility =
+                if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+            addGroupAdapter.submitList(it)
         }
     }
 
     private fun searchUsers(loggedInUsername: String) {
         //initially we will show all the users
-        viewModel.searchUsers("", loggedInUsername).observe(this) {
-            addGroupAdapter.submitList(it)
-        }
+        viewModel.searchUsers("", loggedInUsername)
         binding.addChatsNoResultsLottie.visibility = View.GONE
 
         binding.addGroupSearchEt.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-            viewModel.searchUsers(text.toString(), loggedInUsername).observe(this) {
-                if (it.isNullOrEmpty()) {
-                    binding.addChatsNoResultsLottie.visibility = View.VISIBLE
-                } else {
-                    binding.addChatsNoResultsLottie.visibility = View.GONE
-                }
-                addGroupAdapter.submitList(it)
-            }
+            viewModel.searchUsers(text.toString(), loggedInUsername)
         })
+    }
+
+    override fun onChatClicked(chatId: String) {
+        viewModel.selectedUsers.find { it.chatId == chatId }?.let {
+            viewModel.removeSelectedUser(it)
+        } ?: run {
+            viewModel.searchedUsers.value?.find { it.chatId == chatId }?.let {
+                viewModel.addSelectedUser(it)
+            }
+        }
     }
 }

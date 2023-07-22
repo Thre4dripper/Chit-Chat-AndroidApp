@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemAddGroupChatBinding
 import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
@@ -15,7 +16,10 @@ import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatModel
 import com.google.firebase.Timestamp
 
-class AddGroupRecyclerAdapter(private var loggedInUsername: String) :
+class AddGroupRecyclerAdapter(
+    private var loggedInUsername: String,
+    private var chatClickInterface: ChatClickInterface
+) :
     ListAdapter<ChatModel, AddGroupRecyclerAdapter.SearchUsersViewHolder>(AddGroupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchUsersViewHolder {
@@ -64,6 +68,10 @@ class AddGroupRecyclerAdapter(private var loggedInUsername: String) :
                 val time = TimeUtils.getFormattedTime(Timestamp(statusTime.toLong(), 0))
                 binding.itemAddGroupTextStatus.text =
                     context.getString(R.string.chatting_activity_text_last_seen, time)
+            }
+
+            binding.root.setOnClickListener {
+                chatClickInterface.onChatClicked(chatModel.chatId)
             }
         }
     }
