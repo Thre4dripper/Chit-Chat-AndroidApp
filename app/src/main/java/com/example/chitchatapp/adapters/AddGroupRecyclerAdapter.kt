@@ -3,6 +3,7 @@ package com.example.chitchatapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -18,7 +19,7 @@ import com.google.firebase.Timestamp
 
 class AddGroupRecyclerAdapter(
     private var loggedInUsername: String,
-    private var selectedUsers: List<ChatModel>,
+    private var selectedUsers: LiveData<List<ChatModel>?>,
     private var chatClickInterface: ChatClickInterface
 ) :
     ListAdapter<ChatModel, AddGroupRecyclerAdapter.SearchUsersViewHolder>(AddGroupDiffCallback()) {
@@ -72,7 +73,7 @@ class AddGroupRecyclerAdapter(
             }
 
             binding.itemAddGroupCvCheck.visibility =
-                if (selectedUsers.contains(chatModel)) View.VISIBLE else View.GONE
+                if (selectedUsers.value?.find { it.chatId == chatModel.chatId } != null) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
                 chatClickInterface.onChatClicked(chatModel.chatId)

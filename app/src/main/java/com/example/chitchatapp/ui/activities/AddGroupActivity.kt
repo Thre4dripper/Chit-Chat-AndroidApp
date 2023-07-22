@@ -46,7 +46,8 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
 
     private fun initSelectedUserRecyclerView(loggedInUsername: String) {
         binding.addGroupSelectedContactsRv.apply {
-            selectedUsersAdapter = GroupSelectedRecyclerAdapter(loggedInUsername)
+            selectedUsersAdapter =
+                GroupSelectedRecyclerAdapter(loggedInUsername, this@AddGroupActivity)
             adapter = selectedUsersAdapter
         }
 
@@ -59,7 +60,7 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
         binding.addGroupContactsRv.apply {
             addGroupAdapter = AddGroupRecyclerAdapter(
                 loggedInUsername,
-                viewModel.selectedUsers.value!!, //initially selected users will be empty
+                viewModel.selectedUsers, //initially selected users will be empty
                 this@AddGroupActivity
             )
             adapter = addGroupAdapter
