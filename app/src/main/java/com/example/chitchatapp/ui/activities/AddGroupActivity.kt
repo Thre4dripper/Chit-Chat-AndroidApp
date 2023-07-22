@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.AddGroupRecyclerAdapter
+import com.example.chitchatapp.adapters.GroupSelectedRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityAddGroupBinding
@@ -21,6 +22,7 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
     private lateinit var viewModel: AddGroupViewModel
 
     private lateinit var addGroupAdapter: AddGroupRecyclerAdapter
+    private lateinit var selectedUsersAdapter: GroupSelectedRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_group)
@@ -33,7 +35,8 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
         }
 
         if (loggedInUsername != null) {
-            initRecyclerView(loggedInUsername)
+            initSelectedUserRecyclerView(loggedInUsername)
+            initChatsRecyclerView(loggedInUsername)
             searchUsers(loggedInUsername)
         } else {
             Toast.makeText(this, "Error occurred", Toast.LENGTH_SHORT).show()
@@ -41,11 +44,22 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
         }
     }
 
-    private fun initRecyclerView(loggedInUsername: String) {
+    private fun initSelectedUserRecyclerView(loggedInUsername: String) {
+        binding.addGroupSelectedContactsRv.apply {
+            selectedUsersAdapter = GroupSelectedRecyclerAdapter(loggedInUsername)
+            adapter = selectedUsersAdapter
+        }
+
+        viewModel.selectedUsers.observe(this) {
+            selectedUsersAdapter.submitList(it)
+        }
+    }
+
+    private fun initChatsRecyclerView(loggedInUsername: String) {
         binding.addGroupContactsRv.apply {
             addGroupAdapter = AddGroupRecyclerAdapter(
                 loggedInUsername,
-                viewModel.selectedUsers,
+                viewModel.selectedUsers.value!!, //initially selected users will be empty
                 this@AddGroupActivity
             )
             adapter = addGroupAdapter
@@ -69,7 +83,7 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
     }
 
     override fun onChatClicked(chatId: String) {
-        viewModel.selectedUsers.find { it.chatId == chatId }?.let {
+        viewModel.selectedUsers.value?.find { it.chatId == chatId }?.let {
             viewModel.removeSelectedUser(it)
         } ?: run {
             viewModel.searchedUsers.value?.find { it.chatId == chatId }?.let {

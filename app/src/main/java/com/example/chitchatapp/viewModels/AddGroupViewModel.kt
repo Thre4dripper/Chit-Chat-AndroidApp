@@ -12,8 +12,8 @@ class AddGroupViewModel : ViewModel() {
     val searchedUsers: LiveData<List<ChatModel>?>
         get() = _searchedUsers
 
-    private var _selectedUsers = mutableListOf<ChatModel>()
-    val selectedUsers: List<ChatModel>
+    private var _selectedUsers = MutableLiveData<List<ChatModel>>(mutableListOf())
+    val selectedUsers: LiveData<List<ChatModel>?>
         get() = _selectedUsers
 
     fun searchUsers(searchQuery: String, loggedInUsername: String) {
@@ -41,10 +41,16 @@ class AddGroupViewModel : ViewModel() {
     }
 
     fun addSelectedUser(chatModel: ChatModel) {
-        _selectedUsers.add(chatModel)
+        val oldList = _selectedUsers.value
+        val updatedList = oldList?.toMutableList()
+        updatedList?.add(chatModel)
+        _selectedUsers.value = updatedList
     }
 
     fun removeSelectedUser(chatModel: ChatModel) {
-        _selectedUsers.remove(chatModel)
+        val oldList = _selectedUsers.value
+        val updatedList = oldList?.toMutableList()
+        updatedList?.remove(chatModel)
+        _selectedUsers.value = updatedList
     }
 }
