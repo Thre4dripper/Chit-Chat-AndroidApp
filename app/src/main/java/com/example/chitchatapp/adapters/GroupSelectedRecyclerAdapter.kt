@@ -47,6 +47,14 @@ class GroupSelectedRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemGroupSelectedIv)
 
+            //zoom in and out animation
+            val animation = android.view.animation.AnimationUtils.loadAnimation(
+                context,
+                com.bumptech.glide.R.anim.abc_slide_in_bottom
+            )
+            animation.duration = 300
+            binding.itemGroupSelectedIv.startAnimation(animation)
+
             binding.itemGroupSelectedCancelBtn.setOnClickListener {
                 ChatClickInterface.onChatClicked(chatModel.chatId)
             }
