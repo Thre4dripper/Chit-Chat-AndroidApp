@@ -84,4 +84,8 @@
     <string name="item_chat_text_message">Hey!!</string>
     <string name="item_chat_text_time">10:00 AM</string>
     <string name="item_chat_desc_image">Image</string>
+
+    //create group dialog
+    <string name="create_group_desc_image">Group Image</string>
+    <string name="create_group_text_group_name">Group Name</string>
 </resources>

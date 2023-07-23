@@ -32,10 +32,27 @@
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/add_group_back_btn"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_group_save_btn"
             app:layout_constraintStart_toEndOf="@+id/add_group_back_btn"
             app:layout_constraintTop_toTopOf="@+id/add_group_back_btn"
             tools:ignore="Autofill,LabelFor,TextFields" />
+
+        <ImageView
+            android:id="@+id/add_group_save_btn"
+            style="@style/BackButtonStyle"
+            android:contentDescription="@string/desc_save_btn"
+            android:src="@drawable/ic_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textColorPrimary" />
+
+        <ProgressBar
+            android:id="@+id/add_group_save_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
