@@ -2,18 +2,23 @@ package com.example.chitchatapp.repository
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.constants.StorageFolders
+import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.groups.CreateGroup
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.StorageUtils
+import com.example.chitchatapp.models.ChatGroupModel
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
-class ChatGroupsRepository {
+class GroupsRepository {
     companion object {
+        val groupChats = MutableLiveData<List<ChatGroupModel>?>(null)
+
         fun createGroup(
             context: Context,
             groupName: String,
@@ -61,6 +66,15 @@ class ChatGroupsRepository {
                     selectedUsernames,
                     onSuccess,
                 )
+            }
+        }
+
+        fun getAllGroupChats(context: Context) {
+            val firestore = FirebaseFirestore.getInstance()
+            val loggedInUser = UserStore.getUsername(context) ?: ""
+
+            GetGroupChats.getAllGroupChats(firestore, loggedInUser) {
+                groupChats.value = it
             }
         }
     }

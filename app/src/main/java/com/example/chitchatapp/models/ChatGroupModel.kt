@@ -7,4 +7,6 @@ data class ChatGroupModel(
     val admin: String,
     val members: List<String>,
     val messages: List<GroupMessageModel>
-)
+) {
+    constructor() : this("", "", null, "", listOf(), listOf())
+}

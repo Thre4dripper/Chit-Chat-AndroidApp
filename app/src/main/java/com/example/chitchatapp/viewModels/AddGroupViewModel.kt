@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
-import com.example.chitchatapp.repository.ChatGroupsRepository
+import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.repository.ChatsRepository
 
 class AddGroupViewModel : ViewModel() {
@@ -69,7 +69,7 @@ class AddGroupViewModel : ViewModel() {
             onSuccess(false)
             return
         }
-        ChatGroupsRepository.createGroup(
+        GroupsRepository.createGroup(
             context,
             groupName,
             groupImageUri,

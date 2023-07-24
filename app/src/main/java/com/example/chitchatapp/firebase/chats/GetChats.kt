@@ -7,7 +7,7 @@ import com.example.chitchatapp.models.ChatModel
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 
-class GetAllChats {
+class GetChats {
     companion object {
         private val TAG = "GetChats"
 

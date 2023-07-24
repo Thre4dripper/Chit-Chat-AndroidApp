@@ -2,6 +2,7 @@ package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -214,6 +215,12 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             }
         }
 
+        viewModel.groupChats.observe(this) {
+            if (it != null) {
+                Log.d(TAG, "getGroups: ${it}")
+            }
+        }
+
         viewModel.userDetails.observe(this) {
             if (it == null) return@observe
 
@@ -230,6 +237,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
             //get chats when user details are fetched
             viewModel.getChats(this)
+            viewModel.getGroups(this)
         }
     }
 

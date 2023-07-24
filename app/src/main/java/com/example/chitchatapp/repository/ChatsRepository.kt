@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.StorageFolders
-import com.example.chitchatapp.firebase.chats.GetAllChats
+import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.SendChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
 import com.example.chitchatapp.firebase.user.UpdateStatus
@@ -26,7 +26,7 @@ class ChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: ""
-            GetAllChats.getAllUserChats(firestore, loggedInUser) {
+            GetChats.getAllUserChats(firestore, loggedInUser) {
                 homeChats.value = it
             }
         }
