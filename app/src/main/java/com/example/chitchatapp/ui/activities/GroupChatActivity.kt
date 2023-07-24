@@ -1,10 +1,12 @@
 package com.example.chitchatapp.ui.activities
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.UserConstants
@@ -17,6 +19,7 @@ class GroupChatActivity : AppCompatActivity() {
     private lateinit var viewModel: GroupChatViewModel
 
     private lateinit var groupId: String
+
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +44,42 @@ class GroupChatActivity : AppCompatActivity() {
         if (userModel != null)
 //            createNewChat(userModel, loggedInUsername!!)
         else {
-//            getChatDetails(chatId, loggedInUsername!!)
+            getChatDetails(groupId, loggedInUsername!!)
         }
 
         binding.groupChatBackBtn.setOnClickListener { finish() }
 //        initMenu()
+    }
+
+    private fun getChatDetails(groupId: String, loggedInUsername: String) {
+        //init the recycler view
+//        initRecyclerView(chatId, loggedInUsername)
+//        initSendingLayout(chatId)
+
+        binding.loadingLottie.visibility = View.VISIBLE
+        viewModel.getLiveGroupChatDetails(groupId).observe(this) {
+            if (it != null) {
+                binding.loadingLottie.visibility = View.GONE
+
+                //setting the group image
+                Glide
+                    .with(this)
+                    .load(it.image)
+                    .placeholder(R.drawable.ic_profile)
+                    .circleCrop()
+                    .into(binding.groupChatGroupImage)
+
+                //setting the group name
+                binding.groupChatGroupName.text = it.name
+
+//                //submit the live list to the adapter
+//                chattingAdapter.submitList(it.chatMessages) {
+//                    //when the list is submitted, then update the seen status
+//                    viewModel.updateSeen(this, chatId) {}
+//                    //scroll to the bottom of the recycler view
+//                    binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
+//                }
+            }
+        }
     }
 }
