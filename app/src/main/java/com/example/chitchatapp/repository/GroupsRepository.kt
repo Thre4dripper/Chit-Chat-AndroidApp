@@ -37,7 +37,7 @@ class GroupsRepository {
             }.toMutableList()
 
             //user details were fetched earlier
-            val currentUserImage = UserDetailsRepository.userDetails.value?.profileImage ?: ""
+            val currentUserImage = UserRepository.userDetails.value?.profileImage ?: ""
             selectedGroupUsers.add(GroupChatUserModel(loggedInUsername, currentUserImage))
 
             if (groupImageUri == null) {

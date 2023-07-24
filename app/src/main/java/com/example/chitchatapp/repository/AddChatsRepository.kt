@@ -29,7 +29,7 @@ class AddChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = FirebaseAuth.getInstance().currentUser
-            val currentUser = UserDetailsRepository.userDetails.value
+            val currentUser = UserRepository.userDetails.value
 
             // Check if chat already exists
             ChatUtils.checkIfChatExists(

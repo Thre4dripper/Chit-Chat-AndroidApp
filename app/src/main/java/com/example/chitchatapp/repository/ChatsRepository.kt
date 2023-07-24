@@ -9,7 +9,6 @@ import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
-import com.example.chitchatapp.firebase.user.UpdateStatus
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
@@ -33,6 +32,7 @@ class ChatsRepository {
             GetChats.getAllUserChats(firestore, loggedInUser) { userChats ->
                 val oldList = homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
+                updatedList.removeIf { it.type == HomeLayoutType.USER }
                 updatedList.addAll(
                     userChats.map {
                         HomeChatModel(it.chatId, HomeLayoutType.USER, it, null)
@@ -45,12 +45,13 @@ class ChatsRepository {
         fun getAllGroupChats(context: Context) {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUsername = UserStore.getUsername(context) ?: ""
-            val userImage = UserDetailsRepository.userDetails.value?.profileImage ?: ""
+            val userImage = UserRepository.userDetails.value?.profileImage ?: ""
 
             val groupUserModel = GroupChatUserModel(loggedInUsername, userImage)
             GetGroupChats.getAllGroupChats(firestore, groupUserModel) { groupChats ->
                 val oldList = homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
+                updatedList.removeIf { it.type == HomeLayoutType.GROUP }
                 updatedList.addAll(
                     groupChats.map {
                         HomeChatModel(it.id, HomeLayoutType.GROUP, null, it)
@@ -103,15 +104,6 @@ class ChatsRepository {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: return
             UpdateSeen.updateSeen(firestore, chatModel, loggedInUser, onSuccess)
-        }
-
-        fun updateUserStatus(
-            chatModel: ChatModel, loggedInUser: String, status: String, onSuccess: (String?) -> Unit
-        ) {
-            val firestore = FirebaseFirestore.getInstance()
-            UpdateStatus.updateDMUserStatus(
-                firestore, chatModel, loggedInUser, status, onSuccess
-            )
         }
     }
 }

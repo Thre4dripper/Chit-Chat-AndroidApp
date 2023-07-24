@@ -11,7 +11,7 @@ import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
 import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.HomeRepository
-import com.example.chitchatapp.repository.UserDetailsRepository
+import com.example.chitchatapp.repository.UserRepository
 import com.example.chitchatapp.store.UserStore
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "HomeViewModel"
 
-    private val _userDetails = UserDetailsRepository.userDetails
+    private val _userDetails = UserRepository.userDetails
     val userDetails: LiveData<UserModel?>
         get() = _userDetails
     var isFirebaseUILaunched = false
@@ -43,7 +43,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 return@getUsername
 
             UserStore.saveUsername(getApplication<Application>().applicationContext, username)
-            UserDetailsRepository.getUserDetails(getApplication<Application>().applicationContext) {}
+            UserRepository.getUserDetails(getApplication<Application>().applicationContext) {}
         }
     }
 
@@ -61,7 +61,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
         //clear all data on sign out
         AddChatsRepository.searchResult.value = ArrayList()
-        UserDetailsRepository.userDetails.value = null
+        UserRepository.userDetails.value = null
         ChatsRepository.homeChats.value = null
         UserStore.saveUsername(context, null)
         AuthRepository.signOutUser(context, onSuccess)

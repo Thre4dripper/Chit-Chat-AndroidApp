@@ -8,6 +8,7 @@ import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.example.chitchatapp.firebase.profile.GetProfile
 import com.example.chitchatapp.firebase.profile.UpdateProfile
+import com.example.chitchatapp.firebase.user.GetStatus
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
@@ -16,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
-class UserDetailsRepository {
+class UserRepository {
     companion object {
         private const val TAG = "UserDetailsRepository"
         val userDetails = MutableLiveData<UserModel?>(null)
@@ -35,6 +36,14 @@ class UserDetailsRepository {
                     onSuccess(false)
                 }
             }
+        }
+
+        fun listenUserDetails(
+            loggedInUsername: String,
+            onSuccess: (String?) -> Unit
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            GetStatus.getUserStatus(firestore, loggedInUsername, onSuccess)
         }
 
         fun updateUsername(
