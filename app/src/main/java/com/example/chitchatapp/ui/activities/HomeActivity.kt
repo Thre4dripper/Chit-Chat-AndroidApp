@@ -2,7 +2,6 @@ package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -207,9 +206,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
         viewModel.homeChats.observe(this) {
             if (it != null) {
-//                homeChatsAdapter.submitList(it)
-
-                Log.d(TAG, "getChats: $it")
+                homeChatsAdapter.submitList(it)
                 binding.addChatsLl.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
                 binding.homeActionFab.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
                 binding.loadingLottie.visibility = View.GONE

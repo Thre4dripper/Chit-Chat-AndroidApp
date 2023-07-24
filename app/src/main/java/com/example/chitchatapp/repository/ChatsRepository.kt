@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.StorageFolders
-import com.example.chitchatapp.enums.HomeChatType
+import com.example.chitchatapp.enums.HomeLayoutType
 import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendChat
@@ -35,7 +35,7 @@ class ChatsRepository {
                 val updatedList = oldList.toMutableList()
                 updatedList.addAll(
                     userChats.map {
-                        HomeChatModel(it.chatId, HomeChatType.USER, it, null)
+                        HomeChatModel(it.chatId, HomeLayoutType.USER, it, null)
                     }
                 )
                 homeChats.value = updatedList
@@ -53,7 +53,7 @@ class ChatsRepository {
                 val updatedList = oldList.toMutableList()
                 updatedList.addAll(
                     groupChats.map {
-                        HomeChatModel(it.id, HomeChatType.GROUP, null, it)
+                        HomeChatModel(it.id, HomeLayoutType.GROUP, null, it)
                     }
                 )
                 homeChats.value = updatedList
