@@ -1,10 +1,13 @@
 package com.example.chitchatapp.viewModels
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.repository.ChatGroupsRepository
 import com.example.chitchatapp.repository.ChatsRepository
 
 class AddGroupViewModel : ViewModel() {
@@ -52,5 +55,26 @@ class AddGroupViewModel : ViewModel() {
         val updatedList = oldList?.toMutableList()
         updatedList?.remove(chatModel)
         _selectedUsers.value = updatedList
+    }
+
+    fun createGroup(
+        context: Context,
+        groupName: String,
+        groupImageUri: Uri?,
+        onSuccess: (Boolean) -> Unit,
+    ) {
+        val selectedUsers = _selectedUsers.value
+
+        if (selectedUsers == null) {
+            onSuccess(false)
+            return
+        }
+        ChatGroupsRepository.createGroup(
+            context,
+            groupName,
+            groupImageUri,
+            selectedUsers,
+            onSuccess
+        )
     }
 }

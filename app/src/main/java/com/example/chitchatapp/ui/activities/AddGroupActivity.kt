@@ -140,8 +140,14 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
             val groupImageUri = selectedGroupImageUri
             val groupName = createGroupDialogBinding.createGroupEt.text.toString()
             if (groupName.isNotEmpty()) {
+                //todo open group chat activity immediately
                 binding.addGroupSaveProgressBar.visibility = View.VISIBLE
-//                viewModel.createGroup(groupName, loggedInUsername)
+                binding.addGroupSaveBtn.visibility = View.GONE
+                viewModel.createGroup(this, groupName, groupImageUri) {
+                    binding.addGroupSaveProgressBar.visibility = View.GONE
+                    binding.addGroupSaveBtn.visibility = View.VISIBLE
+                    finish()
+                }
             } else {
                 Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show()
             }
