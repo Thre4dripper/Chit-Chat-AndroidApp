@@ -88,4 +88,14 @@
     //create group dialog
     <string name="create_group_desc_image">Group Image</string>
     <string name="create_group_text_group_name">Group Name</string>
+
+    //Group Chatting Activity
+    <string name="group_chat_activity_desc_image">Group Image</string>
+    <string name="group_chat_activity_group_name">Group Name</string>
+    <string name="group_chat_activity_members">Members</string>
+    <string name="group_chat_activity_desc_menu">@string/chatting_activity_desc_menu</string>
+    <string name="group_chat_activity_desc_browse_image">@string/chatting_activity_desc_browse_image</string>
+    <string name="group_chat_activity_text_message">@string/chatting_activity_text_message</string>
+    <string name="group_chat_activity_desc_send_message">@string/chatting_activity_desc_send_message</string>
+
 </resources>
