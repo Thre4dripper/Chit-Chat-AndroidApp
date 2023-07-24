@@ -161,10 +161,9 @@ class HomeChatsRecyclerAdapter(
 
             }
 
-            //TODO: on click on group chat
-//            binding.root.setOnClickListener {
-//                chatClickInterface.onChatClicked(groupChatModel.id)
-//            }
+            binding.root.setOnClickListener {
+                chatClickInterface.onGroupChatClicked(groupChatModel.id)
+            }
         }
     }
 

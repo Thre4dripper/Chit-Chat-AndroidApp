@@ -239,4 +239,12 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         intent.putExtra(UserConstants.USERNAME, viewModel.userDetails.value!!.username)
         startActivity(intent)
     }
+
+    override fun onGroupChatClicked(groupId: String) {
+        val intent = Intent(this, GroupChatActivity::class.java)
+        intent.putExtra(ChatConstants.GROUP_ID, groupId)
+        //username must be fetched before this
+        intent.putExtra(UserConstants.USERNAME, viewModel.userDetails.value!!.username)
+        startActivity(intent)
+    }
 }
