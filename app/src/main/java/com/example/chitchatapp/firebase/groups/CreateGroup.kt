@@ -12,15 +12,13 @@ class CreateGroup {
     companion object {
         fun createNewGroup(
             firestore: FirebaseFirestore,
+            groupChatId: String,
             groupName: String,
             groupImageUrl: String?,
             loggedInUsername: String,
             selectedUsers: List<String>,
             onSuccess: (Boolean) -> Unit,
         ) {
-            val groupChatId =
-                firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document().id
-
             val group = ChatGroupModel(
                 groupChatId,
                 groupName,

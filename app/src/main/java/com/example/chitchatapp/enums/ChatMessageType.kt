@@ -5,4 +5,5 @@ enum class ChatMessageType {
     TypeMessage,
     TypeImage,
     TypeSticker,
+    TypeDeletedMessage,
 }

@@ -2,6 +2,7 @@ package com.example.chitchatapp.repository
 
 import android.content.Context
 import android.net.Uri
+import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.firebase.groups.CreateGroup
 import com.example.chitchatapp.firebase.utils.ChatUtils
@@ -10,7 +11,6 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.UUID
 
 class ChatGroupsRepository {
     companion object {
@@ -25,6 +25,9 @@ class ChatGroupsRepository {
             val storage = FirebaseStorage.getInstance()
             val loggedInUsername = UserStore.getUsername(context) ?: return
 
+            val groupChatId =
+                fireStore.collection(FirestoreCollections.GROUPS_COLLECTION).document().id
+
             val selectedUsernames = selectedUsers.map {
                 val username = ChatUtils.getChatUsername(it, loggedInUsername)
                 username
@@ -34,6 +37,7 @@ class ChatGroupsRepository {
             if (groupImageUri == null) {
                 CreateGroup.createNewGroup(
                     fireStore,
+                    groupChatId,
                     groupName,
                     null,
                     loggedInUsername,
@@ -45,11 +49,12 @@ class ChatGroupsRepository {
 
             StorageUtils.getUrlFromStorage(
                 storage,
-                "${StorageFolders.GROUP_IMAGES_FOLDER}/${UUID.randomUUID()}",
+                "${StorageFolders.GROUP_IMAGES_FOLDER}/${groupChatId}",
                 groupImageUri
             ) { imageUrl ->
                 CreateGroup.createNewGroup(
                     fireStore,
+                    groupChatId,
                     groupName,
                     imageUrl,
                     loggedInUsername,
