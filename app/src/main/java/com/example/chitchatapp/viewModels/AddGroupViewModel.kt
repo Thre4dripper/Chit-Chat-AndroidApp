@@ -22,25 +22,26 @@ class AddGroupViewModel : ViewModel() {
     fun searchUsers(searchQuery: String, loggedInUsername: String) {
         //updating livedata
         _searchedUsers.value =
-            ChatsRepository.homeChats.value?.filter { homeChat ->
-                //chat name which is displayed in the results list
-                val chatName = ChatUtils.getChatUsername(homeChat, loggedInUsername)
+            ChatsRepository.homeChats.value?.filter { it.userChat != null }?.map { it.userChat!! }
+                ?.filter { homeChat ->
+                    //chat name which is displayed in the results list
+                    val chatName = ChatUtils.getChatUsername(homeChat, loggedInUsername)
 
-                /** filtering logic
-                 * searching in both dmChatUser1 and dmChatUser2 usernames
-                 * this will return true if any of the username contains searchQuery
-                 * even if one of the username is loggedInUsername
-                 * it will return that result also, but displayed chatName will be other username
-                 * so we will also check if displayed chatName contains searchQuery
-                 */
-                val filter = (homeChat.dmChatUser1.username.contains(searchQuery, true) ||
-                        homeChat.dmChatUser2.username.contains(searchQuery, true)) &&
+                    /** filtering logic
+                     * searching in both dmChatUser1 and dmChatUser2 usernames
+                     * this will return true if any of the username contains searchQuery
+                     * even if one of the username is loggedInUsername
+                     * it will return that result also, but displayed chatName will be other username
+                     * so we will also check if displayed chatName contains searchQuery
+                     */
+                    val filter = (homeChat.dmChatUser1.username.contains(searchQuery, true) ||
+                            homeChat.dmChatUser2.username.contains(searchQuery, true)) &&
 
-                        //by this we will eliminate the case where one of the username is loggedInUsername
-                        chatName.contains(searchQuery, true)
+                            //by this we will eliminate the case where one of the username is loggedInUsername
+                            chatName.contains(searchQuery, true)
 
-                filter
-            }
+                    filter
+                }
     }
 
     fun addSelectedUser(chatModel: ChatModel) {

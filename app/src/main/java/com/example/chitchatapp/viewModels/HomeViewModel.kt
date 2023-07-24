@@ -5,12 +5,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.example.chitchatapp.models.ChatGroupModel
-import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.HomeChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
-import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserDetailsRepository
@@ -28,12 +26,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var isFirebaseUILaunched = false
 
     private val _homeChats = ChatsRepository.homeChats
-    val homeChats: LiveData<List<ChatModel>?>
+    val homeChats: LiveData<List<HomeChatModel>?>
         get() = _homeChats
-
-    private val _groupChats = GroupsRepository.groupChats
-    val groupChats: LiveData<List<ChatGroupModel>?>
-        get() = _groupChats
 
     init {
         initUserDetails()
@@ -87,11 +81,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     ) =
         HomeRepository.checkInitialRegistration(onSuccess)
 
-    fun getChats(
+    fun getHomeChats(
         context: Context
-    ) = ChatsRepository.getAllUserChats(context)
-
-    fun getGroups(
-        context: Context
-    ) = GroupsRepository.getAllGroupChats(context)
+    ) {
+        ChatsRepository.getAllUserChats(context)
+        ChatsRepository.getAllGroupChats(context)
+    }
 }

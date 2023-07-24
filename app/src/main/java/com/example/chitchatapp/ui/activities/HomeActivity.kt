@@ -207,17 +207,12 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
         viewModel.homeChats.observe(this) {
             if (it != null) {
-                homeChatsAdapter.submitList(it)
+//                homeChatsAdapter.submitList(it)
 
+                Log.d(TAG, "getChats: $it")
                 binding.addChatsLl.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
                 binding.homeActionFab.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
                 binding.loadingLottie.visibility = View.GONE
-            }
-        }
-
-        viewModel.groupChats.observe(this) {
-            if (it != null) {
-                Log.d(TAG, "getGroups: ${it}")
             }
         }
 
@@ -236,8 +231,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             }
 
             //get chats when user details are fetched
-            viewModel.getChats(this)
-            viewModel.getGroups(this)
+            viewModel.getHomeChats(this)
         }
     }
 

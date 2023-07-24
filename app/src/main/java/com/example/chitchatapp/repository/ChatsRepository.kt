@@ -4,12 +4,16 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.StorageFolders
+import com.example.chitchatapp.enums.HomeChatType
 import com.example.chitchatapp.firebase.chats.GetChats
+import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
 import com.example.chitchatapp.firebase.user.UpdateStatus
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupChatUserModel
+import com.example.chitchatapp.models.HomeChatModel
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -19,15 +23,40 @@ class ChatsRepository {
     companion object {
         private val TAG = "ChatsRepository"
 
-        val homeChats = MutableLiveData<List<ChatModel>?>(null)
+        val homeChats = MutableLiveData<List<HomeChatModel>?>(null)
 
         fun getAllUserChats(
             context: Context
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: ""
-            GetChats.getAllUserChats(firestore, loggedInUser) {
-                homeChats.value = it
+            GetChats.getAllUserChats(firestore, loggedInUser) { userChats ->
+                val oldList = homeChats.value ?: emptyList()
+                val updatedList = oldList.toMutableList()
+                updatedList.addAll(
+                    userChats.map {
+                        HomeChatModel(it.chatId, HomeChatType.USER, it, null)
+                    }
+                )
+                homeChats.value = updatedList
+            }
+        }
+
+        fun getAllGroupChats(context: Context) {
+            val firestore = FirebaseFirestore.getInstance()
+            val loggedInUsername = UserStore.getUsername(context) ?: ""
+            val userImage = UserDetailsRepository.userDetails.value?.profileImage ?: ""
+
+            val groupUserModel = GroupChatUserModel(loggedInUsername, userImage)
+            GetGroupChats.getAllGroupChats(firestore, groupUserModel) { groupChats ->
+                val oldList = homeChats.value ?: emptyList()
+                val updatedList = oldList.toMutableList()
+                updatedList.addAll(
+                    groupChats.map {
+                        HomeChatModel(it.id, HomeChatType.GROUP, null, it)
+                    }
+                )
+                homeChats.value = updatedList
             }
         }
 

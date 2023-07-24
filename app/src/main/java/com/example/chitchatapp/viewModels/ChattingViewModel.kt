@@ -3,7 +3,6 @@ package com.example.chitchatapp.viewModels
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.firebase.utils.ChatUtils
@@ -22,19 +21,19 @@ class ChattingViewModel : ViewModel() {
     }
 
     fun getChatDetails(chatId: String): ChatModel? {
-        oldChatDetails = ChatsRepository.homeChats.value?.find { chatModel ->
-            chatModel.chatId == chatId
-        }
+        oldChatDetails = ChatsRepository.homeChats.value?.find { homeChat ->
+            homeChat.id == chatId
+        }?.userChat
 
         return oldChatDetails
     }
 
     fun getLiveChatDetails(chatId: String): LiveData<ChatModel?> {
-        return Transformations.map(ChatsRepository.homeChats) {
-            it?.find { chatModel ->
-                chatModel.chatId == chatId
-            }
-        } as MutableLiveData<ChatModel?>
+        return Transformations.map(ChatsRepository.homeChats) { homeChats ->
+            homeChats?.find { homeChat ->
+                homeChat.id == chatId
+            }?.userChat
+        }
     }
 
     fun createNewChat(
