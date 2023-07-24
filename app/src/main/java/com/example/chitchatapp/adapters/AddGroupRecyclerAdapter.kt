@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
-import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
+import com.example.chitchatapp.adapters.interfaces.AddGroupInterface
 import com.example.chitchatapp.databinding.ItemAddGroupChatBinding
 import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
@@ -20,7 +20,7 @@ import com.google.firebase.Timestamp
 class AddGroupRecyclerAdapter(
     private var loggedInUsername: String,
     private var selectedUsers: LiveData<List<ChatModel>?>,
-    private var chatClickInterface: ChatClickInterface
+    private var addGroupInterface: AddGroupInterface
 ) :
     ListAdapter<ChatModel, AddGroupRecyclerAdapter.SearchUsersViewHolder>(AddGroupDiffCallback()) {
 
@@ -76,7 +76,7 @@ class AddGroupRecyclerAdapter(
                 if (selectedUsers.value?.find { it.chatId == chatModel.chatId } != null) View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
-                chatClickInterface.onChatClicked(chatModel.chatId)
+                addGroupInterface.onUserClicked(chatModel.chatId)
             }
         }
     }

@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
-import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
+import com.example.chitchatapp.adapters.interfaces.AddGroupInterface
 import com.example.chitchatapp.databinding.ItemGroupSelectedContactBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
 
 class GroupSelectedRecyclerAdapter(
     private var loggedInUsername: String,
-    private var ChatClickInterface: ChatClickInterface
+    private var addGroupInterface: AddGroupInterface
 ) :
     ListAdapter<ChatModel, GroupSelectedRecyclerAdapter.SelectedUserViewHolder>(
         SelectedUserDiffCallback()
@@ -56,7 +56,7 @@ class GroupSelectedRecyclerAdapter(
             binding.itemGroupSelectedIv.startAnimation(animation)
 
             binding.itemGroupSelectedCancelBtn.setOnClickListener {
-                ChatClickInterface.onChatClicked(chatModel.chatId)
+                addGroupInterface.onUserClicked(chatModel.chatId)
             }
         }
     }

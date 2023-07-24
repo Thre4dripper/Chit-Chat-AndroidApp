@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.AddGroupRecyclerAdapter
 import com.example.chitchatapp.adapters.GroupSelectedRecyclerAdapter
-import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
+import com.example.chitchatapp.adapters.interfaces.AddGroupInterface
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityAddGroupBinding
 import com.example.chitchatapp.databinding.DialogCreateGroupBinding
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
+class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
     private val TAG = "AddGroupActivity"
 
     private lateinit var binding: ActivityAddGroupBinding
@@ -110,7 +110,7 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
         })
     }
 
-    override fun onChatClicked(chatId: String) {
+    override fun onUserClicked(chatId: String) {
         viewModel.selectedUsers.value?.find { it.chatId == chatId }?.let {
             viewModel.removeSelectedUser(it)
         } ?: run {
