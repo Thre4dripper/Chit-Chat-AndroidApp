@@ -1,6 +1,5 @@
 package com.example.chitchatapp.ui.activities
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -132,7 +131,7 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
         createGroupDialogBinding = DialogCreateGroupBinding.inflate(layoutInflater)
         dialog.setView(createGroupDialogBinding.root)
 
-        createGroupDialogBinding.createGroupCv.setOnClickListener {
+        createGroupDialogBinding.createGroupIv.setOnClickListener {
             photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
@@ -196,15 +195,12 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
                     Toast.makeText(this, "Error cropping image", Toast.LENGTH_SHORT).show()
                     return@registerForActivityResult
                 }
-                createGroupDialogBinding.createGroupCv.setCardBackgroundColor(Color.TRANSPARENT)
 
                 Glide.with(this)
                     .load(selectedGroupImageUri)
                     .placeholder(R.drawable.ic_group)
                     .circleCrop()
                     .into(createGroupDialogBinding.createGroupIv)
-
-                createGroupDialogBinding.createGroupCv.setCardBackgroundColor(Color.TRANSPARENT)
             } else {
                 binding.addGroupSaveBtn.visibility = View.VISIBLE
                 binding.addGroupSaveProgressBar.visibility = View.GONE

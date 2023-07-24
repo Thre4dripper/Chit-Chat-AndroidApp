@@ -3,6 +3,7 @@ package com.example.chitchatapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -126,6 +127,10 @@ class HomeChatsRecyclerAdapter(
 
             val groupImage = groupChatModel.image
 
+            if (groupImage == null)
+                binding.itemHomeChatProfileImage.imageTintList =
+                    ContextCompat.getColorStateList(context, R.color.fabColor)
+
             Glide.with(context)
                 .load(groupImage)
                 .placeholder(R.drawable.ic_group)
@@ -151,7 +156,8 @@ class HomeChatsRecyclerAdapter(
                     !it.seenBy.contains(loggedInUsername)
                 }.size
                 itemHomeChatCountTv.text = unreadMessages.toString()
-                itemHomeChatCountCv.visibility = if (unreadMessages > 0) View.VISIBLE else View.GONE
+                itemHomeChatCountCv.visibility =
+                    if (unreadMessages > 0) View.VISIBLE else View.GONE
 
             }
 
@@ -167,7 +173,10 @@ class HomeChatsRecyclerAdapter(
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: HomeChatModel, newItem: HomeChatModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: HomeChatModel,
+            newItem: HomeChatModel
+        ): Boolean {
             return oldItem == newItem
         }
     }
