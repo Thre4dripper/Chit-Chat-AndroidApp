@@ -35,10 +35,18 @@ class ChatsRepository {
                 updatedList.removeIf { it.type == HomeLayoutType.USER }
                 updatedList.addAll(
                     userChats.map {
-                        HomeChatModel(it.chatId, HomeLayoutType.USER, it, null)
+                        HomeChatModel(
+                            it.chatId,
+                            HomeLayoutType.USER,
+                            it,
+                            null,
+                            it.chatMessages.last().time
+                        )
                     }
                 )
-                homeChats.value = updatedList
+
+                val sortedList = updatedList.sortedByDescending { it.lastMessageTimestamp }
+                homeChats.value = sortedList
             }
         }
 
@@ -54,10 +62,18 @@ class ChatsRepository {
                 updatedList.removeIf { it.type == HomeLayoutType.GROUP }
                 updatedList.addAll(
                     groupChats.map {
-                        HomeChatModel(it.id, HomeLayoutType.GROUP, null, it)
+                        HomeChatModel(
+                            it.id,
+                            HomeLayoutType.GROUP,
+                            null,
+                            it,
+                            it.messages.last().time
+                        )
                     }
                 )
-                homeChats.value = updatedList
+
+                val sortedList = updatedList.sortedByDescending { it.lastMessageTimestamp }
+                homeChats.value = sortedList
             }
         }
 

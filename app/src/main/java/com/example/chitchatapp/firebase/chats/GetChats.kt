@@ -41,10 +41,7 @@ class GetChats {
                     val chat = doc.toObject(ChatModel::class.java)
                     chats.add(chat)
                 }
-
-                val sortedChats =
-                    chats.sortedByDescending { it.chatMessages.last().time }
-                onSuccess(sortedChats)
+                onSuccess(chats)
             }
         }
     }
