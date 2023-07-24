@@ -11,6 +11,7 @@ import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatGroupModel
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -33,11 +34,16 @@ class GroupsRepository {
             val groupChatId =
                 fireStore.collection(FirestoreCollections.GROUPS_COLLECTION).document().id
 
-            val selectedUsernames = selectedUsers.map {
+            val selectedGroupUsers = selectedUsers.map {
                 val username = ChatUtils.getChatUsername(it, loggedInUsername)
-                username
+                val profileImage = ChatUtils.getChatProfileImage(it, loggedInUsername)
+
+                GroupChatUserModel(username, profileImage)
             }.toMutableList()
-            selectedUsernames.add(loggedInUsername)
+
+            //user details were fetched earlier
+            val currentUserImage = UserDetailsRepository.userDetails.value?.profileImage ?: ""
+            selectedGroupUsers.add(GroupChatUserModel(loggedInUsername, currentUserImage))
 
             if (groupImageUri == null) {
                 CreateGroup.createNewGroup(
@@ -46,7 +52,7 @@ class GroupsRepository {
                     groupName,
                     null,
                     loggedInUsername,
-                    selectedUsernames,
+                    selectedGroupUsers,
                     onSuccess,
                 )
                 return
@@ -63,7 +69,7 @@ class GroupsRepository {
                     groupName,
                     imageUrl,
                     loggedInUsername,
-                    selectedUsernames,
+                    selectedGroupUsers,
                     onSuccess,
                 )
             }
@@ -71,9 +77,11 @@ class GroupsRepository {
 
         fun getAllGroupChats(context: Context) {
             val firestore = FirebaseFirestore.getInstance()
-            val loggedInUser = UserStore.getUsername(context) ?: ""
+            val loggedInUsername = UserStore.getUsername(context) ?: ""
+            val userImage = UserDetailsRepository.userDetails.value?.profileImage ?: ""
 
-            GetGroupChats.getAllGroupChats(firestore, loggedInUser) {
+            val groupUserModel = GroupChatUserModel(loggedInUsername, userImage)
+            GetGroupChats.getAllGroupChats(firestore, groupUserModel) {
                 groupChats.value = it
             }
         }

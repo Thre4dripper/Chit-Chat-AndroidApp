@@ -61,6 +61,14 @@ class ChatUtils {
             }
         }
 
+        fun getCurrentUserImage(chatModel: ChatModel, loggedInUsername: String): String {
+            return if (chatModel.dmChatUser1.username == loggedInUsername) {
+                chatModel.dmChatUser1.profileImage
+            } else {
+                chatModel.dmChatUser2.profileImage
+            }
+        }
+
         fun isStatusChanged(oldChatDetails: ChatModel?, newChatDetails: ChatModel?): Boolean {
             return oldChatDetails?.dmChatUser1?.status != newChatDetails?.dmChatUser1?.status
                     || oldChatDetails?.dmChatUser2?.status != newChatDetails?.dmChatUser2?.status
