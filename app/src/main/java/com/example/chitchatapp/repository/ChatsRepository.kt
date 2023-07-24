@@ -55,7 +55,7 @@ class ChatsRepository {
 
             StorageUtils.getUrlFromStorage(
                 storage,
-                " ${StorageFolders.CHAT_IMAGES_FOLDER}/${chatModel.chatId}/${UUID.randomUUID()}",
+                "${StorageFolders.CHAT_IMAGES_FOLDER}/${chatModel.chatId}/${UUID.randomUUID()}",
                 imageUri
             ) { url ->
                 if (url == null) {
