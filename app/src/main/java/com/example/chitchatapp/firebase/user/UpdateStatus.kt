@@ -1,47 +1,32 @@
 package com.example.chitchatapp.firebase.user
 
 import com.example.chitchatapp.constants.FirestoreCollections
-import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.enums.UserStatus
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class UpdateStatus {
     companion object {
         private val TAG = "UpdateStatus"
 
-        fun updateDMUserStatus(
+        fun updateUserStatus(
             firestore: FirebaseFirestore,
-            chatModel: ChatModel,
-            loggedInUser: String,
-            status: String,
-            onSuccess: (String?) -> Unit
+            loggedInUser: String?,
+            status: UserStatus,
         ) {
-            val updatedChatModel = chatModel.copy(
-                dmChatUser1 = chatModel.dmChatUser1.copy(
-                    status = if (chatModel.dmChatUser1.username == loggedInUser) {
-                        status
-                    } else {
-                        chatModel.dmChatUser1.status
-                    }
-                ),
-                dmChatUser2 = chatModel.dmChatUser2.copy(
-                    status = if (chatModel.dmChatUser2.username == loggedInUser) {
-                        status
-                    } else {
-                        chatModel.dmChatUser2.status
-                    }
-                )
-            )
 
-            firestore.collection(FirestoreCollections.CHATS_COLLECTION)
-                .document(chatModel.chatId)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
-                    onSuccess(status)
-                }
-                .addOnFailureListener {
-                    onSuccess(null)
-                }
+            //todo update status in when login and logout
+            if (loggedInUser == null) {
+                return
+            }
+            val userStatus = if (status == UserStatus.Online) {
+                status.name
+            } else {
+                "${status.name} ${Timestamp.now().seconds}"
+            }
+            firestore.collection(FirestoreCollections.USERS_COLLECTION)
+                .document(loggedInUser)
+                .update("status", userStatus)
         }
     }
 }

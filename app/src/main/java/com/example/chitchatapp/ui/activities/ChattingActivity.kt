@@ -3,8 +3,6 @@ package com.example.chitchatapp.ui.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
@@ -104,22 +102,9 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
         //init the recycler view
-        val chatModel = viewModel.getChatDetails(chatId)
-        binding.chattingRv.apply {
-            chattingAdapter =
-                ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChattingActivity)
-            adapter = chattingAdapter
-            addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-                //scroll to the bottom of the recycler view on keyboard open
-                if (bottom < oldBottom) {
-                    binding.chattingRv.smoothScrollToPosition(chatModel.chatMessages.size - 1)
-                }
-            }
-        }
+        initRecyclerView(chatId, loggedInUsername)
+        initUserStatus(chatId, loggedInUsername)
         initSendingLayout(chatId)
-
-        //update the user status to online
-        updateUserStatus(chatId, UserStatus.Online.name)
 
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveChatDetails(chatId).observe(this) {
@@ -139,42 +124,12 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                 val headerUsername = ChatUtils.getChatUsername(it, loggedInUsername)
                 binding.chattingUsername.text = headerUsername
 
-                //setting the status
-                val headerStatus = ChatUtils.getChatStatus(it, loggedInUsername)
-
-                if (headerStatus == UserStatus.Online.name) {
-                    binding.activityChattingStatusCv.setCardBackgroundColor(
-                        resources.getColor(
-                            R.color.green,
-                            null
-                        )
-                    )
-                    binding.chattingStatus.text = UserStatus.Online.name
-                } else {
-                    binding.activityChattingStatusCv.setCardBackgroundColor(
-                        resources.getColor(
-                            R.color.yellow,
-                            null
-                        )
-                    )
-                    //getting the last seen time
-                    val lastSeen = headerStatus.split(" ")[1].toLong()
-                    val lastSeenTime = TimeUtils.getFormattedTime(Timestamp(lastSeen, 0))
-
-                    binding.chattingStatus.text =
-                        getString(R.string.chatting_activity_text_last_seen, lastSeenTime)
-                }
-
                 //submit the live list to the adapter
                 chattingAdapter.submitList(it.chatMessages) {
                     //when the list is submitted, then update the seen status
                     viewModel.updateSeen(this, chatId) {}
                     //scroll to the bottom of the recycler view
-
-                    if (!ChatUtils.isStatusChanged(it, viewModel.oldChatDetails)) {
-                        binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
-                        viewModel.oldChatDetails = it
-                    }
+                    binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
                 }
             }
         }
@@ -202,6 +157,54 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             }
             //otherwise if chat already exists then it will be that chat id
             getChatDetails(it!!, loggedInUsername)
+        }
+    }
+
+    private fun initRecyclerView(chatId: String, loggedInUsername: String) {
+        val chatModel = viewModel.getChatDetails(chatId)
+        binding.chattingRv.apply {
+            chattingAdapter =
+                ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChattingActivity)
+            adapter = chattingAdapter
+            addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+                //scroll to the bottom of the recycler view on keyboard open
+                if (bottom < oldBottom) {
+                    binding.chattingRv.smoothScrollToPosition(chatModel.chatMessages.size - 1)
+                }
+            }
+        }
+    }
+
+    private fun initUserStatus(chatId: String, loggedInUsername: String) {
+        viewModel.listenUserStatus(chatId, loggedInUsername) { status ->
+            //setting the status
+            if (status == null) {
+                binding.activityChattingStatusCv.visibility = View.GONE
+                return@listenUserStatus
+            }
+
+            if (status == UserStatus.Online.name) {
+                binding.activityChattingStatusCv.setCardBackgroundColor(
+                    resources.getColor(
+                        R.color.green,
+                        null
+                    )
+                )
+                binding.chattingStatus.text = UserStatus.Online.name
+            } else {
+                binding.activityChattingStatusCv.setCardBackgroundColor(
+                    resources.getColor(
+                        R.color.yellow,
+                        null
+                    )
+                )
+                //getting the last seen time
+                val lastSeen = status.split(" ")[1].toLong()
+                val lastSeenTime = TimeUtils.getFormattedTime(Timestamp(lastSeen, 0))
+
+                binding.chattingStatus.text =
+                    getString(R.string.chatting_activity_text_last_seen, lastSeenTime)
+            }
         }
     }
 
@@ -302,31 +305,6 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             if (it == null) {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    @Suppress("DEPRECATION")
-    override fun onBackPressed() {
-        //update the last seen status to last seen
-        updateUserStatus(chatId, UserStatus.LastSeen.name)
-        super.onBackPressed()
-    }
-
-    private fun updateUserStatus(chatId: String, status: String) {
-        //need to update the status to online after some delay
-        //don't know what is happening here but it will not work without this delay
-        if (status == UserStatus.Online.name) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                viewModel.updateUserStatus(this, chatId, status) {}
-            }, 4000)
-        } else {
-            //update the last seen status to last seen
-            val lastSeenTime = Timestamp.now().seconds
-            val lastSeenText = UserStatus.LastSeen.name + " " + lastSeenTime
-            Handler(Looper.getMainLooper()).postDelayed({
-                viewModel.updateUserStatus(this, chatId, lastSeenText) {}
-            }, 4000)
         }
     }
 
