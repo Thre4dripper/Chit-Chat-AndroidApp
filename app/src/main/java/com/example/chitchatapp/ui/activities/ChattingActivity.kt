@@ -191,7 +191,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                     )
                 )
                 binding.chattingStatus.text = UserStatus.Online.name
-            } else {
+            } else if (status.split(" ")[0] == UserStatus.LastSeen.name) {
                 binding.activityChattingStatusCv.setCardBackgroundColor(
                     resources.getColor(
                         R.color.yellow,
@@ -204,6 +204,8 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                 binding.chattingStatus.text =
                     getString(R.string.chatting_activity_text_last_seen, lastSeenTime)
+            } else {
+                binding.activityChattingStatusCv.visibility = View.GONE
             }
         }
     }

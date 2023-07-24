@@ -6,17 +6,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/create_group_iv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:contentDescription="@string/create_group_desc_image"
-            android:src="@drawable/ic_group"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/create_group_cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardBackgroundColor="@color/textColorPrimary"
+            app:cardCornerRadius="200dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/textColorPrimary" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/create_group_iv"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:contentDescription="@string/create_group_desc_image"
+                android:src="@drawable/ic_group" />
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -27,7 +34,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_group_iv">
+            app:layout_constraintTop_toBottomOf="@+id/create_group_cv">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/create_group_et"

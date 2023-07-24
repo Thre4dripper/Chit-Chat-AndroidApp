@@ -124,14 +124,14 @@ class AddGroupActivity : AppCompatActivity(), ChatClickInterface {
     }
 
     private fun openCreateGroupDialog() {
+        selectedGroupImageUri = null
         val dialog = MaterialAlertDialogBuilder(this)
         dialog.setTitle("Create Group")
-        dialog.setCancelable(false)
 
         createGroupDialogBinding = DialogCreateGroupBinding.inflate(layoutInflater)
         dialog.setView(createGroupDialogBinding.root)
 
-        createGroupDialogBinding.createGroupIv.setOnClickListener {
+        createGroupDialogBinding.createGroupCv.setOnClickListener {
             photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
