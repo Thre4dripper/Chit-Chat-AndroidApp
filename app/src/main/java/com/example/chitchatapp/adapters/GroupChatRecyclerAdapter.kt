@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
+import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
 import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
 import com.example.chitchatapp.databinding.ItemChatImageRightBinding
 import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
@@ -23,7 +25,8 @@ import java.util.Locale
 
 class GroupChatRecyclerAdapter(
     private var loggedInUsername: String,
-    private var groupChatModel: GroupChatModel
+    private var groupChatModel: GroupChatModel,
+    private var groupMessageClickInterface: GroupMessageClickInterface
 ) :
     ListAdapter<GroupMessageModel, ViewHolder>(GroupChatDiffUtil()) {
 
@@ -114,6 +117,7 @@ class GroupChatRecyclerAdapter(
                     VIEW_TYPE_LEFT_MESSAGE
                 }
             }
+
             GroupMessageType.TypeImage -> {
                 return if (item.from == loggedInUsername) {
                     VIEW_TYPE_RIGHT_IMAGE
@@ -208,12 +212,12 @@ class GroupChatRecyclerAdapter(
             binding.itemChatRightImageTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)
 
-//            binding.itemChatImageRightIv.setOnClickListener {
-//                chatMessageClickInterface.onImageClicked(
-//                    chatMessageModel,
-//                    binding.itemChatImageRightIv
-//                )
-//            }
+            binding.itemChatImageRightIv.setOnClickListener {
+                groupMessageClickInterface.onImageClicked(
+                    groupMessageModel,
+                    binding.itemChatImageRightIv
+                )
+            }
         }
     }
 
@@ -240,12 +244,12 @@ class GroupChatRecyclerAdapter(
             binding.itemChatLeftImageTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)
 
-//            binding.itemChatLeftImage.setOnClickListener {
-//                chatMessageClickInterface.onImageClicked(
-//                    chatMessageModel,
-//                    binding.itemChatLeftImage
-//                )
-//            }
+            binding.itemChatLeftImage.setOnClickListener {
+                groupMessageClickInterface.onImageClicked(
+                    groupMessageModel,
+                    binding.itemChatLeftImage
+                )
+            }
         }
     }
 

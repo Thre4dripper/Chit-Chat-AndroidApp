@@ -1,23 +1,29 @@
 package com.example.chitchatapp.ui.activities
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
+import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
 import com.example.chitchatapp.constants.ChatConstants
+import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
 import com.yalantis.ucrop.UCrop
@@ -27,7 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class GroupChatActivity : AppCompatActivity() {
+class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     private lateinit var binding: ActivityGroupChatBinding
     private lateinit var viewModel: GroupChatViewModel
 
@@ -157,7 +163,7 @@ class GroupChatActivity : AppCompatActivity() {
         val groupChatModel = viewModel.getGroupChatDetails(groupId)
         binding.groupChatRv.apply {
             groupChatAdapter =
-                GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!)
+                GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!, this@GroupChatActivity)
             adapter = groupChatAdapter
             addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 //scroll to the bottom of the recycler view on keyboard open
@@ -265,5 +271,18 @@ class GroupChatActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {
+        val intent = Intent(this, ZoomActivity::class.java)
+        intent.putExtra(Constants.ZOOM_IMAGE_URL, groupMessageModel.image)
+        val activityOptionsCompat =
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                chatImageIv,
+                getString(R.string.chatting_activity_chat_image_transition)
+            )
+
+        startActivity(intent, activityOptionsCompat.toBundle())
     }
 }
