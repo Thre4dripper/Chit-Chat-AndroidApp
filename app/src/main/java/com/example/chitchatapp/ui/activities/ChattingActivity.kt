@@ -107,7 +107,19 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                     }
 
                     R.id.action_delete_chat -> {
-                        //TODO: delete the chat
+                        clearOrDeleteDialog(
+                            "Delete chat",
+                            "Are you sure you want to delete this chat?"
+                        ) {
+                            viewModel.deletedChat(chatId) {
+                                Toast.makeText(
+                                    this,
+                                    if (it) "Chat deleted" else "Error deleting chat",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                finish()
+                            }
+                        }
                     }
                 }
                 true

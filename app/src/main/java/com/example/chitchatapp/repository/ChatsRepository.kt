@@ -7,6 +7,7 @@ import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.HomeLayoutType
 import com.example.chitchatapp.firebase.chats.ClearChat
+import com.example.chitchatapp.firebase.chats.DeleteChat
 import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendChat
@@ -137,6 +138,25 @@ class ChatsRepository {
                 val hasImages = chatModel.chatMessages.find { it.type == ChatMessageType.TypeImage }
                 if (hasImages != null) {
                     ClearChat.clearChatImages(storage, chatModel) { isImagesDeleted ->
+                        onSuccess(isImagesDeleted)
+                    }
+                } else {
+                    onSuccess(true)
+                }
+            }
+        }
+
+        fun deleteChat(chatModel: ChatModel, onSuccess: (Boolean) -> Unit) {
+            val firestore = FirebaseFirestore.getInstance()
+            val storage = FirebaseStorage.getInstance()
+            DeleteChat.deleteUserChat(firestore, chatModel) { isChatDeleted ->
+                if (!isChatDeleted) {
+                    onSuccess(false)
+                    return@deleteUserChat
+                }
+                val hasImages = chatModel.chatMessages.find { it.type == ChatMessageType.TypeImage }
+                if (hasImages != null) {
+                    DeleteChat.deleteChatImages(storage, chatModel) { isImagesDeleted ->
                         onSuccess(isImagesDeleted)
                     }
                 } else {
