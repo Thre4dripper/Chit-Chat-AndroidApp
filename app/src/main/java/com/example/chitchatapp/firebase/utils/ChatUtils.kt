@@ -2,6 +2,7 @@ package com.example.chitchatapp.firebase.utils
 
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUtils {
@@ -59,6 +60,15 @@ class ChatUtils {
             } else {
                 chatModel.dmChatUser1.status
             }
+        }
+
+        fun getGroupChatProfileImage(
+            groupChatModel: GroupChatModel,
+            from: String
+        ): String {
+            return groupChatModel.members.find {
+                it.username == from
+            }?.profileImage ?: ""
         }
     }
 }

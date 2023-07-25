@@ -8,8 +8,10 @@ import com.example.chitchatapp.enums.HomeLayoutType
 import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendChat
+import com.example.chitchatapp.firebase.chats.SendGroupChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
 import com.example.chitchatapp.firebase.utils.StorageUtils
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.HomeChatModel
@@ -120,6 +122,17 @@ class ChatsRepository {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: return
             UpdateSeen.updateSeen(firestore, chatModel, loggedInUser, onSuccess)
+        }
+
+        fun sendGroupTextMessage(
+            groupChatModel: GroupChatModel,
+            text: String,
+            from: String,
+            chatMessageId: (String?) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+
+            SendGroupChat.sendTextMessage(firestore, groupChatModel, text, from, chatMessageId)
         }
     }
 }

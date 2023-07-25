@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -17,6 +20,12 @@ import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
+import com.yalantis.ucrop.UCrop
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class GroupChatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGroupChatBinding
@@ -84,7 +93,7 @@ class GroupChatActivity : AppCompatActivity() {
     private fun getChatDetails(groupId: String, loggedInUsername: String) {
         //init the recycler view
         initRecyclerView(groupId, loggedInUsername)
-//        initSendingLayout(chatId)
+        initSendingLayout(groupId)
 
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveGroupChatDetails(groupId).observe(this) {
@@ -148,13 +157,112 @@ class GroupChatActivity : AppCompatActivity() {
         val groupChatModel = viewModel.getGroupChatDetails(groupId)
         binding.groupChatRv.apply {
             groupChatAdapter =
-                GroupChatRecyclerAdapter()
+                GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!)
             adapter = groupChatAdapter
             addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 //scroll to the bottom of the recycler view on keyboard open
                 if (bottom < oldBottom) {
-                    binding.groupChatRv.smoothScrollToPosition(groupChatModel!!.messages.size - 1)
+                    binding.groupChatRv.smoothScrollToPosition(groupChatModel.messages.size - 1)
                 }
+            }
+        }
+    }
+
+    private fun initSendingLayout(groupId: String) {
+        binding.sendMessageBtn.alpha = 0.5f
+        binding.sendMessageBtn.isEnabled = false
+        binding.sendMessageEt.addTextChangedListener { text ->
+            if (text.isNullOrEmpty()) {
+                binding.sendMessageBtn.alpha = 0.5f
+                binding.sendMessageBtn.isEnabled = false
+            } else {
+                binding.sendMessageBtn.alpha = 1f
+                binding.sendMessageBtn.isEnabled = true
+            }
+        }
+
+        binding.sendMessageBtn.setOnClickListener {
+            val message = binding.sendMessageEt.text.toString()
+            if (message.isNotEmpty()) {
+                sendMessage(message, groupId)
+                binding.sendMessageEt.text?.clear()
+            }
+        }
+
+        //photo sending button
+        binding.photoProgressBar.visibility = View.GONE
+        binding.photoAddBtn.visibility = View.VISIBLE
+
+        binding.photoAddBtn.setOnClickListener {
+            binding.photoAddBtn.visibility = View.GONE
+            binding.photoProgressBar.visibility = View.VISIBLE
+            photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+    }
+
+    // Registers a photo picker activity launcher in single-select mode.
+    private val photoPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+        { pickedPhotoUri ->
+            if (pickedPhotoUri != null) {
+                var uri: Uri? = null
+
+                //async call to create temp file
+                CoroutineScope(Dispatchers.Main).launch {
+                    uri = Uri.fromFile(withContext(Dispatchers.IO) {
+                        val file = File.createTempFile( //creating temp file
+                            "temp", ".jpg", cacheDir
+                        )
+                        file
+                    })
+                }
+                    //on completion of async call
+                    .invokeOnCompletion {
+                        //Crop activity with source and destination uri
+                        val uCrop = UCrop.of(pickedPhotoUri, uri!!)
+                            .withMaxResultSize(1080, 1080)
+
+                        cropImageCallback.launch(uCrop.getIntent(this))
+                    }
+
+            } else {
+                binding.photoAddBtn.visibility = View.VISIBLE
+                binding.photoProgressBar.visibility = View.GONE
+            }
+        }
+
+    /**
+     * CALLBACK FOR CROPPING RECEIVED IMAGE
+     */
+    private var cropImageCallback =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val selectedImageUri = UCrop.getOutput(result.data!!)
+
+                if (selectedImageUri == null) {
+                    binding.photoAddBtn.visibility = View.VISIBLE
+                    binding.photoProgressBar.visibility = View.GONE
+                    Toast.makeText(this, "Error cropping image", Toast.LENGTH_SHORT).show()
+                    return@registerForActivityResult
+                }
+
+//                viewModel.sendImageMessage(this, chatId, selectedImageUri) {
+//                    if (it == null) {
+//                        Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
+//                    }
+//                    binding.photoAddBtn.visibility = View.VISIBLE
+//                    binding.photoProgressBar.visibility = View.GONE
+//                }
+            } else {
+                binding.photoAddBtn.visibility = View.VISIBLE
+                binding.photoProgressBar.visibility = View.GONE
+            }
+        }
+
+    private fun sendMessage(message: String, chatId: String) {
+        viewModel.sendTextMessage(this, chatId, message) {
+            if (it == null) {
+                Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }
         }
     }

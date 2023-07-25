@@ -45,4 +45,15 @@ class GroupChatViewModel : ViewModel() {
             onSuccess
         )
     }
+
+    fun sendTextMessage(
+        context: Context,
+        chatId: String,
+        text: String,
+        chatMessageId: (String?) -> Unit,
+    ) {
+        val groupChatModel = getGroupChatDetails(chatId) ?: return
+        val from = getLoggedInUsername(context) ?: return
+        ChatsRepository.sendGroupTextMessage(groupChatModel, text, from, chatMessageId)
+    }
 }
