@@ -1,5 +1,6 @@
 package com.example.chitchatapp.ui.activities
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -15,6 +16,7 @@ import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.AddGroupRecyclerAdapter
 import com.example.chitchatapp.adapters.GroupSelectedRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.AddGroupInterface
+import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityAddGroupBinding
 import com.example.chitchatapp.databinding.DialogCreateGroupBinding
@@ -67,7 +69,7 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
             adapter = selectedUsersAdapter
         }
 
-        viewModel.selectedUsers.observe(this) {
+        AddGroupViewModel.selectedUsers.observe(this) {
             selectedUsersAdapter.submitList(it)
 
             //if no user is selected then hide the save button
@@ -79,7 +81,7 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
         binding.addGroupContactsRv.apply {
             addGroupAdapter = AddGroupRecyclerAdapter(
                 loggedInUsername,
-                viewModel.selectedUsers, //initially selected users will be empty
+                AddGroupViewModel.selectedUsers, //initially selected users will be empty
                 this@AddGroupActivity
             )
             adapter = addGroupAdapter
@@ -93,7 +95,6 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
     }
 
     private fun initCreateGrpBtn() {
-        binding.addGroupSaveProgressBar.visibility = View.GONE
         binding.addGroupSaveBtn.visibility = View.GONE
         binding.addGroupSaveBtn.setOnClickListener {
             openCreateGroupDialog()
@@ -111,7 +112,7 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
     }
 
     override fun onUserClicked(chatId: String) {
-        viewModel.selectedUsers.value?.find { it.chatId == chatId }?.let {
+        AddGroupViewModel.selectedUsers.value?.find { it.chatId == chatId }?.let {
             viewModel.removeSelectedUser(it)
         } ?: run {
             viewModel.searchedUsers.value?.find { it.chatId == chatId }?.let {
@@ -139,14 +140,12 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
             val groupImageUri = selectedGroupImageUri
             val groupName = createGroupDialogBinding.createGroupEt.text.toString()
             if (groupName.isNotEmpty()) {
-                //todo open group chat activity immediately
-                binding.addGroupSaveProgressBar.visibility = View.VISIBLE
-                binding.addGroupSaveBtn.visibility = View.GONE
-                viewModel.createGroup(this, groupName, groupImageUri) {
-                    binding.addGroupSaveProgressBar.visibility = View.GONE
-                    binding.addGroupSaveBtn.visibility = View.VISIBLE
-                    finish()
-                }
+                //start group chat activity
+                val intent = Intent(this, GroupChatActivity::class.java)
+                intent.putExtra(GroupConstants.GROUP_NAME, groupName)
+                intent.putExtra(GroupConstants.GROUP_IMAGE, groupImageUri.toString())
+                startActivity(intent)
+                finish()
             } else {
                 Toast.makeText(this, "Group name cannot be empty", Toast.LENGTH_SHORT).show()
             }
@@ -203,7 +202,6 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
                     .into(createGroupDialogBinding.createGroupIv)
             } else {
                 binding.addGroupSaveBtn.visibility = View.VISIBLE
-                binding.addGroupSaveProgressBar.visibility = View.GONE
             }
         }
 }

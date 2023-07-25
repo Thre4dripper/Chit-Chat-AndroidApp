@@ -1,11 +1,14 @@
 package com.example.chitchatapp.viewModels
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.models.ChatGroupModel
+import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.repository.ChatsRepository
+import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.store.UserStore
 
 class GroupChatViewModel : ViewModel() {
@@ -25,5 +28,21 @@ class GroupChatViewModel : ViewModel() {
                 homeChat.id == groupId
             }?.groupChat
         }
+    }
+
+    fun createGroup(
+        context: Context,
+        groupName: String,
+        groupImageUri: Uri?,
+        selectedUsers: List<ChatModel>,
+        onSuccess: (String?) -> Unit,
+    ) {
+        GroupsRepository.createGroup(
+            context,
+            groupName,
+            groupImageUri,
+            selectedUsers,
+            onSuccess
+        )
     }
 }

@@ -1,13 +1,10 @@
 package com.example.chitchatapp.viewModels
 
-import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
-import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.repository.ChatsRepository
 
 class AddGroupViewModel : ViewModel() {
@@ -15,9 +12,9 @@ class AddGroupViewModel : ViewModel() {
     val searchedUsers: LiveData<List<ChatModel>?>
         get() = _searchedUsers
 
-    private var _selectedUsers = MutableLiveData<List<ChatModel>>(mutableListOf())
-    val selectedUsers: LiveData<List<ChatModel>?>
-        get() = _selectedUsers
+    companion object {
+        var selectedUsers = MutableLiveData<List<ChatModel>>(mutableListOf())
+    }
 
     fun searchUsers(searchQuery: String, loggedInUsername: String) {
         //updating livedata
@@ -45,37 +42,16 @@ class AddGroupViewModel : ViewModel() {
     }
 
     fun addSelectedUser(chatModel: ChatModel) {
-        val oldList = _selectedUsers.value
+        val oldList = selectedUsers.value
         val updatedList = oldList?.toMutableList()
         updatedList?.add(chatModel)
-        _selectedUsers.value = updatedList
+        selectedUsers.value = updatedList
     }
 
     fun removeSelectedUser(chatModel: ChatModel) {
-        val oldList = _selectedUsers.value
+        val oldList = selectedUsers.value
         val updatedList = oldList?.toMutableList()
         updatedList?.remove(chatModel)
-        _selectedUsers.value = updatedList
-    }
-
-    fun createGroup(
-        context: Context,
-        groupName: String,
-        groupImageUri: Uri?,
-        onSuccess: (Boolean) -> Unit,
-    ) {
-        val selectedUsers = _selectedUsers.value
-
-        if (selectedUsers == null) {
-            onSuccess(false)
-            return
-        }
-        GroupsRepository.createGroup(
-            context,
-            groupName,
-            groupImageUri,
-            selectedUsers,
-            onSuccess
-        )
+        selectedUsers.value = updatedList
     }
 }

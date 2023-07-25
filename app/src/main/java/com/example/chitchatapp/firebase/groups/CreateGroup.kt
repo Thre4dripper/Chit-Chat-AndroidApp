@@ -18,7 +18,7 @@ class CreateGroup {
             groupImageUrl: String?,
             loggedInUsername: String,
             selectedUsers: List<GroupChatUserModel>,
-            onSuccess: (Boolean) -> Unit,
+            onSuccess: (String?) -> Unit,
         ) {
             val group = ChatGroupModel(
                 groupChatId,
@@ -43,10 +43,10 @@ class CreateGroup {
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupChatId)
                 .set(group)
                 .addOnSuccessListener {
-                    onSuccess(true)
+                    onSuccess(groupChatId)
                 }
                 .addOnFailureListener {
-                    onSuccess(false)
+                    onSuccess(null)
                 }
         }
     }

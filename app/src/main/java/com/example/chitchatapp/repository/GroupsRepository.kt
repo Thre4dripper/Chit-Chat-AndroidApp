@@ -20,7 +20,7 @@ class GroupsRepository {
             groupName: String,
             groupImageUri: Uri?,
             selectedUsers: List<ChatModel>,
-            onSuccess: (Boolean) -> Unit,
+            onSuccess: (String?) -> Unit,
         ) {
             val fireStore = FirebaseFirestore.getInstance()
             val storage = FirebaseStorage.getInstance()
