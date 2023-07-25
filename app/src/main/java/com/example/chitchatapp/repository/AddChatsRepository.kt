@@ -28,12 +28,11 @@ class AddChatsRepository {
             chatId: (String?) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            val loggedInUser = FirebaseAuth.getInstance().currentUser
             val currentUser = UserRepository.userDetails.value
 
             // Check if chat already exists
             ChatUtils.checkIfChatExists(
-                firestore, loggedInUser!!.uid, newChatUser.uid
+                firestore, currentUser!!.uid, newChatUser.uid
             ) {
                 //if chat exists, return chatId
                 if (it != null) {
@@ -41,7 +40,7 @@ class AddChatsRepository {
                     return@checkIfChatExists
                 }
                 //otherwise add new chat
-                AddNewChat.addNewChat(firestore, loggedInUser, newChatUser, currentUser!!, chatId)
+                AddNewChat.addNewChat(firestore, newChatUser, currentUser, chatId)
             }
         }
     }

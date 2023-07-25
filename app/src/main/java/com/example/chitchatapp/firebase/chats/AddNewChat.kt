@@ -9,7 +9,6 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.DMChatUserModel
 import com.example.chitchatapp.models.UserModel
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
 
@@ -17,12 +16,11 @@ class AddNewChat {
     companion object {
         fun addNewChat(
             firestore: FirebaseFirestore,
-            loggedInUser: FirebaseUser?,
             newChatUser: UserModel,
             currentUser: UserModel,
             chatId: (String?) -> Unit,
         ) {
-            val chatDocId = ChatUtils.getDMChatDocId(loggedInUser?.uid.toString(), newChatUser.uid)
+            val chatDocId = ChatUtils.getDMChatDocId(currentUser.uid, newChatUser.uid)
             val data = ChatModel(
                 chatDocId,
                 DMChatUserModel(
@@ -51,7 +49,7 @@ class AddNewChat {
                     ChatMessageModel(
                         UUID.randomUUID().toString(),
                         ChatMessageType.TypeMessage,
-                        "Hi, I am ${loggedInUser?.displayName.toString()}.",
+                        "Hi, I am ${currentUser.username}.",
                         null,
                         null,
                         Timestamp.now(),
