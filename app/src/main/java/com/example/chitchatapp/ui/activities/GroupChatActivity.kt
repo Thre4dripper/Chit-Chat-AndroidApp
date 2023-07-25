@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
@@ -20,6 +21,7 @@ class GroupChatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGroupChatBinding
     private lateinit var viewModel: GroupChatViewModel
 
+    private lateinit var groupChatAdapter: GroupChatRecyclerAdapter
     private var groupId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +62,7 @@ class GroupChatActivity : AppCompatActivity() {
 
     private fun getChatDetails(groupId: String, loggedInUsername: String) {
         //init the recycler view
-//        initRecyclerView(chatId, loggedInUsername)
+        initRecyclerView(groupId, loggedInUsername)
 //        initSendingLayout(chatId)
 
         binding.loadingLottie.visibility = View.VISIBLE
@@ -80,12 +82,12 @@ class GroupChatActivity : AppCompatActivity() {
                 binding.groupChatGroupName.text = it.name
 
 //                //submit the live list to the adapter
-//                chattingAdapter.submitList(it.chatMessages) {
-//                    //when the list is submitted, then update the seen status
+                groupChatAdapter.submitList(it.messages) {
+                    //when the list is submitted, then update the seen status
 //                    viewModel.updateSeen(this, chatId) {}
-//                    //scroll to the bottom of the recycler view
-//                    binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
-//                }
+                    //scroll to the bottom of the recycler view
+                    binding.groupChatRv.smoothScrollToPosition(it.messages.size - 1)
+                }
             }
         }
     }
@@ -118,6 +120,21 @@ class GroupChatActivity : AppCompatActivity() {
             }
             //otherwise if chat already exists then it will be that chat id
             getChatDetails(it!!, loggedInUsername)
+        }
+    }
+
+    private fun initRecyclerView(groupId: String, loggedInUsername: String) {
+        val groupChatModel = viewModel.getGroupChatDetails(groupId)
+        binding.groupChatRv.apply {
+            groupChatAdapter =
+                GroupChatRecyclerAdapter()
+            adapter = groupChatAdapter
+            addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+                //scroll to the bottom of the recycler view on keyboard open
+                if (bottom < oldBottom) {
+                    binding.groupChatRv.smoothScrollToPosition(groupChatModel!!.messages.size - 1)
+                }
+            }
         }
     }
 }
