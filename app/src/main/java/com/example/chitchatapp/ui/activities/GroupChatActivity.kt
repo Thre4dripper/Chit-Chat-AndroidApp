@@ -165,10 +165,14 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             groupChatAdapter =
                 GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!, this@GroupChatActivity)
             adapter = groupChatAdapter
-            addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+        }
+
+        //scroll to the bottom of the recycler view when the keyboard is open acc to live data
+        viewModel.getLiveGroupChatDetails(groupId).observe(this) {
+            binding.groupChatRv.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 //scroll to the bottom of the recycler view on keyboard open
                 if (bottom < oldBottom) {
-                    binding.groupChatRv.smoothScrollToPosition(groupChatModel.messages.size - 1)
+                    binding.groupChatRv.smoothScrollToPosition(groupChatModel!!.messages.size - 1)
                 }
             }
         }

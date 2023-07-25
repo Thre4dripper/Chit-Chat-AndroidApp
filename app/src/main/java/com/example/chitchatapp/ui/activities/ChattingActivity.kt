@@ -205,10 +205,14 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             chattingAdapter =
                 ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChattingActivity)
             adapter = chattingAdapter
-            addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+        }
+
+        //scroll to the bottom of the recycler view when the keyboard is open acc to live data
+        viewModel.getLiveChatDetails(chatId).observe(this) {
+            binding.chattingRv.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 //scroll to the bottom of the recycler view on keyboard open
                 if (bottom < oldBottom) {
-                    binding.chattingRv.smoothScrollToPosition(chatModel.chatMessages.size - 1)
+                    binding.chattingRv.smoothScrollToPosition(it!!.chatMessages.size - 1)
                 }
             }
         }
