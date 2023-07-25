@@ -99,6 +99,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     private fun getChatDetails(groupId: String, loggedInUsername: String) {
         //init the recycler view
         initRecyclerView(groupId, loggedInUsername)
+        initMembersLayout(groupId)
         initSendingLayout(groupId)
 
         binding.loadingLottie.visibility = View.VISIBLE
@@ -176,6 +177,18 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 }
             }
         }
+    }
+
+    private fun initMembersLayout(groupId: String) {
+        val groupMembers = viewModel.getGroupChatDetails(groupId)!!.members
+        var membersNames = ""
+        for (member in groupMembers) {
+            membersNames += member.username + ", "
+        }
+
+        //removing the last comma
+        membersNames = membersNames.substring(0, membersNames.length - 2)
+        binding.groupChatMembers.text = membersNames
     }
 
     private fun initSendingLayout(groupId: String) {

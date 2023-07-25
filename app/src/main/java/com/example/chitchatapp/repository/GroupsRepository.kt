@@ -38,7 +38,7 @@ class GroupsRepository {
 
             //user details were fetched earlier
             val currentUserImage = UserRepository.userDetails.value?.profileImage ?: ""
-            selectedGroupUsers.add(GroupChatUserModel(loggedInUsername, currentUserImage))
+            selectedGroupUsers.add(0, GroupChatUserModel(loggedInUsername, currentUserImage))
 
             if (groupImageUri == null) {
                 CreateGroup.createNewGroup(
