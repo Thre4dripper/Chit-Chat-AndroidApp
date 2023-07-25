@@ -111,10 +111,10 @@ class GroupChatActivity : AppCompatActivity() {
                 //setting the group name
                 binding.groupChatGroupName.text = it.name
 
-//                //submit the live list to the adapter
+                //submit the live list to the adapter
                 groupChatAdapter.submitList(it.messages) {
                     //when the list is submitted, then update the seen status
-//                    viewModel.updateSeen(this, chatId) {}
+                    viewModel.updateSeen(this, groupId) {}
                     //scroll to the bottom of the recycler view
                     binding.groupChatRv.smoothScrollToPosition(it.messages.size - 1)
                 }

@@ -156,5 +156,15 @@ class ChatsRepository {
                 SendGroupChat.sendImage(firestore, groupChatModel, url, from, chatMessageId)
             }
         }
+
+        fun updateGroupSeen(
+            context: Context,
+            groupChatModel: GroupChatModel,
+            onSuccess: (Boolean) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val loggedInUser = UserStore.getUsername(context) ?: return
+            UpdateSeen.updateGroupSeen(firestore, groupChatModel, loggedInUser, onSuccess)
+        }
     }
 }
