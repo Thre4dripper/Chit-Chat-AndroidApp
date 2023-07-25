@@ -4,11 +4,10 @@ data class GroupChatModel(
     val id: String,
     val name: String,
     val image: String?,
-    val admin: String,
     val members: List<GroupChatUserModel>,
     val messages: List<GroupMessageModel>
 ) {
-    constructor() : this("", "", null, "", listOf(), listOf())
+    constructor() : this("", "", null, listOf(), listOf())
 }
 
 data class GroupChatUserModel(

@@ -24,7 +24,6 @@ class CreateGroup {
                 groupChatId,
                 groupName,
                 groupImageUrl,
-                loggedInUsername,
                 selectedUsers,
                 listOf(
                     GroupMessageModel(
