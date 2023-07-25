@@ -134,5 +134,27 @@ class ChatsRepository {
 
             SendGroupChat.sendTextMessage(firestore, groupChatModel, text, from, chatMessageId)
         }
+
+        fun sendGroupImage(
+            groupChatModel: GroupChatModel,
+            imageUri: Uri,
+            from: String,
+            chatMessageId: (String?) -> Unit,
+        ) {
+            val storage = FirebaseStorage.getInstance()
+            val firestore = FirebaseFirestore.getInstance()
+
+            StorageUtils.getUrlFromStorage(
+                storage,
+                "${StorageFolders.CHAT_IMAGES_FOLDER}/${groupChatModel.id}/${UUID.randomUUID()}",
+                imageUri
+            ) { url ->
+                if (url == null) {
+                    chatMessageId(null)
+                    return@getUrlFromStorage
+                }
+                SendGroupChat.sendImage(firestore, groupChatModel, url, from, chatMessageId)
+            }
+        }
     }
 }

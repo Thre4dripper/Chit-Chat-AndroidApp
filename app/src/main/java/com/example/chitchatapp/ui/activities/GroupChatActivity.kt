@@ -246,13 +246,13 @@ class GroupChatActivity : AppCompatActivity() {
                     return@registerForActivityResult
                 }
 
-//                viewModel.sendImageMessage(this, chatId, selectedImageUri) {
-//                    if (it == null) {
-//                        Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
-//                    }
-//                    binding.photoAddBtn.visibility = View.VISIBLE
-//                    binding.photoProgressBar.visibility = View.GONE
-//                }
+                viewModel.sendImageMessage(this, groupId!!, selectedImageUri) {
+                    if (it == null) {
+                        Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
+                    }
+                    binding.photoAddBtn.visibility = View.VISIBLE
+                    binding.photoProgressBar.visibility = View.GONE
+                }
             } else {
                 binding.photoAddBtn.visibility = View.VISIBLE
                 binding.photoProgressBar.visibility = View.GONE

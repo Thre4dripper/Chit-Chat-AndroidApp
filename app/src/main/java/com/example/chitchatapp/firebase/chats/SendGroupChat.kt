@@ -47,5 +47,42 @@ class SendGroupChat {
                     chatMessageId(null)
                 }
         }
+
+        fun sendImage(
+            firestore: FirebaseFirestore,
+            groupChatModel: GroupChatModel,
+            imageUrl: String,
+            from: String,
+            chatMessageId: (String?) -> Unit,
+        ) {
+            val id = UUID.randomUUID().toString()
+            val oldMessagesList = groupChatModel.messages
+            val newMessagesList = oldMessagesList.toMutableList()
+            newMessagesList.add(
+                GroupMessageModel(
+                    id,
+                    GroupMessageType.TypeImage,
+                    null,
+                    imageUrl,
+                    null,
+                    Timestamp.now(),
+                    listOf(from),
+                    from,
+                )
+            )
+            //no worry, firestore will merge the data, and only update the chatMessages field
+            val updatedChatModel = groupChatModel.copy(
+                messages = newMessagesList
+            )
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
+                .document(groupChatModel.id)
+                .set(updatedChatModel, SetOptions.merge())
+                .addOnSuccessListener {
+                    chatMessageId(id)
+                }
+                .addOnFailureListener {
+                    chatMessageId(null)
+                }
+        }
     }
 }

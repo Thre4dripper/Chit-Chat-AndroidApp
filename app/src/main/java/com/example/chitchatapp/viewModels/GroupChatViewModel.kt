@@ -5,8 +5,8 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.store.UserStore
@@ -55,5 +55,16 @@ class GroupChatViewModel : ViewModel() {
         val groupChatModel = getGroupChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
         ChatsRepository.sendGroupTextMessage(groupChatModel, text, from, chatMessageId)
+    }
+
+    fun sendImageMessage(
+        context: Context,
+        chatId: String,
+        imageUri: Uri,
+        chatMessageId: (String?) -> Unit,
+    ) {
+        val groupChatModel = getGroupChatDetails(chatId) ?: return
+        val from = getLoggedInUsername(context) ?: return
+        ChatsRepository.sendGroupImage(groupChatModel, imageUri, from, chatMessageId)
     }
 }

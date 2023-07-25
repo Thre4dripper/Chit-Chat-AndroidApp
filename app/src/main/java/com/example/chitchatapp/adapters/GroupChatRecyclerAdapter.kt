@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
+import com.example.chitchatapp.databinding.ItemChatImageRightBinding
+import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
 import com.example.chitchatapp.databinding.ItemChatTextRightBinding
 import com.example.chitchatapp.databinding.ItemGroupCreatedBinding
 import com.example.chitchatapp.enums.GroupMessageType
@@ -28,6 +31,8 @@ class GroupChatRecyclerAdapter(
         private const val VIEW_TYPE_CREATED_GROUP = 0
         private const val VIEW_TYPE_RIGHT_MESSAGE = 1
         private const val VIEW_TYPE_LEFT_MESSAGE = 2
+        private const val VIEW_TYPE_RIGHT_IMAGE = 3
+        private const val VIEW_TYPE_LEFT_IMAGE = 4
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,6 +47,24 @@ class GroupChatRecyclerAdapter(
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_chat_text_right, parent, false)
                 return RightTextViewHolder(view)
+            }
+
+            VIEW_TYPE_LEFT_MESSAGE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_text_left, parent, false)
+                return LeftTextViewHolder(view)
+            }
+
+            VIEW_TYPE_RIGHT_IMAGE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_image_right, parent, false)
+                return RightImageViewHolder(view)
+            }
+
+            VIEW_TYPE_LEFT_IMAGE -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_image_left, parent, false)
+                return LeftImageViewHolder(view)
             }
 
             else -> null!!
@@ -60,6 +83,23 @@ class GroupChatRecyclerAdapter(
                 val groupMessageViewHolder = holder as RightTextViewHolder
                 groupMessageViewHolder.bind(groupMessageModel)
             }
+
+            VIEW_TYPE_LEFT_MESSAGE -> {
+                val groupMessageViewHolder = holder as LeftTextViewHolder
+                groupMessageViewHolder.bind(groupMessageModel)
+            }
+
+            VIEW_TYPE_RIGHT_IMAGE -> {
+                val groupMessageViewHolder = holder as RightImageViewHolder
+                groupMessageViewHolder.bind(groupMessageModel)
+            }
+
+            VIEW_TYPE_LEFT_IMAGE -> {
+                val groupMessageViewHolder = holder as LeftImageViewHolder
+                groupMessageViewHolder.bind(groupMessageModel)
+            }
+
+            else -> null!!
         }
     }
 
@@ -72,6 +112,13 @@ class GroupChatRecyclerAdapter(
                     VIEW_TYPE_RIGHT_MESSAGE
                 } else {
                     VIEW_TYPE_LEFT_MESSAGE
+                }
+            }
+            GroupMessageType.TypeImage -> {
+                return if (item.from == loggedInUsername) {
+                    VIEW_TYPE_RIGHT_IMAGE
+                } else {
+                    VIEW_TYPE_LEFT_IMAGE
                 }
             }
 
@@ -112,6 +159,93 @@ class GroupChatRecyclerAdapter(
                 .into(binding.itemChatMessageStatusIv)
 
             binding.itemChatMessageStatusIv.visibility = View.GONE
+        }
+    }
+
+    inner class LeftTextViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatTextLeftBinding.bind(itemView)
+
+        fun bind(groupMessageModel: GroupMessageModel) {
+            val senderImage =
+                ChatUtils.getGroupChatProfileImage(groupChatModel, groupMessageModel.from)
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatLeftIv)
+
+            binding.itemChatLeftTextMessage.text = groupMessageModel.text
+            binding.itemChatLeftTextTime.text =
+                TimeUtils.getFormattedTime(groupMessageModel.time)
+        }
+    }
+
+    inner class RightImageViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatImageRightBinding.bind(itemView)
+
+        fun bind(groupMessageModel: GroupMessageModel) {
+
+            Glide
+                .with(itemView.context)
+                .load(groupMessageModel.image)
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatImageRightIv)
+
+            val senderImage = ChatUtils.getGroupChatProfileImage(
+                groupChatModel,
+                groupMessageModel.from
+            )
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatMessageStatusIv)
+
+            binding.itemChatMessageStatusIv.visibility = View.GONE
+
+            binding.itemChatRightImageTime.text =
+                TimeUtils.getFormattedTime(groupMessageModel.time)
+
+//            binding.itemChatImageRightIv.setOnClickListener {
+//                chatMessageClickInterface.onImageClicked(
+//                    chatMessageModel,
+//                    binding.itemChatImageRightIv
+//                )
+//            }
+        }
+    }
+
+    inner class LeftImageViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatImageLeftBinding.bind(itemView)
+
+        fun bind(groupMessageModel: GroupMessageModel) {
+            val senderImage = ChatUtils.getGroupChatProfileImage(
+                groupChatModel,
+                groupMessageModel.from
+            )
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatLeftIv)
+
+            Glide
+                .with(itemView.context)
+                .load(groupMessageModel.image)
+                .into(binding.itemChatLeftImage)
+
+            binding.itemChatLeftImageTime.text =
+                TimeUtils.getFormattedTime(groupMessageModel.time)
+
+//            binding.itemChatLeftImage.setOnClickListener {
+//                chatMessageClickInterface.onImageClicked(
+//                    chatMessageModel,
+//                    binding.itemChatLeftImage
+//                )
+//            }
         }
     }
 
