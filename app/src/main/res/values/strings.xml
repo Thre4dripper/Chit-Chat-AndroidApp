@@ -7,6 +7,8 @@
     <string name="home_activity_desc_logout_btn">Logout</string>
     <string name="home_activity_complete_profile_btn">Complete Profile</string>
     <string name="home_activity_add_chats_btn">Add Chats</string>
+    <string name="home_activity_label_fav_chats">Favourite Chats</string>
+    <string name="home_activity_label_chats">Chats</string>
     <string name="home_activity_fab_add_chat">Add Chat</string>
     <string name="home_activity_fab_add_group">Add Group</string>
     <string name="home_activity_fab_close">Close</string>

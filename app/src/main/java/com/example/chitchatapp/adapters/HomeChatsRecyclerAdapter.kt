@@ -67,7 +67,6 @@ class HomeChatsRecyclerAdapter(
         return when (homeChatModel.type) {
             HomeLayoutType.USER -> VIEW_TYPE_USER
             HomeLayoutType.GROUP -> VIEW_TYPE_GROUP
-            else -> -1
         }
     }
 

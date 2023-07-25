@@ -70,16 +70,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/home_activity_title">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/home_chat_rv"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/item_home_chat" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/home_label_fav_chats_tv"
+                        style="@style/HomeLabelTvStyle"
+                        android:text="@string/home_activity_label_fav_chats" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/home_chat_fav_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="true"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_home_favourite" />
+
+                    <TextView
+                        android:id="@+id/home_label_chats_tv"
+                        style="@style/HomeLabelTvStyle"
+                        android:text="@string/home_activity_label_chats" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/home_chat_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="true"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_home_chat" />
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/loading_lottie"

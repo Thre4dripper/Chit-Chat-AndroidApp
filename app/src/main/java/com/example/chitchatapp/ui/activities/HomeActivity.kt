@@ -58,6 +58,9 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         //hide all the layouts
         binding.completeProfileLl.visibility = View.GONE
         binding.addChatsLl.visibility = View.GONE
+        binding.homeLabelFavChatsTv.visibility = View.GONE
+        binding.homeChatFavRv.visibility = View.GONE
+        binding.homeLabelChatsTv.visibility = View.GONE
 
         //do nothing, after sign in this func will be called again
         if (viewModel.getCurrentUser() == null) return
@@ -204,11 +207,27 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     private fun getChats() {
         binding.loadingLottie.visibility = View.VISIBLE
 
-        viewModel.homeChats.observe(this) {
-            if (it != null) {
-                homeChatsAdapter.submitList(it)
-                binding.addChatsLl.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
-                binding.homeActionFab.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
+        viewModel.homeChats.observe(this) { homeChats ->
+            if (homeChats != null) {
+                homeChatsAdapter.submitList(homeChats)
+
+                //checking for favourite chats
+                val hasFavourites = homeChats.any { it.userChat?.isFavorite == true }
+                binding.homeLabelFavChatsTv.visibility =
+                    if (hasFavourites) View.VISIBLE else View.GONE
+                binding.homeChatFavRv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
+
+                //visibility control for home label chats and home chat recycler view
+                binding.homeLabelChatsTv.visibility =
+                    if (homeChats.isEmpty()) View.GONE else View.VISIBLE
+                binding.homeChatRv.visibility = if (homeChats.isEmpty()) View.GONE else View.VISIBLE
+
+                //visibility control for add chats layout and fabs
+                binding.addChatsLl.visibility = if (homeChats.isEmpty()) View.VISIBLE else View.GONE
+                binding.homeActionFab.visibility =
+                    if (homeChats.isEmpty()) View.GONE else View.VISIBLE
+
+                //hiding loading lottie on loading complete
                 binding.loadingLottie.visibility = View.GONE
             }
         }
