@@ -1,6 +1,6 @@
 package com.example.chitchatapp.models
 
-data class ChatGroupModel(
+data class GroupChatModel(
     val id: String,
     val name: String,
     val image: String?,

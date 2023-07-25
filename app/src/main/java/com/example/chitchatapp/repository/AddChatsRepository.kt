@@ -31,13 +31,13 @@ class AddChatsRepository {
             val currentUser = UserRepository.userDetails.value
 
             // Check if chat already exists
-            ChatUtils.checkIfChatExists(
+            ChatUtils.checkIfUserChatExists(
                 firestore, currentUser!!.uid, newChatUser.uid
             ) {
                 //if chat exists, return chatId
                 if (it != null) {
                     chatId(it)
-                    return@checkIfChatExists
+                    return@checkIfUserChatExists
                 }
                 //otherwise add new chat
                 AddNewChat.addNewChat(firestore, newChatUser, currentUser, chatId)

@@ -42,7 +42,7 @@ class AddGroupRecyclerAdapter(
         fun bind(chatModel: ChatModel) {
             val context = itemView.context
 
-            val profileImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            val profileImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide
                 .with(context)
                 .load(profileImage)
@@ -50,11 +50,11 @@ class AddGroupRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemAddGroupProfileImage)
 
-            val username = ChatUtils.getChatUsername(chatModel, loggedInUsername)
+            val username = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
             binding.itemAddGroupTextUsername.text =
                 context.getString(R.string.item_add_chat_or_text_username, username)
 
-            val status = ChatUtils.getChatStatus(chatModel, loggedInUsername)
+            val status = ChatUtils.getUserChatStatus(chatModel, loggedInUsername)
             if (status == UserStatus.Online.name) {
                 binding.itemAddGroupStatusCv.setCardBackgroundColor(
                     context.getColor(R.color.green)

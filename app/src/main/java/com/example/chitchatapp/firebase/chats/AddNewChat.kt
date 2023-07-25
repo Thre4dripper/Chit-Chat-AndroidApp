@@ -20,7 +20,7 @@ class AddNewChat {
             currentUser: UserModel,
             chatId: (String?) -> Unit,
         ) {
-            val chatDocId = ChatUtils.getDMChatDocId(currentUser.uid, newChatUser.uid)
+            val chatDocId = ChatUtils.getUserChatDocId(currentUser.uid, newChatUser.uid)
             val data = ChatModel(
                 chatDocId,
                 DMChatUserModel(

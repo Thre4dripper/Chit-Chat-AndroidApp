@@ -133,7 +133,7 @@ class ChattingRecyclerAdapter(
             binding.itemChatRightTextTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.time)
 
-            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide
                 .with(itemView.context)
                 .load(senderImage)
@@ -141,7 +141,7 @@ class ChattingRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatMessageStatusIv)
 
-            val senderUsername = ChatUtils.getChatUsername(chatModel, loggedInUsername)
+            val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
             binding.itemChatMessageStatusIv.visibility =
                 if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
@@ -155,7 +155,7 @@ class ChattingRecyclerAdapter(
         private var binding = ItemChatTextLeftBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
-            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide
                 .with(itemView.context)
                 .load(senderImage)
@@ -180,7 +180,7 @@ class ChattingRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatImageRightIv)
 
-            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide
                 .with(itemView.context)
                 .load(senderImage)
@@ -188,7 +188,7 @@ class ChattingRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatMessageStatusIv)
 
-            val senderUsername = ChatUtils.getChatUsername(chatModel, loggedInUsername)
+            val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
             binding.itemChatMessageStatusIv.visibility =
                 if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
@@ -212,7 +212,7 @@ class ChattingRecyclerAdapter(
         private var binding = ItemChatImageLeftBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
-            val senderImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide
                 .with(itemView.context)
                 .load(senderImage)

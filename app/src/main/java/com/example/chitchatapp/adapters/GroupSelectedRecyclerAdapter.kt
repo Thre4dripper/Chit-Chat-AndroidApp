@@ -39,7 +39,7 @@ class GroupSelectedRecyclerAdapter(
         fun bind(chatModel: ChatModel) {
             val context = itemView.context
 
-            val profileImage = ChatUtils.getChatProfileImage(chatModel, loggedInUsername)
+            val profileImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide
                 .with(context)
                 .load(profileImage)

@@ -2,7 +2,7 @@ package com.example.chitchatapp.firebase.groups
 
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.GroupMessageType
-import com.example.chitchatapp.models.ChatGroupModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.GroupMessageModel
 import com.google.firebase.Timestamp
@@ -20,7 +20,7 @@ class CreateGroup {
             selectedUsers: List<GroupChatUserModel>,
             onSuccess: (String?) -> Unit,
         ) {
-            val group = ChatGroupModel(
+            val group = GroupChatModel(
                 groupChatId,
                 groupName,
                 groupImageUrl,

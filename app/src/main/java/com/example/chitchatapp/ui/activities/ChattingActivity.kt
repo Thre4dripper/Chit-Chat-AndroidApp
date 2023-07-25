@@ -112,7 +112,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                 binding.loadingLottie.visibility = View.GONE
 
                 //setting the profile image
-                val chatProfileImage = ChatUtils.getChatProfileImage(it, loggedInUsername)
+                val chatProfileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
                 Glide
                     .with(this)
                     .load(chatProfileImage)
@@ -121,7 +121,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                     .into(binding.chattingProfileImage)
 
                 //setting the username
-                val headerUsername = ChatUtils.getChatUsername(it, loggedInUsername)
+                val headerUsername = ChatUtils.getUserChatUsername(it, loggedInUsername)
                 binding.chattingUsername.text = headerUsername
 
                 //submit the live list to the adapter

@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.chitchatapp.models.ChatGroupModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
@@ -16,13 +16,13 @@ class GroupChatViewModel : ViewModel() {
         return UserStore.getUsername(context)
     }
 
-    fun getGroupChatDetails(groupId: String): ChatGroupModel? {
+    fun getGroupChatDetails(groupId: String): GroupChatModel? {
         return ChatsRepository.homeChats.value?.find { homeChat ->
             homeChat.id == groupId
         }?.groupChat
     }
 
-    fun getLiveGroupChatDetails(groupId: String): LiveData<ChatGroupModel?> {
+    fun getLiveGroupChatDetails(groupId: String): LiveData<GroupChatModel?> {
         return Transformations.map(ChatsRepository.homeChats) { homeChats ->
             homeChats?.find { homeChat ->
                 homeChat.id == groupId

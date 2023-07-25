@@ -22,7 +22,7 @@ class AddGroupViewModel : ViewModel() {
             ChatsRepository.homeChats.value?.filter { it.userChat != null }?.map { it.userChat!! }
                 ?.filter { homeChat ->
                     //chat name which is displayed in the results list
-                    val chatName = ChatUtils.getChatUsername(homeChat, loggedInUsername)
+                    val chatName = ChatUtils.getUserChatUsername(homeChat, loggedInUsername)
 
                     /** filtering logic
                      * searching in both dmChatUser1 and dmChatUser2 usernames

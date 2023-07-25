@@ -18,7 +18,7 @@ class ChattingViewModel : ViewModel() {
 
     fun listenUserStatus(chatId: String, loggedInUsername: String, onSuccess: (String?) -> Unit) {
         val chatModel = getChatDetails(chatId) ?: return
-        val username = ChatUtils.getChatUsername(chatModel, loggedInUsername)
+        val username = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
         UserRepository.listenUserDetails(username, onSuccess)
     }
 
@@ -53,7 +53,7 @@ class ChattingViewModel : ViewModel() {
     ) {
         val chatModel = getChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
-        val to = ChatUtils.getChatUsername(chatModel, from)
+        val to = ChatUtils.getUserChatUsername(chatModel, from)
         ChatsRepository.sendTextMessage(chatModel, text, from, to, chatMessageId)
     }
 
@@ -65,7 +65,7 @@ class ChattingViewModel : ViewModel() {
     ) {
         val chatModel = getChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
-        val to = ChatUtils.getChatUsername(chatModel, from)
+        val to = ChatUtils.getUserChatUsername(chatModel, from)
         ChatsRepository.sendImage(chatModel, imageUri, from, to, chatMessageId)
     }
 

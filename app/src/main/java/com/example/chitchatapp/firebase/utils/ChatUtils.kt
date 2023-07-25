@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ChatUtils {
     companion object {
-        fun getDMChatDocId(
+        fun getUserChatDocId(
             chatUserId1: String,
             chatUserId2: String,
         ): String {
@@ -16,13 +16,13 @@ class ChatUtils {
                 "$chatUserId2-$chatUserId1"
         }
 
-        fun checkIfChatExists(
+        fun checkIfUserChatExists(
             firestore: FirebaseFirestore,
             chatUserId1: String,
             chatUserId2: String,
             chatId: (String?) -> Unit,
         ) {
-            val chatDocId = getDMChatDocId(chatUserId1, chatUserId2)
+            val chatDocId = getUserChatDocId(chatUserId1, chatUserId2)
             firestore.collection(FirestoreCollections.CHATS_COLLECTION)
                 .document(chatDocId)
                 .get()
@@ -37,7 +37,7 @@ class ChatUtils {
                 }
         }
 
-        fun getChatProfileImage(chatModel: ChatModel, loggedInUsername: String): String {
+        fun getUserChatProfileImage(chatModel: ChatModel, loggedInUsername: String): String {
             return if (chatModel.dmChatUser1.username == loggedInUsername) {
                 chatModel.dmChatUser2.profileImage
             } else {
@@ -45,7 +45,7 @@ class ChatUtils {
             }
         }
 
-        fun getChatUsername(chatModel: ChatModel, loggedInUsername: String): String {
+        fun getUserChatUsername(chatModel: ChatModel, loggedInUsername: String): String {
             return if (chatModel.dmChatUser1.username == loggedInUsername) {
                 chatModel.dmChatUser2.username
             } else {
@@ -53,7 +53,7 @@ class ChatUtils {
             }
         }
 
-        fun getChatStatus(chatModel: ChatModel, loggedInUsername: String): String {
+        fun getUserChatStatus(chatModel: ChatModel, loggedInUsername: String): String {
             return if (chatModel.dmChatUser1.username == loggedInUsername) {
                 chatModel.dmChatUser2.status
             } else {

@@ -30,8 +30,8 @@ class GroupsRepository {
                 fireStore.collection(FirestoreCollections.GROUPS_COLLECTION).document().id
 
             val selectedGroupUsers = selectedUsers.map {
-                val username = ChatUtils.getChatUsername(it, loggedInUsername)
-                val profileImage = ChatUtils.getChatProfileImage(it, loggedInUsername)
+                val username = ChatUtils.getUserChatUsername(it, loggedInUsername)
+                val profileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
 
                 GroupChatUserModel(username, profileImage)
             }.toMutableList()

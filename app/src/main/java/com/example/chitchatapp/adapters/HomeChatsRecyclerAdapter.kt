@@ -16,7 +16,7 @@ import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.enums.HomeLayoutType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
-import com.example.chitchatapp.models.ChatGroupModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.HomeChatModel
 
@@ -77,7 +77,7 @@ class HomeChatsRecyclerAdapter(
         fun bind(chatModel: ChatModel) {
             val context = itemView.context
 
-            val profileImage = ChatUtils.getChatProfileImage(
+            val profileImage = ChatUtils.getUserChatProfileImage(
                 chatModel,
                 loggedInUsername
             )
@@ -89,7 +89,7 @@ class HomeChatsRecyclerAdapter(
                 .into(binding.itemHomeChatProfileImage)
 
             binding.apply {
-                val username = ChatUtils.getChatUsername(
+                val username = ChatUtils.getUserChatUsername(
                     chatModel,
                     loggedInUsername
                 )
@@ -122,7 +122,7 @@ class HomeChatsRecyclerAdapter(
     inner class GroupChatViewHolder(itemView: View) : ViewHolder(itemView) {
         private val binding = ItemHomeChatBinding.bind(itemView)
 
-        fun bind(groupChatModel: ChatGroupModel) {
+        fun bind(groupChatModel: GroupChatModel) {
             val context = itemView.context
 
             val groupImage = groupChatModel.image

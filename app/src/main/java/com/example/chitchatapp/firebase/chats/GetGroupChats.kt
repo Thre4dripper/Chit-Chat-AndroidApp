@@ -2,7 +2,7 @@ package com.example.chitchatapp.firebase.chats
 
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.FirestoreCollections
-import com.example.chitchatapp.models.ChatGroupModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -12,7 +12,7 @@ class GetGroupChats {
         fun getAllGroupChats(
             firestore: FirebaseFirestore,
             groupUser: GroupChatUserModel,
-            onSuccess: (List<ChatGroupModel>) -> Unit,
+            onSuccess: (List<GroupChatModel>) -> Unit,
         ) {
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
                 .where(
@@ -24,9 +24,9 @@ class GetGroupChats {
                         return@addSnapshotListener
                     }
 
-                    val groupChats = mutableListOf<ChatGroupModel>()
+                    val groupChats = mutableListOf<GroupChatModel>()
                     for (doc in value!!) {
-                        val groupChat = doc.toObject(ChatGroupModel::class.java)
+                        val groupChat = doc.toObject(GroupChatModel::class.java)
                         groupChats.add(groupChat)
                     }
 

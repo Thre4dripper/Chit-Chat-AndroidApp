@@ -7,6 +7,6 @@ data class HomeChatModel(
     val id: String,
     val type: HomeLayoutType,
     val userChat: ChatModel?,
-    val groupChat: ChatGroupModel?,
+    val groupChat: GroupChatModel?,
     val lastMessageTimestamp: Timestamp
 )
