@@ -75,9 +75,12 @@
 
     //Chatting Screen Menu
     <string name="chatting_screen_menu_view_contact">View Contact</string>
-    <string name="chatting_screen_menu_wallpaper">Wallpaper</string>
     <string name="chatting_screen_menu_clear_chat">Clear Chat</string>
     <string name="chatting_screen_menu_delete_chat">Delete Chat</string>
+
+    //Group Chat Screen Menu
+    <string name="group_chat_screen_menu_view_details">View Group Details</string>
+    <string name="group_chat_screen_menu_exit_group">Exit Group</string>
 
     //Item Chat
     <string name="item_chat_desc_profile_image">@string/item_add_chat_or_grp_desc_profile_image</string>

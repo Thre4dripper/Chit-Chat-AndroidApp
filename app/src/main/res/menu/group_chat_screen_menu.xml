@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_view_details"
+        android:title="@string/group_chat_screen_menu_view_details" />
+
+    <item
+        android:id="@+id/action_exit_group"
+        android:title="@string/group_chat_screen_menu_exit_group" />
+</menu>

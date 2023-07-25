@@ -3,6 +3,7 @@ package com.example.chitchatapp.ui.activities
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -57,7 +58,27 @@ class GroupChatActivity : AppCompatActivity() {
         }
 
         binding.groupChatBackBtn.setOnClickListener { finish() }
-//        initMenu()
+        initMenu()
+    }
+
+    private fun initMenu() {
+        binding.groupChatMenu.setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            popupMenu.menuInflater.inflate(R.menu.group_chat_screen_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_view_details -> {
+                        //TODO: open the group details screen
+                    }
+
+                    R.id.action_exit_group -> {
+                        //TODO: exit the group
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        }
     }
 
     private fun getChatDetails(groupId: String, loggedInUsername: String) {
