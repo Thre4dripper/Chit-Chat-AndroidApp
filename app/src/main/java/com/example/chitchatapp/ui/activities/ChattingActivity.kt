@@ -74,10 +74,9 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
 
         binding.chattingBackBtn.setOnClickListener { finish() }
-        initMenu()
     }
 
-    private fun initMenu() {
+    private fun initMenu(chatId: String) {
         binding.chattingMenu.setOnClickListener { view ->
             val popupMenu = PopupMenu(this, view)
             popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
@@ -141,6 +140,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
         //init the recycler view
+        initMenu(chatId)
         initRecyclerView(chatId, loggedInUsername)
         initUserStatus(chatId, loggedInUsername)
         initSendingLayout(chatId)

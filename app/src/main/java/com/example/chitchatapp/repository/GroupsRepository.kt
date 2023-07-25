@@ -95,8 +95,12 @@ class GroupsRepository {
                 val hasImages = groupChatModel.messages.any { message ->
                     message.type == GroupMessageType.TypeImage
                 }
-                if (!hasImages) return
+                if (!hasImages) {
+                    onSuccess(true)
+                    return
+                }
                 DeleteGroup.deleteGroupChatImages(storage, groupChatModel.id) {}
+                onSuccess(true)
                 return
             }
 

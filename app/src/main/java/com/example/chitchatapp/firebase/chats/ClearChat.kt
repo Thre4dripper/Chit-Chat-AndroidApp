@@ -26,13 +26,20 @@ class ClearChat {
         fun clearChatImages(
             storage: FirebaseStorage, chatModel: ChatModel, onSuccess: (Boolean) -> Unit
         ) {
-            val ref =
-                storage.reference.child("${StorageFolders.CHAT_IMAGES_FOLDER}/${chatModel.chatId}")
-            ref.delete().addOnSuccessListener {
-                onSuccess(true)
-            }.addOnFailureListener {
-                onSuccess(false)
-            }
+            //list all files in chat folder
+            storage.reference.child("${StorageFolders.CHAT_IMAGES_FOLDER}/${chatModel.chatId}/")
+                .listAll()
+                .addOnSuccessListener { listResult ->
+                    //delete all files in chat folder
+                    listResult.items.forEach { item ->
+                        item.delete()
+                    }
+
+                    onSuccess(true)
+                }
+                .addOnFailureListener {
+                    onSuccess(false)
+                }
         }
     }
 }

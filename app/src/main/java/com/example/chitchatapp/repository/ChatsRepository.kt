@@ -154,13 +154,15 @@ class ChatsRepository {
                     onSuccess(false)
                     return@deleteUserChat
                 }
-                val hasImages = chatModel.chatMessages.find { it.type == ChatMessageType.TypeImage }
-                if (hasImages != null) {
-                    DeleteChat.deleteChatImages(storage, chatModel) { isImagesDeleted ->
-                        onSuccess(isImagesDeleted)
-                    }
-                } else {
+                val hasImages = chatModel.chatMessages.any {
+                    it.type == ChatMessageType.TypeImage
+                }
+                if (!hasImages) {
                     onSuccess(true)
+                    return@deleteUserChat
+                }
+                ClearChat.clearChatImages(storage, chatModel) { isImagesDeleted ->
+                    onSuccess(isImagesDeleted)
                 }
             }
         }
