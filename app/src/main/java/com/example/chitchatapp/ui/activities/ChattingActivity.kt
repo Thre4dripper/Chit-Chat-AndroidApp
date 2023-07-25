@@ -227,6 +227,9 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             }
 
             if (status == UserStatus.Online.name) {
+                binding.activityChattingStatusCv.visibility = View.VISIBLE
+                binding.chattingStatus.visibility = View.VISIBLE
+
                 binding.activityChattingStatusCv.setCardBackgroundColor(
                     resources.getColor(
                         R.color.green,
@@ -235,6 +238,9 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                 )
                 binding.chattingStatus.text = UserStatus.Online.name
             } else if (status.split(" ")[0] == UserStatus.LastSeen.name) {
+                binding.activityChattingStatusCv.visibility = View.VISIBLE
+                binding.chattingStatus.visibility = View.VISIBLE
+
                 binding.activityChattingStatusCv.setCardBackgroundColor(
                     resources.getColor(
                         R.color.yellow,
@@ -247,8 +253,6 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                 binding.chattingStatus.text =
                     getString(R.string.chatting_activity_text_last_seen, lastSeenTime)
-            } else {
-                binding.activityChattingStatusCv.visibility = View.GONE
             }
         }
     }

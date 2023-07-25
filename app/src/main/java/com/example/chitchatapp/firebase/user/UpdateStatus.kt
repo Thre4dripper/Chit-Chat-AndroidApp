@@ -14,8 +14,6 @@ class UpdateStatus {
             loggedInUser: String?,
             status: UserStatus,
         ) {
-
-            //todo update status in when login and logout
             if (loggedInUser == null) {
                 return
             }
