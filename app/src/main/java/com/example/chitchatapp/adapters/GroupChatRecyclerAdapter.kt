@@ -8,13 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
-import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
 import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
 import com.example.chitchatapp.databinding.ItemChatImageRightBinding
 import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
 import com.example.chitchatapp.databinding.ItemChatTextRightBinding
-import com.example.chitchatapp.databinding.ItemGroupCreatedBinding
+import com.example.chitchatapp.databinding.ItemGroupNotifyMessageBinding
 import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
@@ -36,14 +35,21 @@ class GroupChatRecyclerAdapter(
         private const val VIEW_TYPE_LEFT_MESSAGE = 2
         private const val VIEW_TYPE_RIGHT_IMAGE = 3
         private const val VIEW_TYPE_LEFT_IMAGE = 4
+        private const val VIEW_TYPE_LEAVED_GROUP = 5
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         when (viewType) {
             VIEW_TYPE_CREATED_GROUP -> {
                 val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_group_created, parent, false)
+                    .inflate(R.layout.item_group_notify_message, parent, false)
                 return GroupCreatedViewHolder(view)
+            }
+
+            VIEW_TYPE_LEAVED_GROUP -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_group_notify_message, parent, false)
+                return GroupLeavedViewHolder(view)
             }
 
             VIEW_TYPE_RIGHT_MESSAGE -> {
@@ -78,8 +84,13 @@ class GroupChatRecyclerAdapter(
         val groupMessageModel = getItem(position)
         when (holder.itemViewType) {
             VIEW_TYPE_CREATED_GROUP -> {
-                val groupCreatedViewHolder = holder as GroupCreatedViewHolder
-                groupCreatedViewHolder.bind(groupMessageModel)
+                val groupNotifyViewHolder = holder as GroupCreatedViewHolder
+                groupNotifyViewHolder.bind(groupMessageModel)
+            }
+
+            VIEW_TYPE_LEAVED_GROUP -> {
+                val groupNotifyViewHolder = holder as GroupLeavedViewHolder
+                groupNotifyViewHolder.bind(groupMessageModel)
             }
 
             VIEW_TYPE_RIGHT_MESSAGE -> {
@@ -126,12 +137,14 @@ class GroupChatRecyclerAdapter(
                 }
             }
 
+            GroupMessageType.TypeLeavedMember -> VIEW_TYPE_LEAVED_GROUP
+
             else -> null!!
         }
     }
 
     inner class GroupCreatedViewHolder(itemView: View) : ViewHolder(itemView) {
-        private val binding = ItemGroupCreatedBinding.bind(itemView)
+        private val binding = ItemGroupNotifyMessageBinding.bind(itemView)
 
         fun bind(groupMessageModel: GroupMessageModel) {
             val context = itemView.context
@@ -139,6 +152,21 @@ class GroupChatRecyclerAdapter(
             val formattedDate = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
             binding.itemGroupCreatedTv.text = context.getString(
                 R.string.item_group_chat_group_created,
+                groupMessageModel.from,
+                formattedDate
+            )
+        }
+    }
+
+    inner class GroupLeavedViewHolder(itemView: View) : ViewHolder(itemView) {
+        private val binding = ItemGroupNotifyMessageBinding.bind(itemView)
+
+        fun bind(groupMessageModel: GroupMessageModel) {
+            val context = itemView.context
+            val date = groupMessageModel.time.toDate()
+            val formattedDate = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
+            binding.itemGroupCreatedTv.text = context.getString(
+                R.string.item_group_chat_left_group,
                 groupMessageModel.from,
                 formattedDate
             )

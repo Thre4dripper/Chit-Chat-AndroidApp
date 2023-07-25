@@ -72,4 +72,9 @@ class GroupChatViewModel : ViewModel() {
         val groupChatModel = getGroupChatDetails(groupId) ?: return
         ChatsRepository.updateGroupSeen(context, groupChatModel, onSuccess)
     }
+
+    fun exitGroup(context: Context, groupId: String, onSuccess: (Boolean) -> Unit) {
+        val groupChatModel = getGroupChatDetails(groupId) ?: return
+        GroupsRepository.exitGroup(context, groupChatModel, onSuccess)
+    }
 }

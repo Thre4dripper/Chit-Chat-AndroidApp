@@ -26,6 +26,7 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,8 +48,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
         //getting intent data
         groupId = intent.getStringExtra(ChatConstants.GROUP_ID)
-        val groupName = intent.getStringExtra(GroupConstants.GROUP_NAME)
-        val groupImage = intent.getStringExtra(GroupConstants.GROUP_IMAGE)
+        val groupName = intent.getStringExtra(GroupConstants.GROUP_NAME) ?: "Group"
+        val groupImage = intent.getStringExtra(GroupConstants.GROUP_IMAGE) ?: ""
         val groupMembers = AddGroupViewModel.selectedUsers.value
 
         val loggedInUsername = viewModel.getLoggedInUsername(this)
@@ -63,7 +64,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         //If it is opened from the chats screen, then groupId will not be null
         if (groupId == null)
             createNewGroup(
-                groupName!!,
+                groupName,
                 groupImage,
                 groupMembers!!,
                 loggedInUsername!!
@@ -73,10 +74,9 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         }
 
         binding.groupChatBackBtn.setOnClickListener { finish() }
-        initMenu()
     }
 
-    private fun initMenu() {
+    private fun initMenu(groupId: String) {
         binding.groupChatMenu.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             popupMenu.menuInflater.inflate(R.menu.group_chat_screen_menu, popupMenu.menu)
@@ -87,7 +87,21 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                     }
 
                     R.id.action_exit_group -> {
-                        //TODO: exit the group
+                        MaterialAlertDialogBuilder(this)
+                            .setTitle("Exit group")
+                            .setMessage("Are you sure you want to exit this group?")
+                            .setPositiveButton("Yes") { _, _ ->
+                                viewModel.exitGroup(this, groupId) { isExited ->
+                                    Toast.makeText(
+                                        this,
+                                        if (isExited) "Exited group" else "Error exiting group",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    finish()
+                                }
+                            }
+                            .setNegativeButton("No") { _, _ -> }
+                            .show()
                     }
                 }
                 true
@@ -98,6 +112,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private fun getChatDetails(groupId: String, loggedInUsername: String) {
         //init the recycler view
+        initMenu(groupId)
         initRecyclerView(groupId, loggedInUsername)
         initMembersLayout(groupId)
         initSendingLayout(groupId)
@@ -131,7 +146,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private fun createNewGroup(
         groupName: String,
-        groupImage: String?,
+        groupImage: String,
         groupMembers: List<ChatModel>,
         loggedInUsername: String
     ) {
@@ -146,7 +161,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             .circleCrop()
             .into(binding.groupChatGroupImage)
 
-        val groupImageUri = if (groupImage == null) null else Uri.parse(groupImage)
+        val groupImageUri = if (groupImage.isEmpty()) null else Uri.parse(groupImage)
         viewModel.createGroup(this, groupName, groupImageUri, groupMembers) {
             binding.loadingLottie.visibility = View.GONE
 

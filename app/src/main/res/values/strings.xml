@@ -104,5 +104,6 @@
 
     //Item Group Chat
     <string name="item_group_chat_group_created">\@%s Created Group on %s</string>
+    <string name="item_group_chat_left_group">\@%s Left Group on %s</string>
 
 </resources>

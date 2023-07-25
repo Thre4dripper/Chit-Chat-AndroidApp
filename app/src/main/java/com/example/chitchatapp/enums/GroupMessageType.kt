@@ -2,8 +2,8 @@ package com.example.chitchatapp.enums
 
 enum class GroupMessageType {
     TypeCreatedGroup,
-    TypeAddedMember,
-    TypeRemovedMember,
+    TypeJoinMember,
+    TypeLeavedMember,
     TypeMessage,
     TypeImage,
     TypeSticker,
