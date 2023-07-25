@@ -6,6 +6,10 @@
         android:title="@string/chatting_screen_menu_view_contact" />
 
     <item
+        android:id="@+id/action_favorite"
+        android:title="@string/chatting_screen_menu_favorite" />
+
+    <item
         android:id="@+id/action_clear_chat"
         android:title="@string/chatting_screen_menu_clear_chat" />
 

@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.StorageFolders
+import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.HomeLayoutType
+import com.example.chitchatapp.firebase.chats.ClearChat
 import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendChat
@@ -123,6 +125,26 @@ class ChatsRepository {
             val loggedInUser = UserStore.getUsername(context) ?: return
             UpdateSeen.updateSeen(firestore, chatModel, loggedInUser, onSuccess)
         }
+
+        fun clearChat(chatModel: ChatModel, onSuccess: (Boolean) -> Unit) {
+            val firestore = FirebaseFirestore.getInstance()
+            val storage = FirebaseStorage.getInstance()
+            ClearChat.clearUserChat(firestore, chatModel) { isChatDeleted ->
+                if (!isChatDeleted) {
+                    onSuccess(false)
+                    return@clearUserChat
+                }
+                val hasImages = chatModel.chatMessages.find { it.type == ChatMessageType.TypeImage }
+                if (hasImages != null) {
+                    ClearChat.clearChatImages(storage, chatModel) { isImagesDeleted ->
+                        onSuccess(isImagesDeleted)
+                    }
+                } else {
+                    onSuccess(true)
+                }
+            }
+        }
+
 
         fun sendGroupTextMessage(
             groupChatModel: GroupChatModel,

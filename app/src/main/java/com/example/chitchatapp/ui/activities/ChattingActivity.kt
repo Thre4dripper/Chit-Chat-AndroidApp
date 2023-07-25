@@ -28,6 +28,7 @@ import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Timestamp
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.CoroutineScope
@@ -77,8 +78,8 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
     }
 
     private fun initMenu() {
-        binding.chattingMenu.setOnClickListener {
-            val popupMenu = PopupMenu(this, it)
+        binding.chattingMenu.setOnClickListener { view ->
+            val popupMenu = PopupMenu(this, view)
             popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
@@ -86,8 +87,23 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                         //TODO: open the contact details screen
                     }
 
+                    R.id.action_favorite -> {
+                        //TODO: add to favorite
+                    }
+
                     R.id.action_clear_chat -> {
-                        //TODO: clear the chat
+                        clearOrDeleteDialog(
+                            "Clear chat",
+                            "Are you sure you want to clear this chat?"
+                        ) {
+                            viewModel.clearChat(chatId) {
+                                Toast.makeText(
+                                    this,
+                                    if (it) "Chat cleared" else "Error clearing chat",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
 
                     R.id.action_delete_chat -> {
@@ -98,6 +114,17 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             }
             popupMenu.show()
         }
+    }
+
+    private fun clearOrDeleteDialog(title: String, message: String, action: () -> Unit) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Yes") { _, _ ->
+                action()
+            }
+            .setNegativeButton("No") { _, _ -> }
+            .show()
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {

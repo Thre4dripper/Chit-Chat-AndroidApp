@@ -73,4 +73,9 @@ class ChattingViewModel : ViewModel() {
         val chatModel = getChatDetails(chatId) ?: return
         ChatsRepository.updateSeen(context, chatModel, onSuccess)
     }
+
+    fun clearChat(chatId: String, onSuccess: (Boolean) -> Unit) {
+        val chatModel = getChatDetails(chatId) ?: return
+        ChatsRepository.clearChat(chatModel, onSuccess)
+    }
 }
