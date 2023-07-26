@@ -33,7 +33,6 @@ class AddNewChat {
                     newChatUser.profileImage,
                     "${UserStatus.LastSeen.name} ${Timestamp.now().seconds}"
                 ),
-                false,
                 listOf(
                     ChatMessageModel(
                         UUID.randomUUID().toString(),

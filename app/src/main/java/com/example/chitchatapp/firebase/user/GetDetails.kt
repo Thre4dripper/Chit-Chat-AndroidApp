@@ -1,14 +1,15 @@
 package com.example.chitchatapp.firebase.user
 
 import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.models.UserModel
 import com.google.firebase.firestore.FirebaseFirestore
 
-class GetStatus {
+class GetDetails {
     companion object {
-        fun getUserStatus(
+        fun getLiveUserDetails(
             firestore: FirebaseFirestore,
             username: String,
-            onSuccess: (String?) -> Unit,
+            onSuccess: (UserModel?) -> Unit,
         ) {
 
             firestore.collection(FirestoreCollections.USERS_COLLECTION)
@@ -19,8 +20,8 @@ class GetStatus {
                         return@addSnapshotListener
                     }
 
-                    val status = value?.get("status") as String?
-                    onSuccess(status)
+                    val data = value?.toObject(UserModel::class.java)
+                    onSuccess(data)
                 }
         }
     }

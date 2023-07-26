@@ -8,7 +8,7 @@ import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.example.chitchatapp.firebase.profile.GetProfile
 import com.example.chitchatapp.firebase.profile.UpdateProfile
-import com.example.chitchatapp.firebase.user.GetStatus
+import com.example.chitchatapp.firebase.user.GetDetails
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
@@ -39,11 +39,11 @@ class UserRepository {
         }
 
         fun listenUserDetails(
-            loggedInUsername: String,
-            onSuccess: (String?) -> Unit
+            username: String,
+            onSuccess: (UserModel?) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            GetStatus.getUserStatus(firestore, loggedInUsername, onSuccess)
+            GetDetails.getLiveUserDetails(firestore, username, onSuccess)
         }
 
         fun updateUsername(

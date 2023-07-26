@@ -6,14 +6,12 @@ data class ChatModel(
     val chatId: String,
     val dmChatUser1: DMChatUserModel,
     val dmChatUser2: DMChatUserModel,
-    val favourite: Boolean,
     val chatMessages: List<ChatMessageModel>,
 ) {
     constructor() : this(
         "",
         DMChatUserModel(),
         DMChatUserModel(),
-        false,
         listOf(),
     )
 }

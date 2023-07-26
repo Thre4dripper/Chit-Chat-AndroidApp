@@ -26,7 +26,6 @@ import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
-import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -77,62 +76,36 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         binding.chattingBackBtn.setOnClickListener { finish() }
     }
 
-    private fun initMenu(chatModel: ChatModel) {
-        binding.chattingMenu.setOnClickListener { view ->
-            val popupMenu = PopupMenu(this, view)
-            popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
+    private fun initMenu(chatId: String, loggedInUsername: String) {
+        viewModel.listenChatIsFavorite(loggedInUsername) { userModel ->
 
-            val favItem = popupMenu.menu.findItem(R.id.action_favorite)
-            favItem.title = if (chatModel.favourite) "UnFavourite" else "Favourite"
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.action_view_contact -> {
-                        //TODO: open the contact details screen
-                    }
+            binding.chattingMenu.setOnClickListener { view ->
+                val popupMenu = PopupMenu(this, view)
+                popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
 
-                    R.id.action_favorite -> {
-                        markFavourite(favItem.title == "Favourite") {}
-                    }
+                val favItem = popupMenu.menu.findItem(R.id.action_favorite)
+                val isFavourite = userModel?.favourites?.contains(chatId)
+                favItem.title = if (isFavourite == true) "UnFavourite" else "Favourite"
 
-                    R.id.action_clear_chat -> {
-                        clearOrDeleteDialog(
-                            "Clear chat",
-                            "Are you sure you want to clear this chat?"
-                        ) {
-                            viewModel.clearChat(chatId) {
-                                Toast.makeText(
-                                    this,
-                                    if (it) "Chat cleared" else "Error clearing chat",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                popupMenu.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.action_view_contact -> {
+                            //TODO: open the contact details screen
                         }
-                    }
 
-                    R.id.action_delete_chat -> {
-                        clearOrDeleteDialog(
-                            "Delete chat",
-                            "Are you sure you want to delete this chat?"
-                        ) {
-                            viewModel.deletedChat(chatId) {
-                                Toast.makeText(
-                                    this,
-                                    if (it) "Chat deleted" else "Error deleting chat",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                finish()
-                            }
-                        }
+                        R.id.action_favorite -> markFavourite(userModel!!, chatId)
+                        R.id.action_clear_chat -> clearChat(chatId)
+                        R.id.action_delete_chat -> deleteChat(chatId)
                     }
+                    true
                 }
-                true
+                popupMenu.show()
             }
-            popupMenu.show()
         }
     }
 
-    private fun markFavourite(favourite: Boolean, onSuccess: (Boolean) -> Unit) {
-        viewModel.favouriteChat(chatId, favourite) {
+    private fun markFavourite(userModel: UserModel, favourite: String) {
+        viewModel.favouriteChat(userModel, favourite) {
             if (it == null)
                 return@favouriteChat
             Toast.makeText(
@@ -140,7 +113,37 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                 if (it) "Marked as Favourite" else "Clear Favourite",
                 Toast.LENGTH_SHORT
             ).show()
-            onSuccess(it)
+        }
+    }
+
+    private fun clearChat(chatId: String) {
+        clearOrDeleteDialog(
+            "Clear chat",
+            "Are you sure you want to clear this chat?"
+        ) {
+            viewModel.clearChat(chatId) {
+                Toast.makeText(
+                    this,
+                    if (it) "Chat cleared" else "Error clearing chat",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun deleteChat(chatId: String) {
+        clearOrDeleteDialog(
+            "Delete chat",
+            "Are you sure you want to delete this chat?"
+        ) {
+            viewModel.deletedChat(chatId) {
+                Toast.makeText(
+                    this,
+                    if (it) "Chat deleted" else "Error deleting chat",
+                    Toast.LENGTH_SHORT
+                ).show()
+                finish()
+            }
         }
     }
 
@@ -157,6 +160,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
         //init the recycler view
+        initMenu(chatId, loggedInUsername)
         initRecyclerView(chatId, loggedInUsername)
         initUserStatus(chatId, loggedInUsername)
         initSendingLayout(chatId)
@@ -165,7 +169,6 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         viewModel.getLiveChatDetails(chatId).observe(this) {
             if (it != null) {
                 //it requires real time updated
-                initMenu(it)
 
                 binding.loadingLottie.visibility = View.GONE
 

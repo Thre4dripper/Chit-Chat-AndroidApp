@@ -19,6 +19,7 @@ import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.HomeChatModel
+import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -129,12 +130,12 @@ class ChatsRepository {
         }
 
         fun favouriteChat(
-            chatId: String,
-            favourite: Boolean,
+            userModel: UserModel,
+            favourite: String,
             onSuccess: (Boolean?) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            MarkFavourite.markAsFavourite(firestore, chatId, favourite, onSuccess)
+            MarkFavourite.markAsFavourite(firestore, userModel, favourite, onSuccess)
         }
 
         fun clearChat(chatModel: ChatModel, onSuccess: (Boolean) -> Unit) {

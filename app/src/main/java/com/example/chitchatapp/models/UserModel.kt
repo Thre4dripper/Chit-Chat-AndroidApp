@@ -9,6 +9,7 @@ data class UserModel(
     val profileImage: String,
     val bio: String,
     val status: String,
+    val favourites: List<String>
 ) : Serializable {
-    constructor() : this("", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", listOf())
 }

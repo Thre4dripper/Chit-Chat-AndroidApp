@@ -24,7 +24,7 @@ class FireStoreRegister {
                 }
 
                 val data = UserModel(
-                    user.uid, "", user.displayName!!, user.photoUrl.toString(), "", ""
+                    user.uid, "", user.displayName!!, user.photoUrl.toString(), "", "", listOf()
                 )
 
                 //register user with uid as document id
