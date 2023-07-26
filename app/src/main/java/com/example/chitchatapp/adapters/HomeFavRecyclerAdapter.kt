@@ -8,12 +8,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemHomeFavouriteBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.HomeChatModel
 
-class HomeFavRecyclerAdapter(private var loggedInUsername: String) :
+class HomeFavRecyclerAdapter(
+    private var loggedInUsername: String,
+    private var chatClickInterface: ChatClickInterface
+) :
     ListAdapter<HomeChatModel, HomeFavRecyclerAdapter.FavouritesViewHolder>(ChatsDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouritesViewHolder {
@@ -43,6 +47,10 @@ class HomeFavRecyclerAdapter(private var loggedInUsername: String) :
 
             val username = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
             binding.itemHomeFavTv.text = username
+
+            binding.root.setOnClickListener {
+                chatClickInterface.onChatClicked(chatModel.chatId)
+            }
         }
     }
 

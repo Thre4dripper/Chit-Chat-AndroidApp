@@ -233,7 +233,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             }
 
             binding.homeChatFavRv.apply {
-                homeFavChatsAdapter = HomeFavRecyclerAdapter(it.username)
+                homeFavChatsAdapter = HomeFavRecyclerAdapter(it.username,this@HomeActivity)
                 adapter = homeFavChatsAdapter
             }
 
