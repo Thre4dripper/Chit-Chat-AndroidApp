@@ -135,11 +135,8 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        @Suppress("DEPRECATION")
-        if (binding.homeAddChatFab.isOrWillBeShown)
-            binding.homeActionFab.performClick()
-        else
-            super.onBackPressed()
+        @Suppress("DEPRECATION") if (binding.homeAddChatFab.isOrWillBeShown) binding.homeActionFab.performClick()
+        else super.onBackPressed()
     }
 
     /**
@@ -211,14 +208,6 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         viewModel.homeChats.observe(this) { homeChats ->
             if (homeChats != null) {
                 homeChatsAdapter.submitList(homeChats)
-                //only sending user chats to fav chats adapter
-                homeFavChatsAdapter.submitList(homeChats.filter { it.userChat != null })
-
-                //checking for favourite chats
-                val hasFavourites = homeChats.any { it.userChat?.favourite == true }
-                binding.homeLabelFavChatsTv.visibility =
-                    if (hasFavourites) View.VISIBLE else View.GONE
-                binding.homeChatFavRv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
 
                 //visibility control for home label chats and home chat recycler view
                 binding.homeLabelChatsTv.visibility =
@@ -250,6 +239,21 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
             //get chats when user details are fetched
             viewModel.getHomeChats(this)
+
+            //listen for favourite chats in user details
+            viewModel.listenFavChats(it.username) { userModel ->
+                //visibility control for home label fav chats and home fav chat recycler view
+                val hasFavourites = userModel!!.favourites.isNotEmpty()
+                binding.homeLabelFavChatsTv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
+                binding.homeChatFavRv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
+
+                //filtering home chats for fav chats
+                val homeChats = viewModel.homeChats.value ?: return@listenFavChats
+                val favChats = homeChats.filter { homeChat ->
+                    userModel.favourites.contains(homeChat.userChat?.chatId)
+                }
+                homeFavChatsAdapter.submitList(favChats)
+            }
         }
     }
 

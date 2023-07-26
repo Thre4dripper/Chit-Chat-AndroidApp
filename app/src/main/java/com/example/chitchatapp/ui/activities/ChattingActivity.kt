@@ -110,7 +110,9 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                 return@favouriteChat
             Toast.makeText(
                 this,
-                if (it) "Marked as Favourite" else "Clear Favourite",
+                if (!userModel.favourites.contains(favourite))
+                    "Marked as Favourite"
+                else "Clear Favourite",
                 Toast.LENGTH_SHORT
             ).show()
         }

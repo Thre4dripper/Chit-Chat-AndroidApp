@@ -87,4 +87,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         ChatsRepository.getAllUserChats(context)
         ChatsRepository.getAllGroupChats(context)
     }
+
+    fun listenFavChats(
+        username: String,
+        onSuccess: (UserModel?) -> Unit
+    ) {
+        UserRepository.listenUserDetails(username, onSuccess)
+    }
 }
