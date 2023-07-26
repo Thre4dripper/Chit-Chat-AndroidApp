@@ -212,7 +212,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
                 homeChatsAdapter.submitList(homeChats)
 
                 //checking for favourite chats
-                val hasFavourites = homeChats.any { it.userChat?.isFavorite == true }
+                val hasFavourites = homeChats.any { it.userChat?.favourite == true }
                 binding.homeLabelFavChatsTv.visibility =
                     if (hasFavourites) View.VISIBLE else View.GONE
                 binding.homeChatFavRv.visibility = if (hasFavourites) View.VISIBLE else View.GONE

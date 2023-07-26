@@ -74,6 +74,10 @@ class ChattingViewModel : ViewModel() {
         ChatsRepository.updateSeen(context, chatModel, onSuccess)
     }
 
+    fun favouriteChat(chatId: String, favourite: Boolean, onSuccess: (Boolean?) -> Unit) {
+        ChatsRepository.favouriteChat(chatId, favourite, onSuccess)
+    }
+
     fun clearChat(chatId: String, onSuccess: (Boolean) -> Unit) {
         val chatModel = getChatDetails(chatId) ?: return
         ChatsRepository.clearChat(chatModel, onSuccess)

@@ -26,6 +26,7 @@ import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
+import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.ChattingViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -76,10 +77,13 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         binding.chattingBackBtn.setOnClickListener { finish() }
     }
 
-    private fun initMenu(chatId: String) {
+    private fun initMenu(chatModel: ChatModel) {
         binding.chattingMenu.setOnClickListener { view ->
             val popupMenu = PopupMenu(this, view)
             popupMenu.menuInflater.inflate(R.menu.chatting_screen_menu, popupMenu.menu)
+
+            val favItem = popupMenu.menu.findItem(R.id.action_favorite)
+            favItem.title = if (chatModel.favourite) "UnFavourite" else "Favourite"
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_view_contact -> {
@@ -87,7 +91,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
                     }
 
                     R.id.action_favorite -> {
-                        //TODO: add to favorite
+                        markFavourite(favItem.title == "Favourite") {}
                     }
 
                     R.id.action_clear_chat -> {
@@ -127,6 +131,19 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
+    private fun markFavourite(favourite: Boolean, onSuccess: (Boolean) -> Unit) {
+        viewModel.favouriteChat(chatId, favourite) {
+            if (it == null)
+                return@favouriteChat
+            Toast.makeText(
+                this,
+                if (it) "Marked as Favourite" else "Clear Favourite",
+                Toast.LENGTH_SHORT
+            ).show()
+            onSuccess(it)
+        }
+    }
+
     private fun clearOrDeleteDialog(title: String, message: String, action: () -> Unit) {
         MaterialAlertDialogBuilder(this)
             .setTitle(title)
@@ -140,7 +157,6 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
         //init the recycler view
-        initMenu(chatId)
         initRecyclerView(chatId, loggedInUsername)
         initUserStatus(chatId, loggedInUsername)
         initSendingLayout(chatId)
@@ -148,6 +164,9 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveChatDetails(chatId).observe(this) {
             if (it != null) {
+                //it requires real time updated
+                initMenu(it)
+
                 binding.loadingLottie.visibility = View.GONE
 
                 //setting the profile image

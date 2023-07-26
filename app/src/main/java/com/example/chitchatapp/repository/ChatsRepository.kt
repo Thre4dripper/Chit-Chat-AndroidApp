@@ -10,6 +10,7 @@ import com.example.chitchatapp.firebase.chats.ClearChat
 import com.example.chitchatapp.firebase.chats.DeleteChat
 import com.example.chitchatapp.firebase.chats.GetChats
 import com.example.chitchatapp.firebase.chats.GetGroupChats
+import com.example.chitchatapp.firebase.chats.MarkFavourite
 import com.example.chitchatapp.firebase.chats.SendChat
 import com.example.chitchatapp.firebase.chats.SendGroupChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
@@ -125,6 +126,15 @@ class ChatsRepository {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: return
             UpdateSeen.updateSeen(firestore, chatModel, loggedInUser, onSuccess)
+        }
+
+        fun favouriteChat(
+            chatId: String,
+            favourite: Boolean,
+            onSuccess: (Boolean?) -> Unit
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            MarkFavourite.markAsFavourite(firestore, chatId, favourite, onSuccess)
         }
 
         fun clearChat(chatModel: ChatModel, onSuccess: (Boolean) -> Unit) {

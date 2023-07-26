@@ -6,6 +6,7 @@ class ChatConstants {
         const val DM_CHAT_USER_1 = "dmChatUser1"
         const val DM_CHAT_USER_2 = "dmChatUser2"
         const val GROUP_MEMBERS = "members"
+        const val FAVOURITE = "favourite"
 
         //for intent
         const val CHAT_ID = "chatId"
