@@ -166,6 +166,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         initRecyclerView(chatId, loggedInUsername)
         initUserStatus(chatId, loggedInUsername)
         initSendingLayout(chatId)
+        initOpenProfile(chatId, loggedInUsername)
 
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveChatDetails(chatId).observe(this) {
@@ -311,6 +312,25 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             binding.photoProgressBar.visibility = View.VISIBLE
             photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+    }
+
+    private fun initOpenProfile(chatId: String, loggedInUsername: String) {
+        binding.chattingProfileImage.setOnClickListener {
+            openProfile(chatId, loggedInUsername)
+        }
+        binding.chattingUsername.setOnClickListener {
+            openProfile(chatId, loggedInUsername)
+        }
+        binding.activityChattingStatusCv.setOnClickListener {
+            openProfile(chatId, loggedInUsername)
+        }
+    }
+
+    private fun openProfile(chatId: String, loggedInUsername: String) {
+        val intent = Intent(this, ChatProfileActivity::class.java)
+        intent.putExtra(ChatConstants.CHAT_ID, chatId)
+        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
+        startActivity(intent)
     }
 
     // Registers a photo picker activity launcher in single-select mode.

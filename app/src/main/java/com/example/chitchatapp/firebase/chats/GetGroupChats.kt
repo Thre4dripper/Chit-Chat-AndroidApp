@@ -1,7 +1,7 @@
 package com.example.chitchatapp.firebase.chats
 
-import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.FirestoreCollections
+import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.google.firebase.firestore.Filter
@@ -16,7 +16,7 @@ class GetGroupChats {
         ) {
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
                 .where(
-                    Filter.arrayContains(ChatConstants.GROUP_MEMBERS, groupUser)
+                    Filter.arrayContains(GroupConstants.GROUP_MEMBERS, groupUser)
                 )
                 .addSnapshotListener { value, error ->
                     if (error != null) {
