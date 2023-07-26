@@ -7,7 +7,7 @@ import com.example.chitchatapp.R
 class ChatProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
+        setContentView(R.layout.activity_profile_user)
 
 
     }

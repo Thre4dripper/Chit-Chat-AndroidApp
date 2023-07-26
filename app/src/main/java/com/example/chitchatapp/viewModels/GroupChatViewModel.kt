@@ -3,8 +3,8 @@ package com.example.chitchatapp.viewModels
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.repository.ChatsRepository
@@ -23,7 +23,7 @@ class GroupChatViewModel : ViewModel() {
     }
 
     fun getLiveGroupChatDetails(groupId: String): LiveData<GroupChatModel?> {
-        return Transformations.map(ChatsRepository.homeChats) { homeChats ->
+        return ChatsRepository.homeChats.map { homeChats ->
             homeChats?.find { homeChat ->
                 homeChat.id == groupId
             }?.groupChat
