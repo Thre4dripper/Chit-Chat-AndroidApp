@@ -5,9 +5,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_height="wrap_content">
+        android:layout_marginEnd="16dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/item_home_fav_cv"
@@ -20,8 +20,9 @@
 
             <ImageView
                 android:id="@+id/item_home_fav_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:contentDescription="@string/item_chat_desc_profile_image"
                 tools:srcCompat="@tools:sample/avatars" />
 
@@ -31,8 +32,9 @@
             android:id="@+id/item_home_fav_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/darkGrey"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/lightGrey"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

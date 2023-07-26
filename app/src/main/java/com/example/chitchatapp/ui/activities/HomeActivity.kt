@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.HomeChatsRecyclerAdapter
+import com.example.chitchatapp.adapters.HomeFavRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
@@ -28,6 +28,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     private lateinit var viewModel: HomeViewModel
 
     private lateinit var homeChatsAdapter: HomeChatsRecyclerAdapter
+    private lateinit var homeFavChatsAdapter: HomeFavRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -210,6 +211,8 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         viewModel.homeChats.observe(this) { homeChats ->
             if (homeChats != null) {
                 homeChatsAdapter.submitList(homeChats)
+                //only sending user chats to fav chats adapter
+                homeFavChatsAdapter.submitList(homeChats.filter { it.userChat != null })
 
                 //checking for favourite chats
                 val hasFavourites = homeChats.any { it.userChat?.favourite == true }
@@ -237,13 +240,12 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
             binding.homeChatRv.apply {
                 homeChatsAdapter = HomeChatsRecyclerAdapter(it.username, this@HomeActivity)
-                addItemDecoration(
-                    DividerItemDecoration(
-                        this@HomeActivity,
-                        DividerItemDecoration.VERTICAL
-                    )
-                )
                 adapter = homeChatsAdapter
+            }
+
+            binding.homeChatFavRv.apply {
+                homeFavChatsAdapter = HomeFavRecyclerAdapter(it.username)
+                adapter = homeFavChatsAdapter
             }
 
             //get chats when user details are fetched
