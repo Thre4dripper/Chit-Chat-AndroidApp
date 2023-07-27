@@ -130,15 +130,15 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
             val isFavorite = userModel.favourites.contains(chatId)
             binding.chatProfileFavoriteBtn.text = if (isFavorite) "UnFavorite" else "Favourite"
             if (isFavorite) {
-                binding.chatProfileFavoriteBtn.setCompoundDrawables(
+                binding.chatProfileFavoriteBtn.setCompoundDrawablesWithIntrinsicBounds(
                     ResourcesCompat.getDrawable(
-                        resources, R.drawable.ic_unfavourite, null
+                        resources, R.drawable.ic_favourite, null
                     ), null, null, null
                 )
             } else {
-                binding.chatProfileFavoriteBtn.setCompoundDrawables(
+                binding.chatProfileFavoriteBtn.setCompoundDrawablesWithIntrinsicBounds(
                     ResourcesCompat.getDrawable(
-                        resources, R.drawable.ic_favourite, null
+                        resources, R.drawable.ic_unfavourite, null
                     ), null, null, null
                 )
             }
