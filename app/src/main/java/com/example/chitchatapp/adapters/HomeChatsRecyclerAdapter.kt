@@ -19,6 +19,8 @@ import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.HomeChatModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class HomeChatsRecyclerAdapter(
     private var loggedInUsername: String,
@@ -142,13 +144,36 @@ class HomeChatsRecyclerAdapter(
                 itemHomeChatMessageTime.text =
                     TimeUtils.getFormattedTime(groupChatModel.messages.last().time)
 
-                if (groupChatModel.messages.last().type == GroupMessageType.TypeMessage) {
-                    itemHomeChatMessagePhoto.visibility = View.GONE
-                    itemHomeChatMessage.text = groupChatModel.messages.last().text?.trim() ?: ""
-                } else if (groupChatModel.messages.last().type == GroupMessageType.TypeImage) {
-                    itemHomeChatMessagePhoto.visibility = View.VISIBLE
-                    itemHomeChatMessage.text =
-                        groupChatModel.messages.last().text?.trim() ?: "Photo"
+                when (groupChatModel.messages.last().type) {
+                    GroupMessageType.TypeCreatedGroup -> {
+                        val date = groupChatModel.messages.last().time.toDate()
+                        val formattedDate =
+                            SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
+                        itemHomeChatMessage.text = context.resources.getString(
+                            R.string.item_group_chat_group_created,
+                            groupChatModel.messages.last().from,
+                            formattedDate
+                        )
+                    }
+
+                    GroupMessageType.TypeMessage -> {
+                        itemHomeChatMessagePhoto.visibility = View.GONE
+                        var preview = groupChatModel.messages.last().from.trim()
+                        preview += ": "
+                        preview += groupChatModel.messages.last().text?.trim() ?: ""
+                        itemHomeChatMessage.text = preview
+                    }
+
+                    GroupMessageType.TypeImage -> {
+                        itemHomeChatMessagePhoto.visibility = View.VISIBLE
+                        itemHomeChatMessage.text =
+                            groupChatModel.messages.last().text?.trim() ?: "Photo"
+                    }
+
+                    else -> {
+                        itemHomeChatMessagePhoto.visibility = View.GONE
+                        itemHomeChatMessage.text = groupChatModel.messages.last().text?.trim() ?: ""
+                    }
                 }
 
                 val unreadMessages = groupChatModel.messages.filter {
