@@ -1,9 +1,11 @@
 package com.example.chitchatapp.ui.activities
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.databinding.DataBindingUtil
@@ -13,32 +15,39 @@ import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupMembersRecyclerAdapter
 import com.example.chitchatapp.adapters.GroupProfileMediaRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupProfileClickInterface
+import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupProfileBinding
 import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
+import com.example.chitchatapp.viewModels.GroupProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
     private lateinit var binding: ActivityGroupProfileBinding
     private lateinit var groupChatViewModel: GroupChatViewModel
+    private lateinit var viewModel: GroupProfileViewModel
 
     private lateinit var mediaAdapter: GroupProfileMediaRecyclerAdapter
     private lateinit var groupMembersAdapter: GroupMembersRecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_profile)
         groupChatViewModel = ViewModelProvider(this)[GroupChatViewModel::class.java]
+        viewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 
         binding.groupProfileBackBtn.setOnClickListener {
             finish()
         }
 
         val groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
+        val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME)
         initMediaRecycleView()
-        initGroupMembersRecyclerView(groupId!!)
+        initGroupMembersRecyclerView(groupId!!, loggedInUsername!!)
         getGroupDetails(groupId)
         initLeaveGroupButton(groupId)
     }
@@ -78,11 +87,12 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         }
     }
 
-    private fun initGroupMembersRecyclerView(groupId: String) {
+    private fun initGroupMembersRecyclerView(groupId: String, loggedInUsername: String) {
         val groupChatModel = groupChatViewModel.getGroupChatDetails(groupId) ?: return
 
         binding.groupProfileMembersRv.apply {
-            groupMembersAdapter = GroupMembersRecyclerAdapter(this@GroupProfileActivity)
+            groupMembersAdapter =
+                GroupMembersRecyclerAdapter(loggedInUsername, this@GroupProfileActivity)
             adapter = groupMembersAdapter
         }
 
@@ -120,7 +130,26 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
-    override fun onGroupMemberClicked(username: String) {
+    override fun onGroupMemberClicked(loggedInUsername: String, memberUsername: String) {
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Loading...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
 
+        viewModel.findChatId(loggedInUsername, memberUsername) { chatId ->
+            progressDialog.dismiss()
+            if (chatId == null) {
+                Toast.makeText(
+                    this,
+                    "Something went wrong. Please try again later.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@findChatId
+            }
+
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(ChatConstants.CHAT_ID, chatId)
+            startActivity(intent)
+        }
     }
 }

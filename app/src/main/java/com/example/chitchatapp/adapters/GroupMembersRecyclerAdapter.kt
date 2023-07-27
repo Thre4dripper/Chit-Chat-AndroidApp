@@ -1,5 +1,6 @@
 package com.example.chitchatapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,10 @@ import com.example.chitchatapp.adapters.interfaces.GroupProfileClickInterface
 import com.example.chitchatapp.databinding.ItemGroupProfileMemberBinding
 import com.example.chitchatapp.models.GroupChatUserModel
 
-class GroupMembersRecyclerAdapter(private var groupProfileClickInterface: GroupProfileClickInterface) :
+class GroupMembersRecyclerAdapter(
+    private var loggedInUsername: String,
+    private var groupProfileClickInterface: GroupProfileClickInterface
+) :
     ListAdapter<GroupChatUserModel, GroupMembersRecyclerAdapter.GroupMemberViewHolder>(
         GroupMemberDiffUtil()
     ) {
@@ -30,6 +34,7 @@ class GroupMembersRecyclerAdapter(private var groupProfileClickInterface: GroupP
     inner class GroupMemberViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemGroupProfileMemberBinding.bind(itemView)
 
+        @SuppressLint("SetTextI18n")
         fun bind(groupChatUserModel: GroupChatUserModel) {
             Glide.with(itemView)
                 .load(groupChatUserModel.profileImage)
@@ -37,10 +42,16 @@ class GroupMembersRecyclerAdapter(private var groupProfileClickInterface: GroupP
                 .circleCrop()
                 .into(binding.itemGroupProfileUserIv)
 
-            binding.itemGroupProfileUserNameTv.text = groupChatUserModel.username
-
-            binding.root.setOnClickListener {
-                groupProfileClickInterface.onGroupMemberClicked(groupChatUserModel.username)
+            if (groupChatUserModel.username == loggedInUsername) {
+                binding.itemGroupProfileUserNameTv.text = "You"
+            } else {
+                binding.itemGroupProfileUserNameTv.text = groupChatUserModel.username
+                binding.root.setOnClickListener {
+                    groupProfileClickInterface.onGroupMemberClicked(
+                        loggedInUsername,
+                        groupChatUserModel.username
+                    )
+                }
             }
         }
     }

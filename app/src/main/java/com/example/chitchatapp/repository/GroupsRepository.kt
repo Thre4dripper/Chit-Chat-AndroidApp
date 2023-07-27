@@ -9,6 +9,7 @@ import com.example.chitchatapp.firebase.groups.CommonGroups
 import com.example.chitchatapp.firebase.groups.CreateGroup
 import com.example.chitchatapp.firebase.groups.DeleteGroup
 import com.example.chitchatapp.firebase.groups.ExitGroup
+import com.example.chitchatapp.firebase.groups.FindMemberChat
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatModel
@@ -116,13 +117,22 @@ class GroupsRepository {
 
         fun findCommonGroups(
             chatUsername: String,
-            chatUserImage:String,
+            chatUserImage: String,
             loggedInUsername: String,
             onSuccess: (List<GroupChatModel>) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val chatUserModel = GroupChatUserModel(chatUsername, chatUserImage)
             CommonGroups.findCommonGroups(firestore, chatUserModel, loggedInUsername, onSuccess)
+        }
+
+        fun findMemberChatId(
+            loggedInUsername: String,
+            memberUsername: String,
+            onSuccess: (String?) -> Unit
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            FindMemberChat.findChatId(firestore, loggedInUsername, memberUsername, onSuccess)
         }
     }
 }

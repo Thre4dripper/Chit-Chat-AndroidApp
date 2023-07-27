@@ -20,6 +20,7 @@ import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupMessageModel
@@ -75,13 +76,13 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         binding.groupChatBackBtn.setOnClickListener { finish() }
     }
 
-    private fun initMenu(groupId: String) {
+    private fun initMenu(groupId: String, loggedInUsername: String) {
         binding.groupChatMenu.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             popupMenu.menuInflater.inflate(R.menu.group_chat_screen_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.action_view_details -> openProfile(groupId)
+                    R.id.action_view_details -> openProfile(groupId, loggedInUsername)
 
 
                     R.id.action_exit_group -> {
@@ -110,11 +111,11 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private fun getGroupDetails(groupId: String, loggedInUsername: String) {
         //init the recycler view
-        initMenu(groupId)
+        initMenu(groupId, loggedInUsername)
         initRecyclerView(groupId, loggedInUsername)
         initMembersLayout(groupId)
         initSendingLayout(groupId)
-        initOpenProfile(groupId)
+        initOpenProfile(groupId, loggedInUsername)
 
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveGroupChatDetails(groupId).observe(this) {
@@ -296,21 +297,22 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             }
         }
 
-    private fun initOpenProfile(groupId: String) {
+    private fun initOpenProfile(groupId: String, loggedInUsername: String) {
         binding.groupChatGroupImage.setOnClickListener {
-            openProfile(groupId)
+            openProfile(groupId, loggedInUsername)
         }
         binding.groupChatGroupName.setOnClickListener {
-            openProfile(groupId)
+            openProfile(groupId, loggedInUsername)
         }
         binding.groupChatMembers.setOnClickListener {
-            openProfile(groupId)
+            openProfile(groupId, loggedInUsername)
         }
     }
 
-    private fun openProfile(groupId: String) {
+    private fun openProfile(groupId: String, loggedInUsername: String) {
         val intent = Intent(this, GroupProfileActivity::class.java)
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
+        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
         profileLauncher.launch(intent)
     }
 
