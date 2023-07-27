@@ -111,6 +111,7 @@ class UserRepository {
             val storage = FirebaseStorage.getInstance()
             val firestore = FirebaseFirestore.getInstance()
             val username = UserStore.getUsername(context) ?: ""
+            val prevProfilePicture = userDetails.value!!.profileImage
 
             StorageUtils.getUrlFromStorage(
                 storage,
@@ -118,7 +119,12 @@ class UserRepository {
                 profilePicture
             ) { url ->
                 if (url != null) {
-                    UpdateProfile.updateProfilePicture(firestore, username, url) {
+                    UpdateProfile.updateProfilePicture(
+                        firestore,
+                        username,
+                        prevProfilePicture,
+                        url
+                    ) {
                         //updating in livedata
                         userDetails.value = userDetails.value?.copy(profileImage = url)
                         callback(it)
