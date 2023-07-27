@@ -1,6 +1,5 @@
 package com.example.chitchatapp.ui.activities
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -22,6 +21,7 @@ import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupProfileBinding
 import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.models.GroupMessageModel
+import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
 import com.example.chitchatapp.viewModels.GroupProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -56,10 +56,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         groupChatViewModel.getLiveGroupChatDetails(groupId).observe(this) {
             if (it == null) return@observe
 
-            Glide.with(this)
-                .load(it.image)
-                .placeholder(R.drawable.ic_group)
-                .circleCrop()
+            Glide.with(this).load(it.image).placeholder(R.drawable.ic_group).circleCrop()
                 .into(binding.groupProfileProfileIv)
 
             binding.groupProfileNameTv.text = it.name
@@ -101,55 +98,82 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
     private fun initLeaveGroupButton(groupId: String) {
         binding.groupProfileExitGroupBtn.setOnClickListener {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Leave Group")
+            MaterialAlertDialogBuilder(this).setTitle("Leave Group")
                 .setMessage("Are you sure you want to leave this group?")
                 .setPositiveButton("Yes") { _, _ ->
                     groupChatViewModel.exitGroup(this, groupId) {
                         setResult(Constants.EXIT_GROUP)
                         finish()
                     }
-                }
-                .setNegativeButton("No") { dialog, _ ->
+                }.setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()
-                }
-                .show()
+                }.show()
         }
     }
 
     override fun onMediaImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {
         val intent = Intent(this, ZoomActivity::class.java)
         intent.putExtra(Constants.ZOOM_IMAGE_URL, groupMessageModel.image)
-        val activityOptionsCompat =
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                chatImageIv,
-                getString(R.string.chatting_activity_chat_image_transition)
-            )
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this, chatImageIv, getString(R.string.chatting_activity_chat_image_transition)
+        )
 
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
     override fun onGroupMemberClicked(loggedInUsername: String, memberUsername: String) {
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Loading...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
+        val loaderDialog =
+            MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
+                .show()
 
+        findChat(loggedInUsername, memberUsername) { chatId ->
+            if (chatId != null) {
+                loaderDialog.dismiss()
+                return@findChat
+            }
+
+            findUser(memberUsername) {
+                if (it != null) {
+                    loaderDialog.dismiss()
+                    return@findUser
+                }
+
+                Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun findChat(
+        loggedInUsername: String,
+        memberUsername: String,
+        onSuccess: (String?) -> Unit,
+    ) {
         viewModel.findChatId(loggedInUsername, memberUsername) { chatId ->
-            progressDialog.dismiss()
             if (chatId == null) {
-                Toast.makeText(
-                    this,
-                    "Something went wrong. Please try again later.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                onSuccess(null)
                 return@findChatId
             }
 
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(ChatConstants.CHAT_ID, chatId)
             startActivity(intent)
+            onSuccess(chatId)
+        }
+    }
+
+    private fun findUser(
+        memberUsername: String, onSuccess: (UserModel?) -> Unit
+    ) {
+        viewModel.getUserModel(memberUsername) { userModel ->
+            if (userModel == null) {
+                onSuccess(null)
+                return@getUserModel
+            }
+
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(UserConstants.USER_MODEL, userModel)
+            startActivity(intent)
+            onSuccess(userModel)
         }
     }
 }
