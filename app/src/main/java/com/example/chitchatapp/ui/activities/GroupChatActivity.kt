@@ -70,7 +70,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 loggedInUsername!!
             )
         else {
-            getChatDetails(groupId!!, loggedInUsername!!)
+            getGroupDetails(groupId!!, loggedInUsername!!)
         }
 
         binding.groupChatBackBtn.setOnClickListener { finish() }
@@ -110,7 +110,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         }
     }
 
-    private fun getChatDetails(groupId: String, loggedInUsername: String) {
+    private fun getGroupDetails(groupId: String, loggedInUsername: String) {
         //init the recycler view
         initMenu(groupId)
         initRecyclerView(groupId, loggedInUsername)
@@ -171,7 +171,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 finish()
             }
             //otherwise if chat already exists then it will be that chat id
-            getChatDetails(it!!, loggedInUsername)
+            getGroupDetails(it!!, loggedInUsername)
         }
     }
 

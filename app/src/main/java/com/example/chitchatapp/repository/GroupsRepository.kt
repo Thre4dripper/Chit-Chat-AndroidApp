@@ -5,6 +5,7 @@ import android.net.Uri
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.enums.GroupMessageType
+import com.example.chitchatapp.firebase.groups.CommonGroups
 import com.example.chitchatapp.firebase.groups.CreateGroup
 import com.example.chitchatapp.firebase.groups.DeleteGroup
 import com.example.chitchatapp.firebase.groups.ExitGroup
@@ -111,6 +112,19 @@ class GroupsRepository {
                 loggedInUsername,
                 onSuccess,
             )
+        }
+
+        fun findCommonGroups(
+            chatUsername: String,
+            chatUserImage:String,
+            loggedInUsername: String,
+            loggedInUserImage:String,
+            onSuccess: (List<GroupChatModel>) -> Unit
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val chatUserModel = GroupChatUserModel(chatUsername, chatUserImage)
+            val loggedInUserModel = GroupChatUserModel(loggedInUsername, loggedInUserImage)
+            CommonGroups.findCommonGroups(firestore, chatUserModel, loggedInUserModel, onSuccess)
         }
     }
 }

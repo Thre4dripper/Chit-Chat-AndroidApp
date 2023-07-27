@@ -1,11 +1,11 @@
 package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
@@ -21,18 +21,23 @@ import com.example.chitchatapp.databinding.ActivityChatProfileBinding
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatMessageModel
+import com.example.chitchatapp.viewModels.ChatProfileViewModel
 import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
+    private val TAG = "ChatProfileActivity"
+
     private lateinit var binding: ActivityChatProfileBinding
-    private lateinit var viewModel: ChatViewModel
+    private lateinit var chatViewModel: ChatViewModel
+    private lateinit var viewModel: ChatProfileViewModel
 
     private lateinit var mediaAdapter: ChatProfileMediaRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_profile)
-        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ChatProfileViewModel::class.java]
+        chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         binding.chatProfileBackBtn.setOnClickListener {
             finish()
@@ -42,12 +47,13 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
         val chatId = intent.getStringExtra(ChatConstants.CHAT_ID)
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME)
         initMediaRecycleView()
-        getChatDetails(chatId!!, loggedInUsername!!)
+        initCommonGroupsRecyclerView(chatId!!, loggedInUsername!!)
+        getChatDetails(chatId, loggedInUsername)
         initBottomButtons(chatId, loggedInUsername)
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
-        viewModel.getLiveChatDetails(chatId).observe(this) { chatModel ->
+        chatViewModel.getLiveChatDetails(chatId).observe(this) { chatModel ->
             if (chatModel == null) return@observe
 
             val profileImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
@@ -80,6 +86,15 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
+    private fun initCommonGroupsRecyclerView(chatId: String, loggedInUsername: String) {
+        val chatModel = chatViewModel.getChatDetails(chatId) ?: return
+        val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
+        val chatUserImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
+        viewModel.commonGroups(chatUsername, chatUserImage, loggedInUsername) {
+            Toast.makeText(this, "Common groups: ${it.size}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun initBottomButtons(chatId: String, loggedInUsername: String) {
         initFavouriteBtn(chatId, loggedInUsername)
         binding.chatProfileClearChatBtn.setOnClickListener {
@@ -91,7 +106,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
     }
 
     private fun initFavouriteBtn(chatId: String, loggedInUsername: String) {
-        viewModel.listenChatIsFavorite(loggedInUsername) { userModel ->
+        chatViewModel.listenChatIsFavorite(loggedInUsername) { userModel ->
             if (userModel == null) return@listenChatIsFavorite
 
             val isFavorite = userModel.favourites.contains(chatId)
@@ -111,7 +126,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
             }
 
             binding.chatProfileFavoriteBtn.setOnClickListener {
-                viewModel.favouriteChat(userModel, chatId) {
+                chatViewModel.favouriteChat(userModel, chatId) {
                     if (it == null) return@favouriteChat
                     Toast.makeText(
                         this, if (!userModel.favourites.contains(chatId)) "Marked as Favourite"
@@ -127,7 +142,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
             "Clear chat",
             "Are you sure you want to clear this chat?"
         ) {
-            viewModel.clearChat(chatId) {
+            chatViewModel.clearChat(chatId) {
                 Toast.makeText(
                     this,
                     if (it) "Chat cleared" else "Error clearing chat",
@@ -143,7 +158,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
             "Delete chat",
             "Are you sure you want to delete this chat?"
         ) {
-            viewModel.deletedChat(chatId) {
+            chatViewModel.deletedChat(chatId) {
                 Toast.makeText(
                     this,
                     if (it) "Chat deleted" else "Error deleting chat",
