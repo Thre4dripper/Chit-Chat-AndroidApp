@@ -108,4 +108,15 @@
     <string name="item_group_chat_group_created">\@%s Created Group on %s</string>
     <string name="item_group_chat_left_group">\@%s Left Group on %s</string>
 
+    //User Profile Activity
+    <string name="chat_profile_activity_profile_photo">Profile Photo</string>
+    <string name="chat_profile_activity_text_username">@string/user_details_activity_label_username</string>
+    <string name="chat_profile_activity_label_medias">Medias</string>
+    <string name="chat_profile_activity_mute_notifications">Mute Notifications</string>
+    <string name="chat_profile_activity_label_groups">Groups in Common</string>
+    <string name="chat_profile_activity_no_groups">No Groups</string>
+    <string name="chat_profile_activity_label_favourite">@string/chatting_screen_menu_favorite</string>
+    <string name="chat_profile_activity_label_clear_chat">@string/chatting_screen_menu_clear_chat</string>
+    <string name="chat_profile_activity_label_delete_chat">@string/chatting_screen_menu_delete_chat</string>
+
 </resources>
