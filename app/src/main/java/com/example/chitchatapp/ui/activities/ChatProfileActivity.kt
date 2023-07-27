@@ -13,16 +13,16 @@ import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChatProfileBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
-import com.example.chitchatapp.viewModels.ChattingViewModel
+import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ChatProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatProfileBinding
-    private lateinit var viewModel: ChattingViewModel
+    private lateinit var viewModel: ChatViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_profile)
-        viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         binding.chatProfileBackBtn.setOnClickListener {
             finish()

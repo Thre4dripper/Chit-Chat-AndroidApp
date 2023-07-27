@@ -258,7 +258,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     }
 
     override fun onChatClicked(chatId: String) {
-        val intent = Intent(this, ChattingActivity::class.java)
+        val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra(ChatConstants.CHAT_ID, chatId)
         //username must be fetched before this
         intent.putExtra(UserConstants.USERNAME, viewModel.userDetails.value!!.username)

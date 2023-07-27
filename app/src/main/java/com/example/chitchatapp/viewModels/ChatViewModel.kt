@@ -13,7 +13,7 @@ import com.example.chitchatapp.repository.ChatsRepository
 import com.example.chitchatapp.repository.UserRepository
 import com.example.chitchatapp.store.UserStore
 
-class ChattingViewModel : ViewModel() {
+class ChatViewModel : ViewModel() {
     private val TAG = "ChattingViewModel"
 
     val userDetails = UserRepository.userDetails

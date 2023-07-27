@@ -79,9 +79,9 @@
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2" />
+                    app:spanCount="2"
+                    tools:listitem="@layout/item_chat_profile_media" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/chat_profile_no_media_lottie"
@@ -150,6 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
+                    tools:listitem="@layout/item_chat_profile_common_group"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 <TextView

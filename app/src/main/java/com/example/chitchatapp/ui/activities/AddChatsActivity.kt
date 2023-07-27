@@ -92,7 +92,7 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
 
     override fun onAddChat(userModel: UserModel) {
         //start chat activity
-        val intent = Intent(this, ChattingActivity::class.java)
+        val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra(UserConstants.USER_MODEL, userModel)
         startActivity(intent)
         finish()

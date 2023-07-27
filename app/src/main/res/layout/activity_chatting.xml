@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/homeBackground"
-        tools:context=".ui.activities.ChattingActivity">
+        tools:context=".ui.activities.ChatActivity">
 
         <ImageView
             android:id="@+id/chatting_back_btn"

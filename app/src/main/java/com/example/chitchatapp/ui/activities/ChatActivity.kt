@@ -27,7 +27,7 @@ import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.UserModel
-import com.example.chitchatapp.viewModels.ChattingViewModel
+import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Timestamp
 import com.yalantis.ucrop.UCrop
@@ -37,11 +37,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
+class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     private val TAG = "ChattingActivity"
 
     private lateinit var binding: ActivityChattingBinding
-    private lateinit var viewModel: ChattingViewModel
+    private lateinit var viewModel: ChatViewModel
 
     private lateinit var chattingAdapter: ChattingRecyclerAdapter
     private lateinit var chatId: String
@@ -50,7 +50,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chatting)
-        viewModel = ViewModelProvider(this)[ChattingViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         //getting intent data
         chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
@@ -228,7 +228,7 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         val chatModel = viewModel.getChatDetails(chatId)
         binding.chattingRv.apply {
             chattingAdapter =
-                ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChattingActivity)
+                ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChatActivity)
             adapter = chattingAdapter
         }
 
