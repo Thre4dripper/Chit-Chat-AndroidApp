@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.interfaces.ChatProfileClickInterface
-import com.example.chitchatapp.databinding.ItemChatProfileMediaBinding
+import com.example.chitchatapp.databinding.ItemProfileMediaBinding
 import com.example.chitchatapp.models.ChatMessageModel
 
 class ChatProfileMediaRecyclerAdapter(private var chatProfileClickInterface: ChatProfileClickInterface) :
@@ -17,7 +17,7 @@ class ChatProfileMediaRecyclerAdapter(private var chatProfileClickInterface: Cha
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_chat_profile_media, parent, false)
+            .inflate(R.layout.item_profile_media, parent, false)
         return MediaViewHolder(view)
     }
 
@@ -27,7 +27,7 @@ class ChatProfileMediaRecyclerAdapter(private var chatProfileClickInterface: Cha
     }
 
     inner class MediaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemChatProfileMediaBinding.bind(itemView)
+        private val binding = ItemProfileMediaBinding.bind(itemView)
 
         fun bind(chatMessageModel: ChatMessageModel) {
             val context = itemView.context

@@ -119,4 +119,11 @@
     <string name="chat_profile_activity_label_clear_chat">@string/chatting_screen_menu_clear_chat</string>
     <string name="chat_profile_activity_label_delete_chat">@string/chatting_screen_menu_delete_chat</string>
 
+    //Group Profile Activity
+    <string name="group_profile_activity_profile_photo">@string/chat_profile_activity_profile_photo</string>
+    <string name="group_profile_activity_text_username">@string/chat_profile_activity_text_username</string>
+    <string name="group_profile_activity_label_medias">@string/chat_profile_activity_label_medias</string>
+    <string name="group_profile_activity_mute_notifications">@string/chat_profile_activity_mute_notifications</string>
+    <string name="group_profile_activity_label_members">@string/group_chat_activity_members</string>
+    <string name="group_profile_activity_label_exit">@string/group_chat_screen_menu_exit_group</string>
 </resources>

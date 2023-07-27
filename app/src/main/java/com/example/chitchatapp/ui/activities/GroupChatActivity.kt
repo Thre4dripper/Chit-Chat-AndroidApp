@@ -18,8 +18,10 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
+import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
+import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupMessageModel
@@ -115,6 +117,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         initRecyclerView(groupId, loggedInUsername)
         initMembersLayout(groupId)
         initSendingLayout(groupId)
+        initOpenProfile(groupId, loggedInUsername)
 
         binding.loadingLottie.visibility = View.VISIBLE
         viewModel.getLiveGroupChatDetails(groupId).observe(this) {
@@ -293,6 +296,32 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             } else {
                 binding.photoAddBtn.visibility = View.VISIBLE
                 binding.photoProgressBar.visibility = View.GONE
+            }
+        }
+
+    private fun initOpenProfile(groupId: String, loggedInUsername: String) {
+        binding.groupChatGroupImage.setOnClickListener {
+            openProfile(groupId, loggedInUsername)
+        }
+        binding.groupChatGroupName.setOnClickListener {
+            openProfile(groupId, loggedInUsername)
+        }
+        binding.groupChatMembers.setOnClickListener {
+            openProfile(groupId, loggedInUsername)
+        }
+    }
+
+    private fun openProfile(groupId: String, loggedInUsername: String) {
+        val intent = Intent(this, GroupProfileActivity::class.java)
+        intent.putExtra(ChatConstants.CHAT_ID, groupId)
+        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
+        profileLauncher.launch(intent)
+    }
+
+    private val profileLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Constants.DELETE_CHAT) {
+                finish()
             }
         }
 

@@ -20,7 +20,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/chat_profile_back_btn"
+                    android:id="@+id/group_profile_back_btn"
                     style="@style/BackButtonStyle"
                     android:contentDescription="@string/desc_back_btn"
                     android:src="@drawable/ic_arrow_back"
@@ -29,21 +29,21 @@
                     app:tint="@color/white" />
 
                 <ImageView
-                    android:id="@+id/chat_profile_profile_iv"
+                    android:id="@+id/group_profile_profile_iv"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/user_details_activity_desc_profile_photo"
+                    android:contentDescription="@string/group_profile_activity_profile_photo"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
-                    android:id="@+id/chat_profile_username_tv"
+                    android:id="@+id/group_profile_username_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/user_details_activity_text_username"
+                    android:text="@string/group_profile_activity_text_username"
                     android:textColor="@color/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -58,18 +58,18 @@
                 android:paddingTop="24dp">
 
                 <TextView
-                    android:id="@+id/chat_profile_media_label"
+                    android:id="@+id/group_profile_media_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
-                    android:text="@string/chat_profile_activity_label_medias"
+                    android:text="@string/group_profile_activity_label_medias"
                     android:textColor="@color/darkGrey"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/chat_profile_media_rv"
+                    android:id="@+id/group_profile_media_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -83,7 +83,7 @@
                     tools:listitem="@layout/item_profile_media" />
 
                 <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/chat_profile_no_media_lottie"
+                    android:id="@+id/group_profile_no_media_lottie"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center"
@@ -116,11 +116,11 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:text="@string/chat_profile_activity_mute_notifications"
+                        android:text="@string/group_profile_activity_mute_notifications"
                         android:textColor="@color/darkGrey" />
 
                     <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/chat_profile_mute_switch"
+                        android:id="@+id/group_profile_mute_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -132,61 +132,33 @@
 
 
                 <TextView
-                    android:id="@+id/chat_profile_groups_label"
+                    android:id="@+id/group_profile_groups_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="24dp"
-                    android:text="@string/chat_profile_activity_label_groups"
+                    android:text="@string/group_profile_activity_label_members"
                     android:textColor="@color/darkGrey"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/chat_profile_groups_rv"
+                    android:id="@+id/group_profile_groups_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_chat_profile_common_group" />
-
-                <TextView
-                    android:id="@+id/chat_profile_no_groups_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/chat_profile_activity_no_groups"
-                    android:textColor="@color/lightGrey" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 <View style="@style/ChatProfileDividerStyle" />
 
                 <TextView
-                    android:id="@+id/chat_profile_favorite_btn"
+                    android:id="@+id/group_profile_delete_group_btn"
                     style="@style/ChatProfileBottomTvStyle"
-                    android:text="@string/chat_profile_activity_label_favourite"
-                    android:textColor="@color/fabColor"
-                    app:drawableStartCompat="@drawable/ic_favourite"
-                    app:drawableTint="@color/fabColor" />
-
-                <TextView
-                    android:id="@+id/chat_profile_clear_chat_btn"
-                    style="@style/ChatProfileBottomTvStyle"
-                    android:text="@string/chat_profile_activity_label_clear_chat"
+                    android:text="@string/group_profile_activity_label_exit"
                     android:textColor="@color/red"
                     app:drawableStartCompat="@drawable/ic_close"
-                    app:drawableTint="@color/red" />
-
-                <TextView
-                    android:id="@+id/chat_profile_delete_chat_btn"
-                    style="@style/ChatProfileBottomTvStyle"
-                    android:text="@string/chat_profile_activity_label_delete_chat"
-                    android:textColor="@color/red"
-                    app:drawableStartCompat="@drawable/ic_delete"
                     app:drawableTint="@color/red" />
 
                 <View

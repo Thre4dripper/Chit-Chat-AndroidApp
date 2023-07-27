@@ -139,7 +139,7 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
         dialog.setPositiveButton("Create") { _, _ ->
             val groupImageUri = selectedGroupImageUri
             val groupName = createGroupDialogBinding.createGroupEt.text.toString()
-            if (groupName.isNotEmpty()) {
+            if (groupName.trim().isNotEmpty()) {
                 //start group chat activity
                 val intent = Intent(this, GroupChatActivity::class.java)
                 intent.putExtra(GroupConstants.GROUP_NAME, groupName)
