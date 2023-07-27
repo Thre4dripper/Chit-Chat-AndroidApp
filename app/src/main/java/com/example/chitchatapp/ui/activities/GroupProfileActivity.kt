@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.GroupMembersRecyclerAdapter
 import com.example.chitchatapp.adapters.GroupProfileMediaRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupProfileClickInterface
 import com.example.chitchatapp.constants.Constants
@@ -24,6 +25,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
     private lateinit var groupChatViewModel: GroupChatViewModel
 
     private lateinit var mediaAdapter: GroupProfileMediaRecyclerAdapter
+    private lateinit var groupMembersAdapter: GroupMembersRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_profile)
@@ -35,6 +37,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
         val groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
         initMediaRecycleView()
+        initGroupMembersRecyclerView(groupId!!)
         getGroupDetails(groupId!!)
     }
 
@@ -71,6 +74,17 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
             mediaAdapter = GroupProfileMediaRecyclerAdapter(this@GroupProfileActivity)
             adapter = mediaAdapter
         }
+    }
+
+    private fun initGroupMembersRecyclerView(groupId: String) {
+        val groupChatModel = groupChatViewModel.getGroupChatDetails(groupId) ?: return
+
+        binding.groupProfileMembersRv.apply {
+            groupMembersAdapter = GroupMembersRecyclerAdapter(this@GroupProfileActivity)
+            adapter = groupMembersAdapter
+        }
+
+        groupMembersAdapter.submitList(groupChatModel.members)
     }
 
     override fun onMediaImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {

@@ -14,7 +14,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:contentDescription="@string/group_chat_activity_desc_image"
+            android:contentDescription="@string/chatting_activity_desc_profile_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,22 +26,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/group_chat_activity_group_name"
+            android:text="@string/group_profile_activity_text_username"
             android:textColor="@color/darkGrey"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/item_group_profile_user_iv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/item_group_profile_user_iv"
             app:layout_constraintTop_toTopOf="@+id/item_group_profile_user_iv" />
 
-        <TextView
-            android:id="@+id/item_group_profile_user_bio_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/group_chat_activity_members"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/item_group_profile_user_name_tv"
-            app:layout_constraintStart_toStartOf="@+id/item_group_profile_user_name_tv"
-            app:layout_constraintTop_toBottomOf="@+id/item_group_profile_user_name_tv" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
