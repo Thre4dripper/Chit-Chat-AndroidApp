@@ -89,13 +89,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
-                        R.id.action_view_contact -> {
-                            val intent = Intent(this, ChatProfileActivity::class.java)
-                            intent.putExtra(ChatConstants.CHAT_ID, chatId)
-                            intent.putExtra(UserConstants.USERNAME, loggedInUsername)
-                            startActivity(intent)
-                        }
-
+                        R.id.action_view_contact -> openProfile(chatId, loggedInUsername)
                         R.id.action_favorite -> markFavourite(userModel!!, chatId)
                         R.id.action_clear_chat -> clearChat(chatId)
                         R.id.action_delete_chat -> deleteChat(chatId)

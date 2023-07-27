@@ -81,9 +81,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             popupMenu.menuInflater.inflate(R.menu.group_chat_screen_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.action_view_details -> {
-                        //TODO: open the group details screen
-                    }
+                    R.id.action_view_details -> openProfile(groupId)
+
 
                     R.id.action_exit_group -> {
                         MaterialAlertDialogBuilder(this)
