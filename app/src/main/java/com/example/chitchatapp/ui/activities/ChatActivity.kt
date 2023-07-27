@@ -90,7 +90,10 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.action_view_contact -> {
-                            //TODO: open the contact details screen
+                            val intent = Intent(this, ChatProfileActivity::class.java)
+                            intent.putExtra(ChatConstants.CHAT_ID, chatId)
+                            intent.putExtra(UserConstants.USERNAME, loggedInUsername)
+                            startActivity(intent)
                         }
 
                         R.id.action_favorite -> markFavourite(userModel!!, chatId)
