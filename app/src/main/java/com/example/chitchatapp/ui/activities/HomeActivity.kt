@@ -15,6 +15,7 @@ import com.example.chitchatapp.adapters.HomeFavRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
+import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityHomeBinding
 import com.example.chitchatapp.enums.FragmentType
@@ -233,7 +234,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             }
 
             binding.homeChatFavRv.apply {
-                homeFavChatsAdapter = HomeFavRecyclerAdapter(it.username,this@HomeActivity)
+                homeFavChatsAdapter = HomeFavRecyclerAdapter(it.username, this@HomeActivity)
                 adapter = homeFavChatsAdapter
             }
 
@@ -244,7 +245,8 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             viewModel.listenFavChats(it.username) { userModel ->
                 //visibility control for home label fav chats and home fav chat recycler view
                 val hasFavourites = userModel!!.favourites.isNotEmpty()
-                binding.homeLabelFavChatsTv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
+                binding.homeLabelFavChatsTv.visibility =
+                    if (hasFavourites) View.VISIBLE else View.GONE
                 binding.homeChatFavRv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
 
                 //filtering home chats for fav chats
@@ -267,9 +269,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
     override fun onGroupChatClicked(groupId: String) {
         val intent = Intent(this, GroupChatActivity::class.java)
-        intent.putExtra(ChatConstants.GROUP_ID, groupId)
-        //username must be fetched before this
-        intent.putExtra(UserConstants.USERNAME, viewModel.userDetails.value!!.username)
+        intent.putExtra(GroupConstants.GROUP_ID, groupId)
         startActivity(intent)
     }
 }

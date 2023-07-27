@@ -8,6 +8,5 @@ class ChatConstants {
 
         //for intent
         const val CHAT_ID = "chatId"
-        const val GROUP_ID = "groupId"
     }
 }

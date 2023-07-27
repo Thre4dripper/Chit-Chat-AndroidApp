@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
-import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
@@ -47,7 +46,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         viewModel = ViewModelProvider(this)[GroupChatViewModel::class.java]
 
         //getting intent data
-        groupId = intent.getStringExtra(ChatConstants.GROUP_ID)
+        groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
         val groupName = intent.getStringExtra(GroupConstants.GROUP_NAME) ?: "Group"
         val groupImage = intent.getStringExtra(GroupConstants.GROUP_IMAGE) ?: ""
         val groupMembers = AddGroupViewModel.selectedUsers.value

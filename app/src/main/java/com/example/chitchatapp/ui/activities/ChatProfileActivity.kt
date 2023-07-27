@@ -15,9 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.ChatProfileMediaRecyclerAdapter
 import com.example.chitchatapp.adapters.CommonGroupsRecyclerAdapter
-import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
+import com.example.chitchatapp.adapters.interfaces.ChatProfileClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
+import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChatProfileBinding
 import com.example.chitchatapp.enums.ChatMessageType
@@ -27,7 +28,7 @@ import com.example.chitchatapp.viewModels.ChatProfileViewModel
 import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
+class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
     private val TAG = "ChatProfileActivity"
 
     private lateinit var binding: ActivityChatProfileBinding
@@ -95,7 +96,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
         val chatUserImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
 
         binding.chatProfileGroupsRv.apply {
-            commonGroupsAdapter = CommonGroupsRecyclerAdapter()
+            commonGroupsAdapter = CommonGroupsRecyclerAdapter(this@ChatProfileActivity)
             adapter = commonGroupsAdapter
         }
 
@@ -198,7 +199,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
             .show()
     }
 
-    override fun onImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView) {
+    override fun onMediaImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView) {
         val intent = Intent(this, ZoomActivity::class.java)
         intent.putExtra(Constants.ZOOM_IMAGE_URL, chatMessageModel.image)
         val activityOptionsCompat =
@@ -209,5 +210,11 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
             )
 
         startActivity(intent, activityOptionsCompat.toBundle())
+    }
+
+    override fun onCommonGroupClicked(groupId: String) {
+        val intent = Intent(this, GroupChatActivity::class.java)
+        intent.putExtra(GroupConstants.GROUP_ID, groupId)
+        startActivity(intent)
     }
 }

@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.ChatProfileClickInterface
 import com.example.chitchatapp.databinding.ItemChatProfileCommonGroupBinding
 import com.example.chitchatapp.models.GroupChatModel
 
-class CommonGroupsRecyclerAdapter :
+class CommonGroupsRecyclerAdapter(private var chatProfileClickInterface: ChatProfileClickInterface) :
     ListAdapter<GroupChatModel, CommonGroupsRecyclerAdapter.CommonGroupViewHolder>(
         CommonGroupsDiffUtil()
     ) {
@@ -46,6 +47,20 @@ class CommonGroupsRecyclerAdapter :
                 .into(binding.itemCommonGroupImage)
 
             binding.itemCommonGroupNameTv.text = groupChatModel.name
+
+            var members = ""
+            groupChatModel.members.forEach { member ->
+                members += "${member.username}, "
+            }
+
+            //remove last comma
+            members = members.substring(0, members.length - 2)
+
+            binding.itemCommonGroupMembersTv.text = members
+
+            binding.root.setOnClickListener {
+                chatProfileClickInterface.onCommonGroupClicked(groupChatModel.id)
+            }
         }
     }
 

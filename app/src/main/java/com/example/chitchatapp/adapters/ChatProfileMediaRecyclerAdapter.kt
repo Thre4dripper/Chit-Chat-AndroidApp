@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
-import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
+import com.example.chitchatapp.adapters.interfaces.ChatProfileClickInterface
 import com.example.chitchatapp.databinding.ItemChatProfileMediaBinding
 import com.example.chitchatapp.models.ChatMessageModel
 
-class ChatProfileMediaRecyclerAdapter(private var chatMessageClickInterface: ChatMessageClickInterface) :
+class ChatProfileMediaRecyclerAdapter(private var chatProfileClickInterface: ChatProfileClickInterface) :
     ListAdapter<ChatMessageModel, ChatProfileMediaRecyclerAdapter.MediaViewHolder>(ChatsDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -37,7 +37,7 @@ class ChatProfileMediaRecyclerAdapter(private var chatMessageClickInterface: Cha
                 .into(binding.itemChatProfileMedia)
 
             binding.root.setOnClickListener {
-                chatMessageClickInterface.onImageClicked(
+                chatProfileClickInterface.onMediaImageClicked(
                     chatMessageModel,
                     binding.itemChatProfileMedia
                 )
