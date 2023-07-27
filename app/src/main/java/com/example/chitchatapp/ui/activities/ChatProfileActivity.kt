@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.constants.ChatConstants
+import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChatProfileBinding
 import com.example.chitchatapp.firebase.utils.ChatUtils
@@ -100,6 +101,7 @@ class ChatProfileActivity : AppCompatActivity() {
                     if (it) "Chat cleared" else "Error clearing chat",
                     Toast.LENGTH_SHORT
                 ).show()
+                finish()
             }
         }
     }
@@ -115,6 +117,7 @@ class ChatProfileActivity : AppCompatActivity() {
                     if (it) "Chat deleted" else "Error deleting chat",
                     Toast.LENGTH_SHORT
                 ).show()
+                setResult(Constants.DELETE_CHAT)
                 finish()
             }
         }

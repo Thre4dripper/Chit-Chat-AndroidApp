@@ -314,25 +314,6 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun initOpenProfile(chatId: String, loggedInUsername: String) {
-        binding.chattingProfileImage.setOnClickListener {
-            openProfile(chatId, loggedInUsername)
-        }
-        binding.chattingUsername.setOnClickListener {
-            openProfile(chatId, loggedInUsername)
-        }
-        binding.activityChattingStatusCv.setOnClickListener {
-            openProfile(chatId, loggedInUsername)
-        }
-    }
-
-    private fun openProfile(chatId: String, loggedInUsername: String) {
-        val intent = Intent(this, ChatProfileActivity::class.java)
-        intent.putExtra(ChatConstants.CHAT_ID, chatId)
-        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
-        startActivity(intent)
-    }
-
     // Registers a photo picker activity launcher in single-select mode.
     private val photoPickerLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia())
@@ -392,6 +373,31 @@ class ChattingActivity : AppCompatActivity(), ChatMessageClickInterface {
             }
         }
 
+    private fun initOpenProfile(chatId: String, loggedInUsername: String) {
+        binding.chattingProfileImage.setOnClickListener {
+            openProfile(chatId, loggedInUsername)
+        }
+        binding.chattingUsername.setOnClickListener {
+            openProfile(chatId, loggedInUsername)
+        }
+        binding.activityChattingStatusCv.setOnClickListener {
+            openProfile(chatId, loggedInUsername)
+        }
+    }
+
+    private fun openProfile(chatId: String, loggedInUsername: String) {
+        val intent = Intent(this, ChatProfileActivity::class.java)
+        intent.putExtra(ChatConstants.CHAT_ID, chatId)
+        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
+        profileLauncher.launch(intent)
+    }
+
+    private val profileLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Constants.DELETE_CHAT) {
+                finish()
+            }
+        }
 
     private fun sendMessage(message: String, chatId: String) {
         viewModel.sendTextMessage(this, chatId, message) {
