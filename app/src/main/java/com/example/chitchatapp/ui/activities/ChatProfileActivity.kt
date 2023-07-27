@@ -2,6 +2,7 @@ package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.ChatProfileMediaRecyclerAdapter
+import com.example.chitchatapp.adapters.CommonGroupsRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
@@ -33,6 +35,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
     private lateinit var viewModel: ChatProfileViewModel
 
     private lateinit var mediaAdapter: ChatProfileMediaRecyclerAdapter
+    private lateinit var commonGroupsAdapter: CommonGroupsRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_profile)
@@ -90,8 +93,22 @@ class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
         val chatModel = chatViewModel.getChatDetails(chatId) ?: return
         val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
         val chatUserImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
+
+        binding.chatProfileGroupsRv.apply {
+            commonGroupsAdapter = CommonGroupsRecyclerAdapter()
+            adapter = commonGroupsAdapter
+        }
+
         viewModel.commonGroups(chatUsername, chatUserImage, loggedInUsername) {
-            Toast.makeText(this, "Common groups: ${it.size}", Toast.LENGTH_SHORT).show()
+            if (it.isEmpty()) {
+                binding.chatProfileNoGroupsTv.visibility = View.VISIBLE
+                binding.chatProfileGroupsRv.visibility = View.GONE
+            } else {
+                binding.chatProfileNoGroupsTv.visibility = View.GONE
+                binding.chatProfileGroupsRv.visibility = View.VISIBLE
+            }
+            Log.d(TAG, "initCommonGroupsRecyclerView: $it")
+            commonGroupsAdapter.submitList(it)
         }
     }
 

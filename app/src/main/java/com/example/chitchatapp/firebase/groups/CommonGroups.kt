@@ -4,7 +4,6 @@ import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CommonGroups {
@@ -12,35 +11,30 @@ class CommonGroups {
         fun findCommonGroups(
             firestore: FirebaseFirestore,
             chatUserModel: GroupChatUserModel,
-            loggedInUserModel: GroupChatUserModel,
+            loggedInUsername: String,
             onSuccess: (List<GroupChatModel>) -> Unit
         ) {
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
-                .where(
-                    Filter.and(
-                        Filter.arrayContains(
-                            GroupConstants.GROUP_MEMBERS,
-                            chatUserModel
-                        ),
-                        Filter.arrayContains(
-                            GroupConstants.GROUP_MEMBERS,
-                            loggedInUserModel
-                        )
-                    )
+                .whereArrayContains(
+                    GroupConstants.GROUP_MEMBERS,
+                    chatUserModel
                 )
-                .addSnapshotListener() { value, error ->
+                .addSnapshotListener { value, error ->
                     if (error != null) {
-                        onSuccess(listOf())
                         return@addSnapshotListener
                     }
 
-                    val groupChats = mutableListOf<GroupChatModel>()
-                    for (doc in value!!) {
-                        val groupChat = doc.toObject(GroupChatModel::class.java)
-                        groupChats.add(groupChat)
-                    }
+                    val commonGroups = mutableListOf<GroupChatModel>()
 
-                    onSuccess(groupChats)
+                    value?.documents?.forEach { document ->
+                        val groupChatModel = document.toObject(GroupChatModel::class.java)
+                        if (groupChatModel?.members?.find { member ->
+                                member.username == loggedInUsername
+                            } != null)
+                            commonGroups.add(groupChatModel)
+
+                    }
+                    onSuccess(commonGroups)
                 }
         }
     }

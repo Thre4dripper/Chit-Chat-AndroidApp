@@ -118,13 +118,11 @@ class GroupsRepository {
             chatUsername: String,
             chatUserImage:String,
             loggedInUsername: String,
-            loggedInUserImage:String,
             onSuccess: (List<GroupChatModel>) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val chatUserModel = GroupChatUserModel(chatUsername, chatUserImage)
-            val loggedInUserModel = GroupChatUserModel(loggedInUsername, loggedInUserImage)
-            CommonGroups.findCommonGroups(firestore, chatUserModel, loggedInUserModel, onSuccess)
+            CommonGroups.findCommonGroups(firestore, chatUserModel, loggedInUsername, onSuccess)
         }
     }
 }
