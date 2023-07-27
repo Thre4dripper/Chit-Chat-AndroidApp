@@ -16,8 +16,8 @@ import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.enums.HomeLayoutType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
-import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.HomeChatModel
 
 class HomeChatsRecyclerAdapter(

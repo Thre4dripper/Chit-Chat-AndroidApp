@@ -19,6 +19,7 @@ import com.example.chitchatapp.databinding.ActivityGroupProfileBinding
 import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
     private lateinit var binding: ActivityGroupProfileBinding
@@ -38,7 +39,8 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         val groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
         initMediaRecycleView()
         initGroupMembersRecyclerView(groupId!!)
-        getGroupDetails(groupId!!)
+        getGroupDetails(groupId)
+        initLeaveGroupButton(groupId)
     }
 
     private fun getGroupDetails(groupId: String) {
@@ -85,6 +87,24 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         }
 
         groupMembersAdapter.submitList(groupChatModel.members)
+    }
+
+    private fun initLeaveGroupButton(groupId: String) {
+        binding.groupProfileExitGroupBtn.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Leave Group")
+                .setMessage("Are you sure you want to leave this group?")
+                .setPositiveButton("Yes") { _, _ ->
+                    groupChatViewModel.exitGroup(this, groupId) {
+                        setResult(Constants.EXIT_GROUP)
+                        finish()
+                    }
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
     }
 
     override fun onMediaImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {

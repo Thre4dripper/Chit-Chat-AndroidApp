@@ -8,5 +8,6 @@ class Constants {
 
         //for activity result
         const val DELETE_CHAT = 100
+        const val EXIT_GROUP = 101
     }
 }

@@ -154,7 +154,7 @@
                 <View style="@style/ChatProfileDividerStyle" />
 
                 <TextView
-                    android:id="@+id/group_profile_delete_group_btn"
+                    android:id="@+id/group_profile_exit_group_btn"
                     style="@style/ChatProfileBottomTvStyle"
                     android:text="@string/group_profile_activity_label_exit"
                     android:textColor="@color/red"

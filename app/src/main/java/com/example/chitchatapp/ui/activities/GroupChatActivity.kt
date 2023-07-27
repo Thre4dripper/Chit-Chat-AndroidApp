@@ -317,7 +317,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private val profileLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Constants.DELETE_CHAT) {
+            if (result.resultCode == Constants.EXIT_GROUP) {
                 finish()
             }
         }
