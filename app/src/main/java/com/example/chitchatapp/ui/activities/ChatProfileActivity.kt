@@ -1,24 +1,34 @@
 package com.example.chitchatapp.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.ChatProfileMediaRecyclerAdapter
+import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChatProfileBinding
+import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
+import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class ChatProfileActivity : AppCompatActivity() {
+class ChatProfileActivity : AppCompatActivity(), ChatMessageClickInterface {
     private lateinit var binding: ActivityChatProfileBinding
     private lateinit var viewModel: ChatViewModel
+
+    private lateinit var mediaAdapter: ChatProfileMediaRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_profile)
@@ -31,6 +41,7 @@ class ChatProfileActivity : AppCompatActivity() {
 
         val chatId = intent.getStringExtra(ChatConstants.CHAT_ID)
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME)
+        initMediaRecycleView()
         getChatDetails(chatId!!, loggedInUsername!!)
         initBottomButtons(chatId, loggedInUsername)
     }
@@ -45,6 +56,27 @@ class ChatProfileActivity : AppCompatActivity() {
 
             val username = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
             binding.chatProfileUsernameTv.text = username
+
+            val chatMediasList = chatModel.chatMessages.filter { chatMessage ->
+                chatMessage.type == ChatMessageType.TypeImage
+            }
+
+            if (chatMediasList.isEmpty()) {
+                binding.chatProfileMediaRv.visibility = View.GONE
+                binding.chatProfileNoMediaLottie.visibility = View.VISIBLE
+            } else {
+                binding.chatProfileMediaRv.visibility = View.VISIBLE
+                binding.chatProfileNoMediaLottie.visibility = View.GONE
+            }
+
+            mediaAdapter.submitList(chatMediasList)
+        }
+    }
+
+    private fun initMediaRecycleView() {
+        binding.chatProfileMediaRv.apply {
+            mediaAdapter = ChatProfileMediaRecyclerAdapter(this@ChatProfileActivity)
+            adapter = mediaAdapter
         }
     }
 
@@ -132,5 +164,18 @@ class ChatProfileActivity : AppCompatActivity() {
             }
             .setNegativeButton("No") { _, _ -> }
             .show()
+    }
+
+    override fun onImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView) {
+        val intent = Intent(this, ZoomActivity::class.java)
+        intent.putExtra(Constants.ZOOM_IMAGE_URL, chatMessageModel.image)
+        val activityOptionsCompat =
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                chatImageIv,
+                getString(R.string.chatting_activity_chat_image_transition)
+            )
+
+        startActivity(intent, activityOptionsCompat.toBundle())
     }
 }
