@@ -127,7 +127,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 Glide
                     .with(this)
                     .load(it.image)
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_group)
                     .circleCrop()
                     .into(binding.groupChatGroupImage)
 
@@ -158,7 +158,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         Glide
             .with(this)
             .load(groupImage)
-            .placeholder(R.drawable.ic_profile)
+            .placeholder(R.drawable.ic_group)
             .circleCrop()
             .into(binding.groupChatGroupImage)
 
@@ -322,7 +322,13 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         val intent = Intent(this, GroupProfileActivity::class.java)
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
         intent.putExtra(UserConstants.USERNAME, loggedInUsername)
-        profileLauncher.launch(intent)
+        val activityOptionsCompat =
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                binding.groupChatGroupImage,
+                getString(R.string.group_profile_activity_profile_image_transition)
+            )
+        profileLauncher.launch(intent, activityOptionsCompat)
     }
 
     private val profileLauncher =

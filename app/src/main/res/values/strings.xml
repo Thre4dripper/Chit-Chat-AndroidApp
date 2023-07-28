@@ -128,4 +128,6 @@
     //Image Transition Names
     <string name="chatting_activity_chat_image_transition">chatImageTransition</string>
     <string name="user_details_activity_profile_image_transition">profileImageTransition</string>
+    <string name="chat_profile_activity_profile_image_transition">chatProfileImageTransition</string>
+    <string name="group_profile_activity_profile_image_transition">groupImageTransition</string>
 </resources>

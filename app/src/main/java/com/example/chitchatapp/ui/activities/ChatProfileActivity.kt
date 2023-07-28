@@ -44,7 +44,8 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         binding.chatProfileBackBtn.setOnClickListener {
-            finish()
+            @Suppress("DEPRECATION")
+            onBackPressed()
         }
 
 

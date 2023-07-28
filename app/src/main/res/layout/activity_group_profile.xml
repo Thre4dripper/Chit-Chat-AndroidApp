@@ -32,6 +32,7 @@
                     android:id="@+id/group_profile_profile_iv"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
+                    android:transitionName="@string/group_profile_activity_profile_image_transition"
                     android:layout_gravity="center"
                     android:contentDescription="@string/group_profile_activity_profile_photo"
                     tools:srcCompat="@tools:sample/avatars" />

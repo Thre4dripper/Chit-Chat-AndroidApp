@@ -41,7 +41,8 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         viewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 
         binding.groupProfileBackBtn.setOnClickListener {
-            finish()
+            @Suppress("DEPRECATION")
+            onBackPressed()
         }
 
         val groupId = intent.getStringExtra(GroupConstants.GROUP_ID)

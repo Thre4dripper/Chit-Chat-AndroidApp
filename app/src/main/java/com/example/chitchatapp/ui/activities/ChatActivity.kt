@@ -395,7 +395,12 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         val intent = Intent(this, ChatProfileActivity::class.java)
         intent.putExtra(ChatConstants.CHAT_ID, chatId)
         intent.putExtra(UserConstants.USERNAME, loggedInUsername)
-        profileLauncher.launch(intent)
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            binding.chattingProfileImage,
+            getString(R.string.chat_profile_activity_profile_image_transition)
+        )
+        profileLauncher.launch(intent, activityOptionsCompat)
     }
 
     private val profileLauncher =

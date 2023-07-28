@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -46,7 +47,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         binding.profileImageBtn.setOnClickListener {
             val intent = Intent(this, UserDetailsActivity::class.java)
             val activityOptionsCompat =
-                androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
                     binding.profileImageBtn,
                     getString(R.string.user_details_activity_profile_image_transition)
