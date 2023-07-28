@@ -83,13 +83,13 @@ class ChatViewModel : ViewModel() {
     fun sendSticker(
         context: Context,
         chatId: String,
-        sticker: Int,
+        stickerIndex: Int,
         chatMessageId: (String?) -> Unit,
     ) {
         val chatModel = getChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getUserChatUsername(chatModel, from)
-        ChatsRepository.sendSticker(chatModel, sticker, from, to, chatMessageId)
+        ChatsRepository.sendSticker(chatModel, stickerIndex, from, to, chatMessageId)
     }
 
     fun updateSeen(context: Context, chatId: String, onSuccess: (Boolean) -> Unit) {

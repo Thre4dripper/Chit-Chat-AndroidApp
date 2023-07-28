@@ -35,8 +35,8 @@ class StickersBottomSheet(private var viewModel: ChatViewModel, private var chat
         stickerAdapter.submitList(LottieStickers.stickers)
     }
 
-    override fun onStickerClick(sticker: Int) {
-        viewModel.sendSticker(requireContext(), chatId, sticker) {
+    override fun onStickerClick(stickerIndex: Int) {
+        viewModel.sendSticker(requireContext(), chatId, stickerIndex) {
             if (it == null) {
                 Toast.makeText(requireContext(), "Error Sending Sticker", Toast.LENGTH_SHORT).show()
             } else {

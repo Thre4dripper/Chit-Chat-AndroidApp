@@ -29,9 +29,9 @@ class CreateGroup {
                     GroupMessageModel(
                         UUID.randomUUID().toString(),
                         GroupMessageType.TypeCreatedGroup,
-                        "",
-                        "",
-                        "",
+                        null,
+                        null,
+                        null,
                         Timestamp.now(),
                         listOf(loggedInUsername),
                         loggedInUsername,

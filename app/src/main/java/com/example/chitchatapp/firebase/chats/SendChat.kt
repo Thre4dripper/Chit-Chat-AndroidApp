@@ -92,7 +92,7 @@ class SendChat {
         fun sendSticker(
             firestore: FirebaseFirestore,
             chatModel: ChatModel,
-            sticker: Int,
+            stickerIndex: Int,
             from: String,
             to: String,
             chatMessageId: (String?) -> Unit,
@@ -106,7 +106,7 @@ class SendChat {
                     ChatMessageType.TypeSticker,
                     null,
                     null,
-                    sticker.toString(),
+                    stickerIndex,
                     Timestamp.now(),
                     listOf(from),
                     from,

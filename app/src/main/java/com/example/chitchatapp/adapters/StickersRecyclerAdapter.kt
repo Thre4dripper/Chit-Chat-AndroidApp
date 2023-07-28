@@ -30,7 +30,7 @@ class StickersRecyclerAdapter(private var stickerClickInterface: StickerClickInt
             binding.bsStickerLottie.setAnimation(sticker)
 
             binding.root.setOnClickListener {
-                stickerClickInterface.onStickerClick(sticker)
+                stickerClickInterface.onStickerClick(adapterPosition)
             }
         }
     }

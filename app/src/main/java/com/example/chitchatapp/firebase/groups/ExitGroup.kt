@@ -28,9 +28,9 @@ class ExitGroup {
                 GroupMessageModel(
                     UUID.randomUUID().toString(),
                     GroupMessageType.TypeLeavedMember,
-                    "",
-                    "",
-                    "",
+                    null,
+                    null,
+                    null,
                     Timestamp.now(),
                     listOf(loggedInUsername),
                     loggedInUsername,

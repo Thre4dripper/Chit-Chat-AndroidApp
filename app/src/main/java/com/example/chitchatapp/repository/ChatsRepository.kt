@@ -121,14 +121,14 @@ class ChatsRepository {
 
         fun sendSticker(
             chatModel: ChatModel,
-            sticker: Int,
+            stickerIndex: Int,
             from: String,
             to: String,
             chatMessageId: (String?) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
 
-            SendChat.sendSticker(firestore, chatModel, sticker, from, to, chatMessageId)
+            SendChat.sendSticker(firestore, chatModel, stickerIndex, from, to, chatMessageId)
         }
 
         fun updateSeen(
