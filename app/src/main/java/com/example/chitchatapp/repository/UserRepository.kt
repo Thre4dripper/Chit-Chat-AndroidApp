@@ -5,10 +5,13 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.ErrorMessages
 import com.example.chitchatapp.constants.StorageFolders
+import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
 import com.example.chitchatapp.firebase.profile.GetProfile
 import com.example.chitchatapp.firebase.profile.UpdateProfile
 import com.example.chitchatapp.firebase.user.GetDetails
+import com.example.chitchatapp.firebase.user.UpdateStatus
+import com.example.chitchatapp.firebase.user.UpdateToken
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
@@ -39,8 +42,7 @@ class UserRepository {
         }
 
         fun listenUserDetails(
-            username: String,
-            onSuccess: (UserModel?) -> Unit
+            username: String, onSuccess: (UserModel?) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
             GetDetails.getLiveUserDetails(firestore, username, onSuccess)
@@ -114,16 +116,11 @@ class UserRepository {
             val prevProfilePicture = userDetails.value!!.profileImage
 
             StorageUtils.getUrlFromStorage(
-                storage,
-                "${StorageFolders.PROFILE_IMAGES_FOLDER}/$username",
-                profilePicture
+                storage, "${StorageFolders.PROFILE_IMAGES_FOLDER}/$username", profilePicture
             ) { url ->
                 if (url != null) {
                     UpdateProfile.updateProfilePicture(
-                        firestore,
-                        username,
-                        prevProfilePicture,
-                        url
+                        firestore, username, prevProfilePicture, url
                     ) {
                         //updating in livedata
                         userDetails.value = userDetails.value?.copy(profileImage = url)
@@ -133,6 +130,24 @@ class UserRepository {
                     callback(ErrorMessages.ERROR_UPDATING_PROFILE_PICTURE)
                 }
             }
+        }
+
+        fun updateStatus(
+            context: Context,
+            status: UserStatus,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val username = UserStore.getUsername(context)
+
+            UpdateStatus.updateUserStatus(firestore, username, status)
+        }
+
+        fun updateToken(context: Context) {
+            val firestore = FirebaseFirestore.getInstance()
+            val username = UserStore.getUsername(context)
+            val fcmToken = UserStore.getFCMToken(context) ?: ""
+
+            UpdateToken.updateFCMToken(firestore, username, fcmToken)
         }
     }
 }

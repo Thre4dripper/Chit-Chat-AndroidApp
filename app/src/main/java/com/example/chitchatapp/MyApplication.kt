@@ -5,10 +5,7 @@ import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import com.example.chitchatapp.enums.UserStatus
-import com.example.chitchatapp.firebase.user.UpdateStatus
-import com.example.chitchatapp.firebase.user.UpdateToken
-import com.example.chitchatapp.store.UserStore
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.chitchatapp.repository.UserRepository
 
 class MyApplication : Application(), ActivityLifecycleCallbacks {
     private val TAG = "MyApplication"
@@ -27,11 +24,8 @@ class MyApplication : Application(), ActivityLifecycleCallbacks {
     override fun onActivityStarted(p0: Activity) {
         if (++activityReferences == 1) {
             // App enters foreground
-            val firestore = FirebaseFirestore.getInstance()
-            val loggedInUser = UserStore.getUsername(this)
-            val fcmToken = UserStore.getFCMToken(this) ?: ""
-            UpdateStatus.updateUserStatus(firestore, loggedInUser, UserStatus.Online)
-            UpdateToken.updateFCMToken(firestore, loggedInUser, fcmToken)
+            UserRepository.updateStatus(this, UserStatus.Online)
+            UserRepository.updateToken(this)
         }
     }
 
@@ -42,9 +36,7 @@ class MyApplication : Application(), ActivityLifecycleCallbacks {
     override fun onActivityStopped(p0: Activity) {
         if (--activityReferences == 0) {
             // App enters background
-            val firestore = FirebaseFirestore.getInstance()
-            val loggedInUser = UserStore.getUsername(this)
-            UpdateStatus.updateUserStatus(firestore, loggedInUser, UserStatus.LastSeen)
+            UserRepository.updateStatus(this, UserStatus.LastSeen)
         }
     }
 
