@@ -80,6 +80,18 @@ class ChatViewModel : ViewModel() {
         ChatsRepository.sendImage(chatModel, imageUri, from, to, chatMessageId)
     }
 
+    fun sendSticker(
+        context: Context,
+        chatId: String,
+        sticker: Int,
+        chatMessageId: (String?) -> Unit,
+    ) {
+        val chatModel = getChatDetails(chatId) ?: return
+        val from = getLoggedInUsername(context) ?: return
+        val to = ChatUtils.getUserChatUsername(chatModel, from)
+        ChatsRepository.sendSticker(chatModel, sticker, from, to, chatMessageId)
+    }
+
     fun updateSeen(context: Context, chatId: String, onSuccess: (Boolean) -> Unit) {
         val chatModel = getChatDetails(chatId) ?: return
         ChatsRepository.updateSeen(context, chatModel, onSuccess)

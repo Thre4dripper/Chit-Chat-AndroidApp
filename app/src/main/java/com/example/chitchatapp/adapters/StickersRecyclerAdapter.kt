@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chitchatapp.R
+import com.example.chitchatapp.adapters.interfaces.StickerClickInterface
 import com.example.chitchatapp.databinding.ItemBsStickerBinding
 
-class StickersRecyclerAdapter :
+class StickersRecyclerAdapter(private var stickerClickInterface: StickerClickInterface) :
     ListAdapter<Int, StickersRecyclerAdapter.StickerViewHolder>(StickerDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StickerViewHolder {
@@ -27,6 +28,10 @@ class StickersRecyclerAdapter :
 
         fun bind(sticker: Int) {
             binding.bsStickerLottie.setAnimation(sticker)
+
+            binding.root.setOnClickListener {
+                stickerClickInterface.onStickerClick(sticker)
+            }
         }
     }
 
