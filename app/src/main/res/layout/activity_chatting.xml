@@ -51,9 +51,9 @@
             android:id="@+id/activity_chatting_status_cv"
             android:layout_width="8dp"
             android:layout_height="8dp"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/yellow"
             app:cardCornerRadius="10dp"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/chatting_profile_image"
             app:layout_constraintStart_toStartOf="@+id/chatting_username"
             app:layout_constraintTop_toBottomOf="@+id/chatting_username" />
@@ -143,6 +143,20 @@
                     android:src="@drawable/ic_photo" />
             </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/add_sticker_btn_ll"
+                style="@style/SendMessageLayoutActionContainerStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/add_photo_btn_ll"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <ImageView
+                    android:id="@+id/sticker_add_btn"
+                    style="@style/SendMessageLayoutActionBtnStyle"
+                    android:contentDescription="@string/chatting_activity_desc_browse_image"
+                    android:src="@drawable/ic_sticker" />
+            </FrameLayout>
+
             <EditText
                 android:id="@+id/send_message_et"
                 android:layout_width="0dp"
@@ -157,7 +171,7 @@
                 android:minHeight="50dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/send_message_btn_ll"
-                app:layout_constraintStart_toEndOf="@+id/add_photo_btn_ll" />
+                app:layout_constraintStart_toEndOf="@+id/add_sticker_btn_ll" />
 
             <FrameLayout
                 android:id="@+id/send_message_btn_ll"

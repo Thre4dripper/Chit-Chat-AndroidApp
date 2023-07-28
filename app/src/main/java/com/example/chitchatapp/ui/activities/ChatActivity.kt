@@ -27,6 +27,7 @@ import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.UserModel
+import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
 import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Timestamp
@@ -308,6 +309,12 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
             binding.photoAddBtn.visibility = View.GONE
             binding.photoProgressBar.visibility = View.VISIBLE
             photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        //sticker sending button
+        binding.stickerAddBtn.setOnClickListener {
+            val stickersBottomSheet = StickersBottomSheet()
+            stickersBottomSheet.show(supportFragmentManager, stickersBottomSheet.tag)
         }
     }
 
