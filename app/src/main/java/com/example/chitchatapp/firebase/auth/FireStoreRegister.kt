@@ -4,6 +4,7 @@ import com.example.chitchatapp.constants.ErrorMessages
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.constants.SuccessMessages
 import com.example.chitchatapp.constants.UserConstants
+import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.CrudUtils
 import com.example.chitchatapp.firebase.utils.Utils
 import com.example.chitchatapp.models.UserModel
@@ -14,7 +15,10 @@ class FireStoreRegister {
     companion object {
         private const val TAG = "FireStoreRegister"
         fun registerInitialUser(
-            firestore: FirebaseFirestore, user: FirebaseUser, onSuccess: (Boolean) -> Unit
+            firestore: FirebaseFirestore,
+            user: FirebaseUser,
+            fcmToken: String,
+            onSuccess: (Boolean) -> Unit
         ) {
             //check if user is already registered
             Utils.checkCompleteRegistration(firestore, user) {
@@ -24,7 +28,14 @@ class FireStoreRegister {
                 }
 
                 val data = UserModel(
-                    user.uid, "", user.displayName!!, user.photoUrl.toString(), "", "", listOf()
+                    user.uid,
+                    "",
+                    user.displayName!!,
+                    user.photoUrl.toString(),
+                    "",
+                    UserStatus.Online.name,
+                    listOf(),
+                    fcmToken
                 )
 
                 //register user with uid as document id

@@ -21,12 +21,17 @@ class AuthRepository {
 
         fun onSignInResult(
             res: FirebaseAuthUIAuthenticationResult,
+            fcmToken: String,
             onSuccess: (Boolean) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
             FirebaseUISignIn.onSignInResult(res) { firebaseUser ->
                 if (firebaseUser != null) {
-                    FireStoreRegister.registerInitialUser(firestore, firebaseUser) { isRegistered ->
+                    FireStoreRegister.registerInitialUser(
+                        firestore,
+                        firebaseUser,
+                        fcmToken
+                    ) { isRegistered ->
                         onSuccess(isRegistered)
                     }
                 } else {

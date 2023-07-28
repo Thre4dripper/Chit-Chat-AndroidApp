@@ -73,7 +73,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     ) {
         //init user details on sign in
         initUserDetails()
-        AuthRepository.onSignInResult(res, onSuccess)
+        val fcmToken = UserStore.getFCMToken(getApplication<Application>().applicationContext) ?: ""
+        AuthRepository.onSignInResult(res, fcmToken, onSuccess)
     }
 
     fun checkInitialRegistration(

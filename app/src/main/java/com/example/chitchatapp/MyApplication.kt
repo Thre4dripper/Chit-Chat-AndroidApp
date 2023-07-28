@@ -6,6 +6,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.user.UpdateStatus
+import com.example.chitchatapp.firebase.user.UpdateToken
 import com.example.chitchatapp.store.UserStore
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -28,7 +29,9 @@ class MyApplication : Application(), ActivityLifecycleCallbacks {
             // App enters foreground
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(this)
+            val fcmToken = UserStore.getFCMToken(this) ?: ""
             UpdateStatus.updateUserStatus(firestore, loggedInUser, UserStatus.Online)
+            UpdateToken.updateFCMToken(firestore, loggedInUser, fcmToken)
         }
     }
 
