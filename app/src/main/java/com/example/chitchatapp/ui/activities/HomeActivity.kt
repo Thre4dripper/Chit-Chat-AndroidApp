@@ -44,7 +44,14 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
         //all the click listeners
         binding.profileImageBtn.setOnClickListener {
-            startActivity(Intent(this, UserDetailsActivity::class.java))
+            val intent = Intent(this, UserDetailsActivity::class.java)
+            val activityOptionsCompat =
+                androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    binding.profileImageBtn,
+                    getString(R.string.user_details_activity_profile_image_transition)
+                )
+            startActivity(intent, activityOptionsCompat.toBundle())
         }
         binding.logoutBtn.setOnClickListener {
             signOut()

@@ -38,12 +38,13 @@ class UserDetailsActivity : AppCompatActivity() {
 
     }
 
+    @Suppress("DEPRECATION")
     private fun initBackButtons() {
         binding.userDetailsBackBtn.setOnClickListener {
-            finish()
+            onBackPressed()
         }
         binding.userDetailsBackBtnTv.setOnClickListener {
-            finish()
+            onBackPressed()
         }
     }
 
