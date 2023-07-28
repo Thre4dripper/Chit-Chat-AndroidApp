@@ -61,6 +61,9 @@ dependencies {
     //firebase firestore
     implementation("com.google.firebase:firebase-firestore-ktx")
 
+    //firebase messaging
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.2.0'
+
     //glide
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
