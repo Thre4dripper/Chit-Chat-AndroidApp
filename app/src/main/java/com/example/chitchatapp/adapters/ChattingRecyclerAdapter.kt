@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.chitchatapp.LottieStickers
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
 import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
 import com.example.chitchatapp.databinding.ItemChatImageRightBinding
+import com.example.chitchatapp.databinding.ItemChatStickerLeftBinding
+import com.example.chitchatapp.databinding.ItemChatStickerRightBinding
 import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
 import com.example.chitchatapp.databinding.ItemChatTextRightBinding
 import com.example.chitchatapp.enums.ChatMessageType
@@ -33,6 +36,8 @@ class ChattingRecyclerAdapter(
         const val VIEW_TYPE_RIGHT_MESSAGE = 2
         const val VIEW_TYPE_LEFT_IMAGE = 3
         const val VIEW_TYPE_RIGHT_IMAGE = 4
+        const val VIEW_TYPE_LEFT_STICKER = 5
+        const val VIEW_TYPE_RIGHT_STICKER = 6
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -67,6 +72,18 @@ class ChattingRecyclerAdapter(
                 LeftImageViewHolder(view)
             }
 
+            VIEW_TYPE_RIGHT_STICKER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_sticker_right, parent, false)
+                RightStickerViewHolder(view)
+            }
+
+            VIEW_TYPE_LEFT_STICKER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_sticker_left, parent, false)
+                LeftStickerViewHolder(view)
+            }
+
             else -> null!!
         }
     }
@@ -94,6 +111,16 @@ class ChattingRecyclerAdapter(
                 val viewHolder = holder as RightImageViewHolder
                 viewHolder.bind(item)
             }
+
+            VIEW_TYPE_LEFT_STICKER -> {
+                val viewHolder = holder as LeftStickerViewHolder
+                viewHolder.bind(item)
+            }
+
+            VIEW_TYPE_RIGHT_STICKER -> {
+                val viewHolder = holder as RightStickerViewHolder
+                viewHolder.bind(item)
+            }
         }
     }
 
@@ -117,6 +144,14 @@ class ChattingRecyclerAdapter(
                     VIEW_TYPE_RIGHT_IMAGE
                 } else {
                     VIEW_TYPE_LEFT_IMAGE
+                }
+            }
+
+            ChatMessageType.TypeSticker -> {
+                return if (item.from == loggedInUsername) {
+                    VIEW_TYPE_RIGHT_STICKER
+                } else {
+                    VIEW_TYPE_LEFT_STICKER
                 }
             }
 
@@ -234,6 +269,52 @@ class ChattingRecyclerAdapter(
                     binding.itemChatLeftImage
                 )
             }
+        }
+    }
+
+    inner class RightStickerViewHolder(itemView: View) : ViewHolder(itemView) {
+        private val binding = ItemChatStickerRightBinding.bind(itemView)
+
+        fun bind(chatMessageModel: ChatMessageModel) {
+            binding.itemChatRightLottie.setAnimation(LottieStickers.getSticker(chatMessageModel.sticker!!))
+
+            val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatStickerStatusIv)
+
+            val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
+            binding.itemChatStickerStatusIv.visibility =
+                if (chatMessageModel.seenBy.contains(senderUsername)) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+
+            binding.itemChatRightStickerTime.text =
+                TimeUtils.getFormattedTime(chatMessageModel.time)
+        }
+    }
+
+    inner class LeftStickerViewHolder(itemView: View) : ViewHolder(itemView) {
+        private val binding = ItemChatStickerLeftBinding.bind(itemView)
+
+        fun bind(chatMessageModel: ChatMessageModel) {
+            val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatLeftIv)
+
+            binding.itemChatLeftLottie.setAnimation(LottieStickers.getSticker(chatMessageModel.sticker!!))
+
+            binding.itemChatLeftStickerTime.text =
+                TimeUtils.getFormattedTime(chatMessageModel.time)
         }
     }
 
