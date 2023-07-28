@@ -184,8 +184,16 @@ class HomeChatsRecyclerAdapter(
 
                     GroupMessageType.TypeImage -> {
                         itemHomeChatMessagePhoto.visibility = View.VISIBLE
+                        itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_photo)
                         itemHomeChatMessage.text =
                             groupChatModel.messages.last().text?.trim() ?: "Photo"
+                    }
+
+                    GroupMessageType.TypeSticker -> {
+                        itemHomeChatMessagePhoto.visibility = View.VISIBLE
+                        itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_sticker)
+                        itemHomeChatMessage.text =
+                            groupChatModel.messages.last().text?.trim() ?: "Sticker"
                     }
 
                     else -> {

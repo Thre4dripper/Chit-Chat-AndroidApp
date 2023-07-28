@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.example.chitchatapp.LottieStickers
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
 import com.example.chitchatapp.databinding.ItemChatImageLeftBinding
 import com.example.chitchatapp.databinding.ItemChatImageRightBinding
+import com.example.chitchatapp.databinding.ItemChatStickerLeftBinding
+import com.example.chitchatapp.databinding.ItemChatStickerRightBinding
 import com.example.chitchatapp.databinding.ItemChatTextLeftBinding
 import com.example.chitchatapp.databinding.ItemChatTextRightBinding
 import com.example.chitchatapp.databinding.ItemGroupNotifyMessageBinding
@@ -31,11 +34,13 @@ class GroupChatRecyclerAdapter(
 
     companion object {
         private const val VIEW_TYPE_CREATED_GROUP = 0
-        private const val VIEW_TYPE_RIGHT_MESSAGE = 1
-        private const val VIEW_TYPE_LEFT_MESSAGE = 2
-        private const val VIEW_TYPE_RIGHT_IMAGE = 3
-        private const val VIEW_TYPE_LEFT_IMAGE = 4
-        private const val VIEW_TYPE_LEAVED_GROUP = 5
+        private const val VIEW_TYPE_LEAVED_GROUP = 1
+        private const val VIEW_TYPE_RIGHT_MESSAGE = 2
+        private const val VIEW_TYPE_LEFT_MESSAGE = 3
+        private const val VIEW_TYPE_RIGHT_IMAGE = 4
+        private const val VIEW_TYPE_LEFT_IMAGE = 5
+        private const val VIEW_TYPE_LEFT_STICKER = 6
+        private const val VIEW_TYPE_RIGHT_STICKER = 7
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -76,6 +81,18 @@ class GroupChatRecyclerAdapter(
                 return LeftImageViewHolder(view)
             }
 
+            VIEW_TYPE_RIGHT_STICKER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_sticker_right, parent, false)
+                return RightStickerViewHolder(view)
+            }
+
+            VIEW_TYPE_LEFT_STICKER -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_chat_sticker_left, parent, false)
+                return LeftStickerViewHolder(view)
+            }
+
             else -> null!!
         }
     }
@@ -113,6 +130,16 @@ class GroupChatRecyclerAdapter(
                 groupMessageViewHolder.bind(groupMessageModel)
             }
 
+            VIEW_TYPE_RIGHT_STICKER -> {
+                val groupMessageViewHolder = holder as RightStickerViewHolder
+                groupMessageViewHolder.bind(groupMessageModel)
+            }
+
+            VIEW_TYPE_LEFT_STICKER -> {
+                val groupMessageViewHolder = holder as LeftStickerViewHolder
+                groupMessageViewHolder.bind(groupMessageModel)
+            }
+
             else -> null!!
         }
     }
@@ -121,6 +148,8 @@ class GroupChatRecyclerAdapter(
         val item = getItem(position)
         return when (item.type) {
             GroupMessageType.TypeCreatedGroup -> VIEW_TYPE_CREATED_GROUP
+            GroupMessageType.TypeLeavedMember -> VIEW_TYPE_LEAVED_GROUP
+
             GroupMessageType.TypeMessage -> {
                 return if (item.from == loggedInUsername) {
                     VIEW_TYPE_RIGHT_MESSAGE
@@ -137,7 +166,13 @@ class GroupChatRecyclerAdapter(
                 }
             }
 
-            GroupMessageType.TypeLeavedMember -> VIEW_TYPE_LEAVED_GROUP
+            GroupMessageType.TypeSticker -> {
+                return if (item.from == loggedInUsername) {
+                    VIEW_TYPE_RIGHT_STICKER
+                } else {
+                    VIEW_TYPE_LEFT_STICKER
+                }
+            }
 
             else -> null!!
         }
@@ -224,17 +259,7 @@ class GroupChatRecyclerAdapter(
                 .placeholder(R.drawable.ic_profile)
                 .into(binding.itemChatImageRightIv)
 
-            val senderImage = ChatUtils.getGroupChatProfileImage(
-                groupChatModel,
-                groupMessageModel.from
-            )
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatMessageStatusIv)
-
+            //hide status icon in group chat
             binding.itemChatMessageStatusIv.visibility = View.GONE
 
             binding.itemChatRightImageTime.text =
@@ -278,6 +303,42 @@ class GroupChatRecyclerAdapter(
                     binding.itemChatLeftImage
                 )
             }
+        }
+    }
+
+    inner class RightStickerViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatStickerRightBinding.bind(itemView)
+
+        fun bind(groupMessageModel: GroupMessageModel) {
+            binding.itemChatRightLottie.setAnimation(LottieStickers.getSticker(groupMessageModel.sticker!!))
+
+            //hide status icon in group chat
+            binding.itemChatStickerStatusIv.visibility = View.GONE
+
+            binding.itemChatRightStickerTime.text =
+                TimeUtils.getFormattedTime(groupMessageModel.time)
+        }
+    }
+
+    inner class LeftStickerViewHolder(itemView: View) : ViewHolder(itemView) {
+        private var binding = ItemChatStickerLeftBinding.bind(itemView)
+
+        fun bind(groupMessageModel: GroupMessageModel) {
+            val senderImage = ChatUtils.getGroupChatProfileImage(
+                groupChatModel,
+                groupMessageModel.from
+            )
+            Glide
+                .with(itemView.context)
+                .load(senderImage)
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(binding.itemChatLeftIv)
+
+            binding.itemChatLeftLottie.setAnimation(LottieStickers.getSticker(groupMessageModel.sticker!!))
+
+            binding.itemChatLeftStickerTime.text =
+                TimeUtils.getFormattedTime(groupMessageModel.time)
         }
     }
 
