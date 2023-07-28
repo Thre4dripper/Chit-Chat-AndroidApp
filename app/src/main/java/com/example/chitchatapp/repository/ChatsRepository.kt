@@ -224,6 +224,17 @@ class ChatsRepository {
             }
         }
 
+        fun sendGroupSticker(
+            groupChatModel: GroupChatModel,
+            stickerIndex: Int,
+            from: String,
+            chatMessageId: (String?) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+
+            SendGroupChat.sendSticker(firestore, groupChatModel, stickerIndex, from, chatMessageId)
+        }
+
         fun updateGroupSeen(
             context: Context,
             groupChatModel: GroupChatModel,

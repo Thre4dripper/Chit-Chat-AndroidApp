@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.chitchatapp.LottieStickers
 import com.example.chitchatapp.adapters.StickersRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.StickerClickInterface
 import com.example.chitchatapp.databinding.BsStickersBinding
-import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class StickersBottomSheet(private var viewModel: ChatViewModel, private var chatId: String) :
+class StickersBottomSheet(private var stickerIndex: (Int) -> Unit) :
     BottomSheetDialogFragment(), StickerClickInterface {
 
     private lateinit var binding: BsStickersBinding
@@ -36,12 +34,7 @@ class StickersBottomSheet(private var viewModel: ChatViewModel, private var chat
     }
 
     override fun onStickerClick(stickerIndex: Int) {
-        viewModel.sendSticker(requireContext(), chatId, stickerIndex) {
-            if (it == null) {
-                Toast.makeText(requireContext(), "Error Sending Sticker", Toast.LENGTH_SHORT).show()
-            } else {
-                dismiss()
-            }
-        }
+        stickerIndex(stickerIndex)
+        dismiss()
     }
 }

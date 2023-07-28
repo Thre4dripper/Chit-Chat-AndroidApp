@@ -68,6 +68,17 @@ class GroupChatViewModel : ViewModel() {
         ChatsRepository.sendGroupImage(groupChatModel, imageUri, from, chatMessageId)
     }
 
+    fun sendSticker(
+        context: Context,
+        chatId: String,
+        stickerIndex: Int,
+        chatMessageId: (String?) -> Unit,
+    ) {
+        val groupChatModel = getGroupChatDetails(chatId) ?: return
+        val from = getLoggedInUsername(context) ?: return
+        ChatsRepository.sendGroupSticker(groupChatModel, stickerIndex, from, chatMessageId)
+    }
+
     fun updateSeen(context: Context, groupId: String, onSuccess: (Boolean) -> Unit) {
         val groupChatModel = getGroupChatDetails(groupId) ?: return
         ChatsRepository.updateGroupSeen(context, groupChatModel, onSuccess)

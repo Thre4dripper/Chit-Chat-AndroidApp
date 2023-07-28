@@ -313,7 +313,9 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
         //sticker sending button
         binding.stickerAddBtn.setOnClickListener {
-            val stickersBottomSheet = StickersBottomSheet(viewModel, chatId)
+            val stickersBottomSheet = StickersBottomSheet {
+                viewModel.sendSticker(this, chatId, it) {}
+            }
             stickersBottomSheet.show(supportFragmentManager, stickersBottomSheet.tag)
         }
     }

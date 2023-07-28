@@ -84,5 +84,42 @@ class SendGroupChat {
                     chatMessageId(null)
                 }
         }
+
+        fun sendSticker(
+            firestore: FirebaseFirestore,
+            groupChatModel: GroupChatModel,
+            stickerIndex: Int,
+            from: String,
+            chatMessageId: (String?) -> Unit,
+        ) {
+            val id = UUID.randomUUID().toString()
+            val oldMessagesList = groupChatModel.messages
+            val newMessagesList = oldMessagesList.toMutableList()
+            newMessagesList.add(
+                GroupMessageModel(
+                    id,
+                    GroupMessageType.TypeSticker,
+                    null,
+                    null,
+                    stickerIndex,
+                    Timestamp.now(),
+                    listOf(from),
+                    from,
+                )
+            )
+            //no worry, firestore will merge the data, and only update the chatMessages field
+            val updatedChatModel = groupChatModel.copy(
+                messages = newMessagesList
+            )
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
+                .document(groupChatModel.id)
+                .set(updatedChatModel, SetOptions.merge())
+                .addOnSuccessListener {
+                    chatMessageId(id)
+                }
+                .addOnFailureListener {
+                    chatMessageId(null)
+                }
+        }
     }
 }

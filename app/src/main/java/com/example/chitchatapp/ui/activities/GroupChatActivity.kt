@@ -24,6 +24,7 @@ import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupMessageModel
+import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -235,6 +236,14 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             binding.photoAddBtn.visibility = View.GONE
             binding.photoProgressBar.visibility = View.VISIBLE
             photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        //sticker sending button
+        binding.stickerAddBtn.setOnClickListener {
+            val stickersBottomSheet = StickersBottomSheet {
+                viewModel.sendSticker(this, groupId, it) {}
+            }
+            stickersBottomSheet.show(supportFragmentManager, stickersBottomSheet.tag)
         }
     }
 
