@@ -98,12 +98,30 @@ class HomeChatsRecyclerAdapter(
                 itemHomeChatMessageTime.text =
                     TimeUtils.getFormattedTime(chatModel.chatMessages.last().time)
 
-                if (chatModel.chatMessages.last().type == ChatMessageType.TypeMessage) {
-                    itemHomeChatMessagePhoto.visibility = View.GONE
-                    itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
-                } else if (chatModel.chatMessages.last().type == ChatMessageType.TypeImage) {
-                    itemHomeChatMessagePhoto.visibility = View.VISIBLE
-                    itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: "Photo"
+                when (chatModel.chatMessages.last().type) {
+                    ChatMessageType.TypeMessage -> {
+                        itemHomeChatMessagePhoto.visibility = View.GONE
+                        itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
+                    }
+
+                    ChatMessageType.TypeImage -> {
+                        itemHomeChatMessagePhoto.visibility = View.VISIBLE
+                        itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_photo)
+                        itemHomeChatMessage.text =
+                            chatModel.chatMessages.last().text?.trim() ?: "Photo"
+                    }
+
+                    ChatMessageType.TypeSticker -> {
+                        itemHomeChatMessagePhoto.visibility = View.VISIBLE
+                        itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_sticker)
+                        itemHomeChatMessage.text =
+                            chatModel.chatMessages.last().text?.trim() ?: "Sticker"
+                    }
+
+                    else -> {
+                        itemHomeChatMessagePhoto.visibility = View.GONE
+                        itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
+                    }
                 }
 
                 val unreadMessages = chatModel.chatMessages.filter {

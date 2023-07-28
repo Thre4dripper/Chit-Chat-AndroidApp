@@ -186,6 +186,13 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <style name="ItemChatStickerStyle">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="lottie_autoPlay">true</item>
+        <item name="lottie_loop">true</item>
+    </style>
+
     //User Profile Activity
 
     <style name="ChatProfileBottomTvStyle">
