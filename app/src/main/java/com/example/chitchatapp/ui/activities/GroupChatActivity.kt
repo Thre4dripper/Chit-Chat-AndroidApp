@@ -14,6 +14,8 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
@@ -41,6 +43,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private lateinit var groupChatAdapter: GroupChatRecyclerAdapter
     private var groupId: String? = null
+    private var scrollToBottom = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,7 +143,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 //when the list is submitted, then update the seen status
                 viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
-                binding.groupChatRv.smoothScrollToPosition(0)
+                if (scrollToBottom)
+                    binding.groupChatRv.smoothScrollToPosition(0)
             }
 
         }
@@ -188,6 +192,20 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             groupChatAdapter =
                 GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!, this@GroupChatActivity)
             adapter = groupChatAdapter
+
+            //this is for when user is at the bottom of the recycler view
+            //then only scroll to bottom for new messages
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    //detect end of recycler view
+                    //since recycler view is reversed, so we need to check if the first item is visible
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstItemPos = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+                    //if the last visible item is the last item in the list, then scroll to bottom
+                    scrollToBottom = firstItemPos == 0
+                }
+            })
         }
     }
 
