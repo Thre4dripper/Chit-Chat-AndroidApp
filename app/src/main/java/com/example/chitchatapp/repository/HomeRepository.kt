@@ -33,5 +33,13 @@ class HomeRepository {
             val user = FirebaseAuth.getInstance().currentUser
             Utils.checkInitialRegistration(firestore, user, onSuccess)
         }
+
+        fun checkCompleteRegistration(
+            onSuccess: (Boolean) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            val user = FirebaseAuth.getInstance().currentUser
+            Utils.checkCompleteRegistration(firestore, user, onSuccess)
+        }
     }
 }

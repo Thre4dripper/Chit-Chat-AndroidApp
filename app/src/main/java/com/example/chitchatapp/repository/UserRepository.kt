@@ -142,10 +142,11 @@ class UserRepository {
             UpdateStatus.updateUserStatus(firestore, username, status)
         }
 
-        fun updateToken(context: Context) {
+        fun updateToken(context: Context, fcmToken: String?) {
             val firestore = FirebaseFirestore.getInstance()
             val username = UserStore.getUsername(context)
-            val fcmToken = UserStore.getFCMToken(context) ?: ""
+
+            if (fcmToken == null || username == null) return
 
             UpdateToken.updateFCMToken(firestore, username, fcmToken)
         }

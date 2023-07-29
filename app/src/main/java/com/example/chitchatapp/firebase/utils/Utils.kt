@@ -39,11 +39,19 @@ class Utils {
             user: FirebaseUser?,
             isComplete: (Boolean) -> Unit
         ) {
-            firestore.collection(FirestoreCollections.REGISTERED_IDS_COLLECTION).document(user!!.uid)
-                .get().addOnSuccessListener {
-                    isComplete(it.exists())
-                }.addOnFailureListener {
-                    isComplete(false)
+            firestore.collection(FirestoreCollections.REGISTERED_IDS_COLLECTION)
+                .document(user!!.uid)
+                .addSnapshotListener() { snapshot, e ->
+                    if (e != null) {
+                        isComplete(false)
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        isComplete(true)
+                    } else {
+                        isComplete(false)
+                    }
                 }
         }
 

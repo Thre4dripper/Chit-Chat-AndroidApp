@@ -86,7 +86,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         }
 
         //checking if user has completed profile or not
-        viewModel.checkInitialRegistration { isInitial ->
+        viewModel.checkUserRegistration { isInitial ->
             binding.loadingLottie.visibility = View.GONE
             binding.completeProfileLl.visibility = if (isInitial) View.VISIBLE else View.GONE
 

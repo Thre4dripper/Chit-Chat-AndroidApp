@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.models.HomeChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
@@ -28,24 +29,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _homeChats = ChatsRepository.homeChats
     val homeChats: LiveData<List<HomeChatModel>?>
         get() = _homeChats
-
-    init {
-        initUserDetails()
-    }
-
-    /**
-     * Init user details on app launch
-     */
-    private fun initUserDetails() {
-        getCurrentUser() ?: return
-        HomeRepository.getUsername { username ->
-            if (username == null)
-                return@getUsername
-
-            UserStore.saveUsername(getApplication<Application>().applicationContext, username)
-            UserRepository.getUserDetails(getApplication<Application>().applicationContext) {}
-        }
-    }
 
     fun getCurrentUser(): FirebaseUser? {
         return FirebaseAuth.getInstance().currentUser
@@ -75,15 +58,38 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         onSuccess: (Boolean) -> Unit,
     ) {
         //init user details on sign in
-        initUserDetails()
-        val fcmToken = UserStore.getFCMToken(getApplication<Application>().applicationContext) ?: ""
-        AuthRepository.onSignInResult(res, fcmToken, onSuccess)
+        AuthRepository.onSignInResult(res, onSuccess)
     }
 
-    fun checkInitialRegistration(
+    /**
+     * This function checks if the user is initially registered and completely registered
+     * This is called when the app is launched from onCreate() of HomeActivity
+     */
+    fun checkUserRegistration(
         onSuccess: (Boolean) -> Unit,
-    ) =
+    ) {
         HomeRepository.checkInitialRegistration(onSuccess)
+
+        HomeRepository.checkCompleteRegistration {
+            if (it) initUserDetails()
+        }
+    }
+
+    private fun initUserDetails() {
+        getCurrentUser() ?: return
+        HomeRepository.getUsername { username ->
+            if (username == null) return@getUsername
+
+            val context = getApplication<Application>().applicationContext
+            val fcmToken = UserStore.getFCMToken(context)
+
+            //order of statements is important, first save username then do other stuff
+            UserStore.saveUsername(context, username)
+            UserRepository.getUserDetails(context) {}
+            UserRepository.updateStatus(context, UserStatus.Online)
+            UserRepository.updateToken(context, fcmToken)
+        }
+    }
 
     fun getHomeChats(
         context: Context
@@ -93,8 +99,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun listenFavChats(
-        username: String,
-        onSuccess: (UserModel?) -> Unit
+        username: String, onSuccess: (UserModel?) -> Unit
     ) {
         UserRepository.listenUserDetails(username, onSuccess)
     }
