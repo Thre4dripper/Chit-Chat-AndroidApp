@@ -46,7 +46,9 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    TextNotification.sendTextNotification(context, firestore, text, from, to)
+                    TextNotification.sendTextNotification(
+                        context, firestore, chatModel.chatId, text, from, to
+                    )
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)

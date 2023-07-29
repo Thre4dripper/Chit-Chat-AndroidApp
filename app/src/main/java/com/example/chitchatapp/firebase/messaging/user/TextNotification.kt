@@ -15,6 +15,7 @@ class TextNotification {
         fun sendTextNotification(
             context: Context,
             firestore: FirebaseFirestore,
+            chatId: String,
             text: String,
             from: String,
             to: String
@@ -23,11 +24,11 @@ class TextNotification {
             var receiverDetails: UserModel? = null
             GetDetails.getUserDetails(firestore, from) {
                 senderDetails = it!!
-                preparePayload(context, senderDetails, receiverDetails, text)
+                preparePayload(context, senderDetails, receiverDetails, chatId, text)
             }
             GetDetails.getUserDetails(firestore, to) {
                 receiverDetails = it!!
-                preparePayload(context, senderDetails, receiverDetails, text)
+                preparePayload(context, senderDetails, receiverDetails, chatId, text)
             }
         }
 
@@ -35,6 +36,7 @@ class TextNotification {
             context: Context,
             senderDetails: UserModel?,
             receiverDetails: UserModel?,
+            chatId: String,
             text: String
         ) {
             if (senderDetails == null || receiverDetails == null) return
@@ -48,6 +50,7 @@ class TextNotification {
             data.put("notifierName", senderDetails.username)
             data.put("notifierId", senderDetails.uid)
             data.put("notifierImage", senderDetails.profileImage)
+            data.put("chatId", chatId)
             data.put("text", text)
 
             payload.put("data", data)

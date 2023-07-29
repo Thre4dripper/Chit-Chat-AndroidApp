@@ -1,11 +1,15 @@
 package com.example.chitchatapp.notifications
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.chitchatapp.R
+import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.NotificationConstants
+import com.example.chitchatapp.ui.activities.ChatActivity
 import org.json.JSONObject
 
 class UserChatNotifications {
@@ -16,6 +20,7 @@ class UserChatNotifications {
             val notifierName = payload.getString("notifierName")
             val notifierId = payload.getString("notifierId")
             val notifierImage = payload.getString("notifierImage")
+            val chatId = payload.getString("chatId")
             val text = payload.getString("text")
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
@@ -23,6 +28,12 @@ class UserChatNotifications {
                 ("${NotificationConstants.USER_TEXT_NOTIFICATION_ID}$notificationHash").toInt()
 
             val notificationUserImage = FCMConfig.getBitmapFromUrl(notifierImage)
+
+            val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra(ChatConstants.CHAT_ID, chatId)
+
+            val pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -33,7 +44,9 @@ class UserChatNotifications {
                     .setStyle(
                         NotificationCompat.BigTextStyle().setBigContentTitle(notifierName)
                             .bigText(text)
-                    ).setAutoCancel(true).build()
+                    )
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true).build()
 
             with(NotificationManagerCompat.from(context)) {
                 try {
