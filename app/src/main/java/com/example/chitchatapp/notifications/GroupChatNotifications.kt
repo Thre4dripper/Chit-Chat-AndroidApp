@@ -1,11 +1,15 @@
 package com.example.chitchatapp.notifications
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.chitchatapp.R
+import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.NotificationConstants
+import com.example.chitchatapp.ui.activities.GroupChatActivity
 import org.json.JSONObject
 
 class GroupChatNotifications {
@@ -33,7 +37,15 @@ class GroupChatNotifications {
                 ("${NotificationConstants.GROUP_TEXT_NOTIFICATION_ID}$notificationHash").toInt()
 
             val notificationIconImage = FCMConfig.getBitmapFromUrl(notificationImage)
-            Log.d(TAG, "textNotification: $notificationIconImage")
+
+            val intent = Intent(context, GroupChatActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            intent.putExtra(GroupConstants.GROUP_ID, groupId)
+
+            val pendingIntent = PendingIntent.getActivity(
+                context, notificationId, intent, PendingIntent.FLAG_MUTABLE
+            )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.GROUP_CHAT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -44,7 +56,9 @@ class GroupChatNotifications {
                     .setStyle(
                         NotificationCompat.BigTextStyle().setBigContentTitle(groupName)
                             .bigText("$notifierName: $text")
-                    ).setAutoCancel(true).build()
+                    )
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true).build()
 
             with(NotificationManagerCompat.from(context)) {
                 try {
@@ -75,6 +89,15 @@ class GroupChatNotifications {
 
             val notificationIconImage = FCMConfig.getBitmapFromUrl(notificationImage)
             val notificationMessageImage = FCMConfig.getBitmapFromUrl(image)
+
+            val intent = Intent(context, GroupChatActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            intent.putExtra(GroupConstants.GROUP_ID, groupId)
+
+            val pendingIntent = PendingIntent.getActivity(
+                context, notificationId, intent, PendingIntent.FLAG_MUTABLE
+            )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.GROUP_CHAT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -84,7 +107,9 @@ class GroupChatNotifications {
                     .setLargeIcon(notificationIconImage)
                     .setStyle(
                         NotificationCompat.BigPictureStyle().bigPicture(notificationMessageImage)
-                    ).setAutoCancel(true).build()
+                    )
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true).build()
 
             with(NotificationManagerCompat.from(context)) {
                 try {
@@ -113,6 +138,15 @@ class GroupChatNotifications {
                 ("${NotificationConstants.GROUP_STICKER_NOTIFICATION_ID}$notificationHash").toInt()
 
             val notificationIconImage = FCMConfig.getBitmapFromUrl(notificationImage)
+
+            val intent = Intent(context, GroupChatActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            intent.putExtra(GroupConstants.GROUP_ID, groupId)
+
+            val pendingIntent = PendingIntent.getActivity(
+                context, notificationId, intent, PendingIntent.FLAG_MUTABLE
+            )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.GROUP_CHAT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -120,6 +154,7 @@ class GroupChatNotifications {
                     .setContentText("$notifierName: \uD83C\uDF20 Sticker")
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setLargeIcon(notificationIconImage)
+                    .setContentIntent(pendingIntent)
                     .setAutoCancel(true).build()
 
             with(NotificationManagerCompat.from(context)) {

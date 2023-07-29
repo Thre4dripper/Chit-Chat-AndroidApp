@@ -63,15 +63,15 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         //1. From the chats screen
         //2. From the add group screen
         //If it is opened from the chats screen, then groupId will not be null
-        if (groupId == null)
+        if (groupId != null)
+            getGroupDetails(groupId!!, loggedInUsername!!)
+        else {
             createNewGroup(
                 groupName,
                 groupImage,
                 groupMembers!!,
                 loggedInUsername!!
             )
-        else {
-            getGroupDetails(groupId!!, loggedInUsername!!)
         }
 
         binding.groupChatBackBtn.setOnClickListener { finish() }
