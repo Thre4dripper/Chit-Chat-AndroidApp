@@ -3,6 +3,7 @@ package com.example.chitchatapp.viewModels
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.chitchatapp.enums.UserStatus
@@ -80,6 +81,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun initUserDetails() {
         val context = getApplication<Application>().applicationContext
         val fcmToken = UserStore.getFCMToken(context)
+        Log.d("FCM", "initUserDetails: $fcmToken")
 
         HomeRepository.getUsername { username ->
             //save username even if it is null

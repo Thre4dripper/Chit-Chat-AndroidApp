@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.enums.ChatMessageType
-import com.example.chitchatapp.enums.HomeLayoutType
+import com.example.chitchatapp.enums.ChatType
 import com.example.chitchatapp.firebase.chats.ClearChat
 import com.example.chitchatapp.firebase.chats.DeleteChat
 import com.example.chitchatapp.firebase.chats.GetChats
@@ -39,12 +39,12 @@ class ChatsRepository {
             GetChats.getAllUserChats(firestore, loggedInUser) { userChats ->
                 val oldList = homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
-                updatedList.removeIf { it.type == HomeLayoutType.USER }
+                updatedList.removeIf { it.type == ChatType.USER }
                 updatedList.addAll(
                     userChats.map {
                         HomeChatModel(
                             it.chatId,
-                            HomeLayoutType.USER,
+                            ChatType.USER,
                             it,
                             null,
                             it.chatMessages.last().time
@@ -66,12 +66,12 @@ class ChatsRepository {
             GetGroupChats.getAllGroupChats(firestore, groupUserModel) { groupChats ->
                 val oldList = homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
-                updatedList.removeIf { it.type == HomeLayoutType.GROUP }
+                updatedList.removeIf { it.type == ChatType.GROUP }
                 updatedList.addAll(
                     groupChats.map {
                         HomeChatModel(
                             it.id,
-                            HomeLayoutType.GROUP,
+                            ChatType.GROUP,
                             null,
                             it,
                             it.messages.last().time

@@ -13,7 +13,7 @@ import com.example.chitchatapp.adapters.interfaces.ChatClickInterface
 import com.example.chitchatapp.databinding.ItemHomeChatBinding
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.GroupMessageType
-import com.example.chitchatapp.enums.HomeLayoutType
+import com.example.chitchatapp.enums.ChatType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatModel
@@ -67,8 +67,8 @@ class HomeChatsRecyclerAdapter(
     override fun getItemViewType(position: Int): Int {
         val homeChatModel = getItem(position)
         return when (homeChatModel.type) {
-            HomeLayoutType.USER -> VIEW_TYPE_USER
-            HomeLayoutType.GROUP -> VIEW_TYPE_GROUP
+            ChatType.USER -> VIEW_TYPE_USER
+            ChatType.GROUP -> VIEW_TYPE_GROUP
         }
     }
 

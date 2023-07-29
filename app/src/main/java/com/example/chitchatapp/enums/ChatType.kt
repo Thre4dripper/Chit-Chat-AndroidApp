@@ -1,6 +1,6 @@
 package com.example.chitchatapp.enums
 
-enum class HomeLayoutType {
+enum class ChatType {
     USER,
     GROUP,
 }
