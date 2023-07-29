@@ -8,7 +8,7 @@ import com.example.chitchatapp.R
 import com.example.chitchatapp.constants.NotificationConstants
 import org.json.JSONObject
 
-class UserChatNotification {
+class UserChatNotifications {
     companion object {
         private val TAG = "UserChatNotification"
         fun textNotification(context: Context, payload: JSONObject) {

@@ -56,20 +56,42 @@ class FCMConfig : FirebaseMessagingService() {
     ) {
         when (chatType.name) {
             ChatType.USER.name -> {
-                if (messageType == ChatMessageType.TypeMessage) {
-                    UserChatNotification.textNotification(this, payload)
-                } else if (messageType == ChatMessageType.TypeImage) {
-                    UserChatNotification.imageNotification(this, payload)
-                } else if (messageType == ChatMessageType.TypeSticker) {
-                    UserChatNotification.stickerNotification(this, payload)
+                when (messageType) {
+                    ChatMessageType.TypeMessage -> {
+                        UserChatNotifications.textNotification(this, payload)
+                    }
+
+                    ChatMessageType.TypeImage -> {
+                        UserChatNotifications.imageNotification(this, payload)
+                    }
+
+                    ChatMessageType.TypeSticker -> {
+                        UserChatNotifications.stickerNotification(this, payload)
+                    }
+
+                    else -> {
+                        Log.d(TAG, "notifyByChatType: unknown message type")
+                    }
                 }
             }
 
             ChatType.GROUP.name -> {
-                if (messageType == ChatMessageType.TypeMessage) {
-                    //todo
-                } else if (messageType == ChatMessageType.TypeImage) {
-                    //todo
+                when (messageType) {
+                    ChatMessageType.TypeMessage -> {
+                        GroupChatNotifications.textNotification(this, payload)
+                    }
+
+                    ChatMessageType.TypeImage -> {
+                        GroupChatNotifications.imageNotification(this, payload)
+                    }
+
+                    ChatMessageType.TypeSticker -> {
+                        GroupChatNotifications.stickerNotification(this, payload)
+                    }
+
+                    else -> {
+                        Log.d(TAG, "notifyByChatType: unknown message type")
+                    }
                 }
             }
         }
