@@ -60,6 +60,8 @@ class FCMConfig : FirebaseMessagingService() {
                     UserChatNotification.textNotification(this, payload)
                 } else if (messageType == ChatMessageType.TypeImage) {
                     UserChatNotification.imageNotification(this, payload)
+                } else if (messageType == ChatMessageType.TypeSticker) {
+                    UserChatNotification.stickerNotification(this, payload)
                 }
             }
 

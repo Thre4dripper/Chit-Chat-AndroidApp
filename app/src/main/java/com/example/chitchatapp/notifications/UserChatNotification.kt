@@ -75,5 +75,33 @@ class UserChatNotification {
                 }
             }
         }
+
+        fun stickerNotification(context: Context, payload: JSONObject) {
+            val notifierName = payload.getString("notifierName")
+            val notifierId = payload.getString("notifierId")
+            val notifierImage = payload.getString("notifierImage")
+
+            val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
+            val notificationId =
+                ("${NotificationConstants.USER_STICKER_NOTIFICATION_ID}$notificationHash").toInt()
+
+            val notificationUserImage = FCMConfig.getBitmapFromUrl(notifierImage)
+            val builder =
+                NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle(notifierName)
+                    .setContentText("\uD83C\uDF20 Sticker")
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setLargeIcon(notificationUserImage)
+                    .setAutoCancel(true).build()
+
+            with(NotificationManagerCompat.from(context)) {
+                try {
+                    notify(notificationId, builder)
+                } catch (e: SecurityException) {
+                    Log.d(TAG, "e: $e")
+                }
+            }
+        }
     }
 }
