@@ -54,7 +54,7 @@ class GroupChatViewModel : ViewModel() {
     ) {
         val groupChatModel = getGroupChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
-        ChatsRepository.sendGroupTextMessage(groupChatModel, text, from, chatMessageId)
+        ChatsRepository.sendGroupTextMessage(context, groupChatModel, text, from, chatMessageId)
     }
 
     fun sendImageMessage(

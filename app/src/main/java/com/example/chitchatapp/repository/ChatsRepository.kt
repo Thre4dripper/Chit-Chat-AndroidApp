@@ -183,6 +183,7 @@ class ChatsRepository {
 
 
         fun sendGroupTextMessage(
+            context: Context,
             groupChatModel: GroupChatModel,
             text: String,
             from: String,
@@ -190,7 +191,14 @@ class ChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
 
-            SendGroupChat.sendTextMessage(firestore, groupChatModel, text, from, chatMessageId)
+            SendGroupChat.sendTextMessage(
+                context,
+                firestore,
+                groupChatModel,
+                text,
+                from,
+                chatMessageId
+            )
         }
 
         fun sendGroupImage(

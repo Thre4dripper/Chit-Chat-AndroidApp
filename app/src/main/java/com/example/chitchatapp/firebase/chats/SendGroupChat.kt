@@ -1,7 +1,9 @@
 package com.example.chitchatapp.firebase.chats
 
+import android.content.Context
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.GroupMessageType
+import com.example.chitchatapp.firebase.messaging.group.TextNotification
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupMessageModel
 import com.google.firebase.Timestamp
@@ -12,6 +14,7 @@ import java.util.UUID
 class SendGroupChat {
     companion object {
         fun sendTextMessage(
+            context: Context,
             firestore: FirebaseFirestore,
             groupChatModel: GroupChatModel,
             text: String,
@@ -41,6 +44,13 @@ class SendGroupChat {
                 .document(groupChatModel.id)
                 .set(updatedChatModel, SetOptions.merge())
                 .addOnSuccessListener {
+                    TextNotification.sendTextNotification(
+                        context,
+                        firestore,
+                        text,
+                        from,
+                        groupChatModel.id
+                    )
                     chatMessageId(id)
                 }
                 .addOnFailureListener {
