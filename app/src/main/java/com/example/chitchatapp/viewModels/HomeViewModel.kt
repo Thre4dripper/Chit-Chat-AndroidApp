@@ -58,13 +58,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun signOutUser(context: Context, onSuccess: (Boolean) -> Unit) {
         isFirebaseUILaunched = false
-
-        //clear all data on sign out
-        AddChatsRepository.searchResult.value = ArrayList()
-        UserRepository.userDetails.value = null
-        ChatsRepository.homeChats.value = null
-        UserStore.saveUsername(context, null)
-        AuthRepository.signOutUser(context, onSuccess)
+        AuthRepository.signOutUser(context) {
+            //clear all data on sign out
+            UserRepository.updateStatus(context, UserStatus.LastSeen)
+            UserRepository.updateToken(context, "")
+            AddChatsRepository.searchResult.value = ArrayList()
+            UserRepository.userDetails.value = null
+            ChatsRepository.homeChats.value = null
+            UserStore.saveUsername(context, null)
+            onSuccess(it)
+        }
     }
 
     fun onSignInResult(

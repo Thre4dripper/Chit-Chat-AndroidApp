@@ -6,6 +6,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.repository.UserRepository
+import com.example.chitchatapp.store.UserStore
 
 class MyApplication : Application(), ActivityLifecycleCallbacks {
     private val TAG = "MyApplication"
@@ -25,7 +26,7 @@ class MyApplication : Application(), ActivityLifecycleCallbacks {
         if (++activityReferences == 1) {
             // App enters foreground
             UserRepository.updateStatus(this, UserStatus.Online)
-            UserRepository.updateToken(this)
+            UserRepository.updateToken(this, UserStore.getFCMToken(this))
         }
     }
 
