@@ -192,16 +192,12 @@ class ChatsRepository {
             val firestore = FirebaseFirestore.getInstance()
 
             SendGroupChat.sendTextMessage(
-                context,
-                firestore,
-                groupChatModel,
-                text,
-                from,
-                chatMessageId
+                context, firestore, groupChatModel, text, from, chatMessageId
             )
         }
 
         fun sendGroupImage(
+            context: Context,
             groupChatModel: GroupChatModel,
             imageUri: Uri,
             from: String,
@@ -219,11 +215,14 @@ class ChatsRepository {
                     chatMessageId(null)
                     return@getUrlFromStorage
                 }
-                SendGroupChat.sendImage(firestore, groupChatModel, url, from, chatMessageId)
+                SendGroupChat.sendImage(
+                    context, firestore, groupChatModel, url, from, chatMessageId
+                )
             }
         }
 
         fun sendGroupSticker(
+            context: Context,
             groupChatModel: GroupChatModel,
             stickerIndex: Int,
             from: String,
@@ -231,7 +230,9 @@ class ChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
 
-            SendGroupChat.sendSticker(firestore, groupChatModel, stickerIndex, from, chatMessageId)
+            SendGroupChat.sendSticker(
+                context, firestore, groupChatModel, stickerIndex, from, chatMessageId
+            )
         }
 
         fun updateGroupSeen(

@@ -3,6 +3,8 @@ package com.example.chitchatapp.firebase.chats
 import android.content.Context
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.GroupMessageType
+import com.example.chitchatapp.firebase.messaging.group.ImageNotification
+import com.example.chitchatapp.firebase.messaging.group.StickerNotification
 import com.example.chitchatapp.firebase.messaging.group.TextNotification
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupMessageModel
@@ -40,25 +42,19 @@ class SendGroupChat {
             val updatedChatModel = groupChatModel.copy(
                 messages = newMessagesList
             )
-            firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
-                .document(groupChatModel.id)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupChatModel.id)
+                .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
                     TextNotification.sendTextNotification(
-                        context,
-                        firestore,
-                        text,
-                        from,
-                        groupChatModel.id
+                        context, firestore, text, from, groupChatModel.id
                     )
                     chatMessageId(id)
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     chatMessageId(null)
                 }
         }
 
         fun sendImage(
+            context: Context,
             firestore: FirebaseFirestore,
             groupChatModel: GroupChatModel,
             imageUrl: String,
@@ -84,18 +80,19 @@ class SendGroupChat {
             val updatedChatModel = groupChatModel.copy(
                 messages = newMessagesList
             )
-            firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
-                .document(groupChatModel.id)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupChatModel.id)
+                .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
+                    ImageNotification.sendImageNotification(
+                        context, firestore, imageUrl, from, groupChatModel.id
+                    )
                     chatMessageId(id)
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     chatMessageId(null)
                 }
         }
 
         fun sendSticker(
+            context: Context,
             firestore: FirebaseFirestore,
             groupChatModel: GroupChatModel,
             stickerIndex: Int,
@@ -121,13 +118,13 @@ class SendGroupChat {
             val updatedChatModel = groupChatModel.copy(
                 messages = newMessagesList
             )
-            firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
-                .document(groupChatModel.id)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupChatModel.id)
+                .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
+                    StickerNotification.sendStickerNotification(
+                        context, firestore, from, groupChatModel.id
+                    )
                     chatMessageId(id)
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     chatMessageId(null)
                 }
         }
