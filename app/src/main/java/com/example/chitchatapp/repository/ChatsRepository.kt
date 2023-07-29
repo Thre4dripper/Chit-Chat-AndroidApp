@@ -40,17 +40,11 @@ class ChatsRepository {
                 val oldList = homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
                 updatedList.removeIf { it.type == ChatType.USER }
-                updatedList.addAll(
-                    userChats.map {
-                        HomeChatModel(
-                            it.chatId,
-                            ChatType.USER,
-                            it,
-                            null,
-                            it.chatMessages.last().time
-                        )
-                    }
-                )
+                updatedList.addAll(userChats.map {
+                    HomeChatModel(
+                        it.chatId, ChatType.USER, it, null, it.chatMessages.last().time
+                    )
+                })
 
                 val sortedList = updatedList.sortedByDescending { it.lastMessageTimestamp }
                 homeChats.value = sortedList
@@ -67,17 +61,11 @@ class ChatsRepository {
                 val oldList = homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
                 updatedList.removeIf { it.type == ChatType.GROUP }
-                updatedList.addAll(
-                    groupChats.map {
-                        HomeChatModel(
-                            it.id,
-                            ChatType.GROUP,
-                            null,
-                            it,
-                            it.messages.last().time
-                        )
-                    }
-                )
+                updatedList.addAll(groupChats.map {
+                    HomeChatModel(
+                        it.id, ChatType.GROUP, null, it, it.messages.last().time
+                    )
+                })
 
                 val sortedList = updatedList.sortedByDescending { it.lastMessageTimestamp }
                 homeChats.value = sortedList
@@ -122,6 +110,7 @@ class ChatsRepository {
         }
 
         fun sendSticker(
+            context: Context,
             chatModel: ChatModel,
             stickerIndex: Int,
             from: String,
@@ -130,7 +119,9 @@ class ChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
 
-            SendChat.sendSticker(firestore, chatModel, stickerIndex, from, to, chatMessageId)
+            SendChat.sendSticker(
+                context, firestore, chatModel, stickerIndex, from, to, chatMessageId
+            )
         }
 
         fun updateSeen(
@@ -144,9 +135,7 @@ class ChatsRepository {
         }
 
         fun favouriteChat(
-            userModel: UserModel,
-            favourite: String,
-            onSuccess: (Boolean?) -> Unit
+            userModel: UserModel, favourite: String, onSuccess: (Boolean?) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
             MarkFavourite.markAsFavourite(firestore, userModel, favourite, onSuccess)

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.messaging.user.ImageNotification
+import com.example.chitchatapp.firebase.messaging.user.StickerNotification
 import com.example.chitchatapp.firebase.messaging.user.TextNotification
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.ChatModel
@@ -91,6 +92,7 @@ class SendChat {
         }
 
         fun sendSticker(
+            context: Context,
             firestore: FirebaseFirestore,
             chatModel: ChatModel,
             stickerIndex: Int,
@@ -120,6 +122,7 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
+                    StickerNotification.sendStickerNotification(context, firestore, from, to)
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
