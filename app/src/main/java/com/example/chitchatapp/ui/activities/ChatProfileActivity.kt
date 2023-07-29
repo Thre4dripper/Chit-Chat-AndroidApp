@@ -51,15 +51,18 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
 
         val chatId = intent.getStringExtra(ChatConstants.CHAT_ID)
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME)
-        initMediaRecycleView()
-        initCommonGroupsRecyclerView(chatId!!, loggedInUsername!!)
-        getChatDetails(chatId, loggedInUsername)
-        initBottomButtons(chatId, loggedInUsername)
+
+        getChatDetails(chatId!!, loggedInUsername!!)
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
-        chatViewModel.getLiveChatDetails(chatId).observe(this) { chatModel ->
+        chatViewModel.chatDetails.observe(this) { chatModel ->
             if (chatModel == null) return@observe
+
+            //init everything after chat details are fetched
+            initMediaRecycleView()
+            initCommonGroupsRecyclerView(loggedInUsername)
+            initBottomButtons(chatId, loggedInUsername)
 
             val profileImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
             Glide.with(this).load(profileImage).placeholder(R.drawable.ic_profile).circleCrop()
@@ -82,6 +85,8 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
 
             mediaAdapter.submitList(chatMediasList)
         }
+
+        chatViewModel.getLiveChatDetails(chatId)
     }
 
     private fun initMediaRecycleView() {
@@ -91,8 +96,8 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         }
     }
 
-    private fun initCommonGroupsRecyclerView(chatId: String, loggedInUsername: String) {
-        val chatModel = chatViewModel.getChatDetails(chatId) ?: return
+    private fun initCommonGroupsRecyclerView(loggedInUsername: String) {
+        val chatModel = chatViewModel.chatDetails.value ?: return
         val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
         val chatUserImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
 
@@ -117,10 +122,10 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
     private fun initBottomButtons(chatId: String, loggedInUsername: String) {
         initFavouriteBtn(chatId, loggedInUsername)
         binding.chatProfileClearChatBtn.setOnClickListener {
-            clearChat(chatId)
+            clearChat()
         }
         binding.chatProfileDeleteChatBtn.setOnClickListener {
-            deleteChat(chatId)
+            deleteChat()
         }
     }
 
@@ -156,12 +161,12 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         }
     }
 
-    private fun clearChat(chatId: String) {
+    private fun clearChat() {
         clearOrDeleteDialog(
             "Clear chat",
             "Are you sure you want to clear this chat?"
         ) {
-            chatViewModel.clearChat(chatId) {
+            chatViewModel.clearChat {
                 Toast.makeText(
                     this,
                     if (it) "Chat cleared" else "Error clearing chat",
@@ -172,12 +177,12 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         }
     }
 
-    private fun deleteChat(chatId: String) {
+    private fun deleteChat() {
         clearOrDeleteDialog(
             "Delete chat",
             "Are you sure you want to delete this chat?"
         ) {
-            chatViewModel.deletedChat(chatId) {
+            chatViewModel.deletedChat {
                 Toast.makeText(
                     this,
                     if (it) "Chat deleted" else "Error deleting chat",

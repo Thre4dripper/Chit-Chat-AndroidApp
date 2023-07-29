@@ -44,5 +44,22 @@ class GetChats {
                 onSuccess(chats)
             }
         }
+
+        fun getUserChatById(
+            firestore: FirebaseFirestore,
+            chatId: String,
+            onSuccess: (ChatModel?) -> Unit,
+        ) {
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatId)
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+                        onSuccess(null)
+                        return@addSnapshotListener
+                    }
+
+                    val chat = value?.toObject(ChatModel::class.java)
+                    onSuccess(chat)
+                }
+        }
     }
 }

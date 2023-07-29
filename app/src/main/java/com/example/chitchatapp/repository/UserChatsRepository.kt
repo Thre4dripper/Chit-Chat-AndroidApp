@@ -2,22 +2,17 @@ package com.example.chitchatapp.repository
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.MutableLiveData
 import com.example.chitchatapp.constants.StorageFolders
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.ChatType
 import com.example.chitchatapp.firebase.chats.ClearChat
 import com.example.chitchatapp.firebase.chats.DeleteChat
 import com.example.chitchatapp.firebase.chats.GetChats
-import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.MarkFavourite
 import com.example.chitchatapp.firebase.chats.SendChat
-import com.example.chitchatapp.firebase.chats.SendGroupChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
 import com.example.chitchatapp.firebase.utils.StorageUtils
-import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.ChatModel
-import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.HomeChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.store.UserStore
@@ -25,19 +20,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
-class ChatsRepository {
+class UserChatsRepository {
     companion object {
-        private val TAG = "ChatsRepository"
-
-        val homeChats = MutableLiveData<List<HomeChatModel>?>(null)
-
         fun getAllUserChats(
             context: Context
         ) {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: ""
             GetChats.getAllUserChats(firestore, loggedInUser) { userChats ->
-                val oldList = homeChats.value ?: emptyList()
+                val oldList = HomeRepository.homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()
                 updatedList.removeIf { it.type == ChatType.USER }
                 updatedList.addAll(userChats.map {
@@ -47,29 +38,16 @@ class ChatsRepository {
                 })
 
                 val sortedList = updatedList.sortedByDescending { it.lastMessageTimestamp }
-                homeChats.value = sortedList
+                HomeRepository.homeChats.value = sortedList
             }
         }
 
-        fun getAllGroupChats(context: Context) {
+        fun getUserChatById(
+            chatId: String,
+            chatModel: (ChatModel?) -> Unit,
+        ) {
             val firestore = FirebaseFirestore.getInstance()
-            val loggedInUsername = UserStore.getUsername(context) ?: ""
-            val userImage = UserRepository.userDetails.value?.profileImage ?: ""
-
-            val groupUserModel = GroupChatUserModel(loggedInUsername, userImage)
-            GetGroupChats.getAllGroupChats(firestore, groupUserModel) { groupChats ->
-                val oldList = homeChats.value ?: emptyList()
-                val updatedList = oldList.toMutableList()
-                updatedList.removeIf { it.type == ChatType.GROUP }
-                updatedList.addAll(groupChats.map {
-                    HomeChatModel(
-                        it.id, ChatType.GROUP, null, it, it.messages.last().time
-                    )
-                })
-
-                val sortedList = updatedList.sortedByDescending { it.lastMessageTimestamp }
-                homeChats.value = sortedList
-            }
+            GetChats.getUserChatById(firestore, chatId, chatModel)
         }
 
         fun sendTextMessage(
@@ -179,70 +157,6 @@ class ChatsRepository {
                     onSuccess(isImagesDeleted)
                 }
             }
-        }
-
-
-        fun sendGroupTextMessage(
-            context: Context,
-            groupChatModel: GroupChatModel,
-            text: String,
-            from: String,
-            chatMessageId: (String?) -> Unit,
-        ) {
-            val firestore = FirebaseFirestore.getInstance()
-
-            SendGroupChat.sendTextMessage(
-                context, firestore, groupChatModel, text, from, chatMessageId
-            )
-        }
-
-        fun sendGroupImage(
-            context: Context,
-            groupChatModel: GroupChatModel,
-            imageUri: Uri,
-            from: String,
-            chatMessageId: (String?) -> Unit,
-        ) {
-            val storage = FirebaseStorage.getInstance()
-            val firestore = FirebaseFirestore.getInstance()
-
-            StorageUtils.getUrlFromStorage(
-                storage,
-                "${StorageFolders.CHAT_IMAGES_FOLDER}/${groupChatModel.id}/${UUID.randomUUID()}",
-                imageUri
-            ) { url ->
-                if (url == null) {
-                    chatMessageId(null)
-                    return@getUrlFromStorage
-                }
-                SendGroupChat.sendImage(
-                    context, firestore, groupChatModel, url, from, chatMessageId
-                )
-            }
-        }
-
-        fun sendGroupSticker(
-            context: Context,
-            groupChatModel: GroupChatModel,
-            stickerIndex: Int,
-            from: String,
-            chatMessageId: (String?) -> Unit,
-        ) {
-            val firestore = FirebaseFirestore.getInstance()
-
-            SendGroupChat.sendSticker(
-                context, firestore, groupChatModel, stickerIndex, from, chatMessageId
-            )
-        }
-
-        fun updateGroupSeen(
-            context: Context,
-            groupChatModel: GroupChatModel,
-            onSuccess: (Boolean) -> Unit,
-        ) {
-            val firestore = FirebaseFirestore.getInstance()
-            val loggedInUser = UserStore.getUsername(context) ?: return
-            UpdateSeen.updateGroupSeen(firestore, groupChatModel, loggedInUser, onSuccess)
         }
     }
 }

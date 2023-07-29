@@ -3,30 +3,31 @@ package com.example.chitchatapp.viewModels
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
-import com.example.chitchatapp.repository.ChatsRepository
+import com.example.chitchatapp.repository.UserChatsRepository
 import com.example.chitchatapp.repository.UserRepository
 import com.example.chitchatapp.store.UserStore
 
 class ChatViewModel : ViewModel() {
-    private val TAG = "ChattingViewModel"
+    private val TAG = "ChatViewModel"
 
-    val userDetails = UserRepository.userDetails
+    private var _chatDetails = MutableLiveData<ChatModel?>(null)
+    val chatDetails: LiveData<ChatModel?>
+        get() = _chatDetails
 
     fun listenChatIsFavorite(
-        loggedInUsername: String,
-        onSuccess: (UserModel?) -> Unit
+        loggedInUsername: String, onSuccess: (UserModel?) -> Unit
     ) {
         UserRepository.listenUserDetails(loggedInUsername, onSuccess)
     }
 
-    fun listenUserStatus(chatId: String, loggedInUsername: String, onSuccess: (String?) -> Unit) {
-        val chatModel = getChatDetails(chatId) ?: return
+    fun listenUserStatus(loggedInUsername: String, onSuccess: (String?) -> Unit) {
+        val chatModel = _chatDetails.value ?: return
         val username = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
         UserRepository.listenUserDetails(username) {
             onSuccess(it?.status)
@@ -37,17 +38,9 @@ class ChatViewModel : ViewModel() {
         return UserStore.getUsername(context)
     }
 
-    fun getChatDetails(chatId: String): ChatModel? {
-        return ChatsRepository.homeChats.value?.find { homeChat ->
-            homeChat.id == chatId
-        }?.userChat
-    }
-
-    fun getLiveChatDetails(chatId: String): LiveData<ChatModel?> {
-        return ChatsRepository.homeChats.map { homeChats ->
-            homeChats?.find { homeChat ->
-                homeChat.id == chatId
-            }?.userChat
+    fun getLiveChatDetails(chatId: String) {
+        UserChatsRepository.getUserChatById(chatId) {
+            _chatDetails.value = it
         }
     }
 
@@ -58,56 +51,53 @@ class ChatViewModel : ViewModel() {
 
     fun sendTextMessage(
         context: Context,
-        chatId: String,
         text: String,
         chatMessageId: (String?) -> Unit,
     ) {
-        val chatModel = getChatDetails(chatId) ?: return
+        val chatModel = _chatDetails.value ?: return
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getUserChatUsername(chatModel, from)
-        ChatsRepository.sendTextMessage(context, chatModel, text, from, to, chatMessageId)
+        UserChatsRepository.sendTextMessage(context, chatModel, text, from, to, chatMessageId)
     }
 
     fun sendImageMessage(
         context: Context,
-        chatId: String,
         imageUri: Uri,
         chatMessageId: (String?) -> Unit,
     ) {
-        val chatModel = getChatDetails(chatId) ?: return
+        val chatModel = _chatDetails.value ?: return
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getUserChatUsername(chatModel, from)
-        ChatsRepository.sendImage(context, chatModel, imageUri, from, to, chatMessageId)
+        UserChatsRepository.sendImage(context, chatModel, imageUri, from, to, chatMessageId)
     }
 
     fun sendSticker(
         context: Context,
-        chatId: String,
         stickerIndex: Int,
         chatMessageId: (String?) -> Unit,
     ) {
-        val chatModel = getChatDetails(chatId) ?: return
+        val chatModel = _chatDetails.value ?: return
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getUserChatUsername(chatModel, from)
-        ChatsRepository.sendSticker(context, chatModel, stickerIndex, from, to, chatMessageId)
+        UserChatsRepository.sendSticker(context, chatModel, stickerIndex, from, to, chatMessageId)
     }
 
-    fun updateSeen(context: Context, chatId: String, onSuccess: (Boolean) -> Unit) {
-        val chatModel = getChatDetails(chatId) ?: return
-        ChatsRepository.updateSeen(context, chatModel, onSuccess)
+    fun updateSeen(context: Context, onSuccess: (Boolean) -> Unit) {
+        val chatModel = _chatDetails.value ?: return
+        UserChatsRepository.updateSeen(context, chatModel, onSuccess)
     }
 
     fun favouriteChat(userModel: UserModel, favourite: String, onSuccess: (Boolean?) -> Unit) {
-        ChatsRepository.favouriteChat(userModel, favourite, onSuccess)
+        UserChatsRepository.favouriteChat(userModel, favourite, onSuccess)
     }
 
-    fun clearChat(chatId: String, onSuccess: (Boolean) -> Unit) {
-        val chatModel = getChatDetails(chatId) ?: return
-        ChatsRepository.clearChat(chatModel, onSuccess)
+    fun clearChat(onSuccess: (Boolean) -> Unit) {
+        val chatModel = _chatDetails.value ?: return
+        UserChatsRepository.clearChat(chatModel, onSuccess)
     }
 
-    fun deletedChat(chatId: String, onSuccess: (Boolean) -> Unit) {
-        val chatModel = getChatDetails(chatId) ?: return
-        ChatsRepository.deleteChat(chatModel, onSuccess)
+    fun deletedChat(onSuccess: (Boolean) -> Unit) {
+        val chatModel = _chatDetails.value ?: return
+        UserChatsRepository.deleteChat(chatModel, onSuccess)
     }
 }

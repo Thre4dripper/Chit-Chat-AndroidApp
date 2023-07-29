@@ -3,30 +3,26 @@ package com.example.chitchatapp.viewModels
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatModel
-import com.example.chitchatapp.repository.ChatsRepository
+import com.example.chitchatapp.repository.GroupChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.store.UserStore
 
 class GroupChatViewModel : ViewModel() {
+    private val _groupChatDetails = MutableLiveData<GroupChatModel?>(null)
+    val groupChatDetails: LiveData<GroupChatModel?>
+        get() = _groupChatDetails
+
     fun getLoggedInUsername(context: Context): String? {
         return UserStore.getUsername(context)
     }
 
-    fun getGroupChatDetails(groupId: String): GroupChatModel? {
-        return ChatsRepository.homeChats.value?.find { homeChat ->
-            homeChat.id == groupId
-        }?.groupChat
-    }
-
-    fun getLiveGroupChatDetails(groupId: String): LiveData<GroupChatModel?> {
-        return ChatsRepository.homeChats.map { homeChats ->
-            homeChats?.find { homeChat ->
-                homeChat.id == groupId
-            }?.groupChat
+    fun getLiveGroupChatDetails(groupId: String) {
+        GroupChatsRepository.getGroupChatById(groupId) {
+            _groupChatDetails.value = it
         }
     }
 
@@ -44,44 +40,45 @@ class GroupChatViewModel : ViewModel() {
 
     fun sendTextMessage(
         context: Context,
-        chatId: String,
         text: String,
         chatMessageId: (String?) -> Unit,
     ) {
-        val groupChatModel = getGroupChatDetails(chatId) ?: return
+        val groupChatModel = _groupChatDetails.value ?: return
         val from = getLoggedInUsername(context) ?: return
-        ChatsRepository.sendGroupTextMessage(context, groupChatModel, text, from, chatMessageId)
+        GroupChatsRepository.sendGroupTextMessage(
+            context, groupChatModel, text, from, chatMessageId
+        )
     }
 
     fun sendImageMessage(
         context: Context,
-        chatId: String,
         imageUri: Uri,
         chatMessageId: (String?) -> Unit,
     ) {
-        val groupChatModel = getGroupChatDetails(chatId) ?: return
+        val groupChatModel = _groupChatDetails.value ?: return
         val from = getLoggedInUsername(context) ?: return
-        ChatsRepository.sendGroupImage(context, groupChatModel, imageUri, from, chatMessageId)
+        GroupChatsRepository.sendGroupImage(context, groupChatModel, imageUri, from, chatMessageId)
     }
 
     fun sendSticker(
         context: Context,
-        chatId: String,
         stickerIndex: Int,
         chatMessageId: (String?) -> Unit,
     ) {
-        val groupChatModel = getGroupChatDetails(chatId) ?: return
+        val groupChatModel = _groupChatDetails.value ?: return
         val from = getLoggedInUsername(context) ?: return
-        ChatsRepository.sendGroupSticker(context, groupChatModel, stickerIndex, from, chatMessageId)
+        GroupChatsRepository.sendGroupSticker(
+            context, groupChatModel, stickerIndex, from, chatMessageId
+        )
     }
 
-    fun updateSeen(context: Context, groupId: String, onSuccess: (Boolean) -> Unit) {
-        val groupChatModel = getGroupChatDetails(groupId) ?: return
-        ChatsRepository.updateGroupSeen(context, groupChatModel, onSuccess)
+    fun updateSeen(context: Context, onSuccess: (Boolean) -> Unit) {
+        val groupChatModel = _groupChatDetails.value ?: return
+        GroupChatsRepository.updateGroupSeen(context, groupChatModel, onSuccess)
     }
 
-    fun exitGroup(context: Context, groupId: String, onSuccess: (Boolean) -> Unit) {
-        val groupChatModel = getGroupChatDetails(groupId) ?: return
+    fun exitGroup(context: Context, onSuccess: (Boolean) -> Unit) {
+        val groupChatModel = _groupChatDetails.value ?: return
         GroupsRepository.exitGroup(context, groupChatModel, onSuccess)
     }
 }

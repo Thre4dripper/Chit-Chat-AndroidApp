@@ -11,8 +11,9 @@ import com.example.chitchatapp.models.HomeChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.AuthRepository
-import com.example.chitchatapp.repository.ChatsRepository
+import com.example.chitchatapp.repository.GroupChatsRepository
 import com.example.chitchatapp.repository.HomeRepository
+import com.example.chitchatapp.repository.UserChatsRepository
 import com.example.chitchatapp.repository.UserRepository
 import com.example.chitchatapp.store.UserStore
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -27,7 +28,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         get() = _userDetails
     var isFirebaseUILaunched = false
 
-    private val _homeChats = ChatsRepository.homeChats
+    private val _homeChats = HomeRepository.homeChats
     val homeChats: LiveData<List<HomeChatModel>?>
         get() = _homeChats
 
@@ -48,7 +49,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             UserRepository.updateToken(context, "")
             AddChatsRepository.searchResult.value = ArrayList()
             UserRepository.userDetails.value = null
-            ChatsRepository.homeChats.value = null
+            HomeRepository.homeChats.value = null
             UserStore.saveUsername(context, null)
             onSuccess(it)
         }
@@ -101,8 +102,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun getHomeChats(
         context: Context
     ) {
-        ChatsRepository.getAllUserChats(context)
-        ChatsRepository.getAllGroupChats(context)
+        UserChatsRepository.getAllUserChats(context)
+        GroupChatsRepository.getAllGroupChats(context)
     }
 
     fun listenFavChats(

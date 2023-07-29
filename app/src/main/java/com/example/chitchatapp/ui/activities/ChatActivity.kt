@@ -45,7 +45,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     private lateinit var viewModel: ChatViewModel
 
     private lateinit var chattingAdapter: ChattingRecyclerAdapter
-    private lateinit var chatId: String
+    private var chatId: String? = null
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         //getting intent data
-        chatId = intent.getStringExtra(ChatConstants.CHAT_ID) ?: ""
+        chatId = intent.getStringExtra(ChatConstants.CHAT_ID)
         val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
 
         val loggedInUsername = viewModel.getLoggedInUsername(this)
@@ -68,10 +68,10 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         //2. From the add chats screen
         //If it is opened from the chats screen, then the user model will be null
         //If it is opened from the add chats screen, then the user model will not be null
-        if (userModel != null)
-            createNewChat(userModel, loggedInUsername!!)
-        else {
-            getChatDetails(chatId, loggedInUsername!!)
+        if (chatId != null) {
+            getChatDetails(chatId!!, loggedInUsername!!)
+        } else {
+            createNewChat(userModel!!, loggedInUsername!!)
         }
 
         binding.chattingBackBtn.setOnClickListener { finish() }
@@ -92,8 +92,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                     when (menuItem.itemId) {
                         R.id.action_view_contact -> openProfile(chatId, loggedInUsername)
                         R.id.action_favorite -> markFavourite(userModel!!, chatId)
-                        R.id.action_clear_chat -> clearChat(chatId)
-                        R.id.action_delete_chat -> deleteChat(chatId)
+                        R.id.action_clear_chat -> clearChat()
+                        R.id.action_delete_chat -> deleteChat()
                     }
                     true
                 }
@@ -116,12 +116,12 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun clearChat(chatId: String) {
+    private fun clearChat() {
         clearOrDeleteDialog(
             "Clear chat",
             "Are you sure you want to clear this chat?"
         ) {
-            viewModel.clearChat(chatId) {
+            viewModel.clearChat {
                 Toast.makeText(
                     this,
                     if (it) "Chat cleared" else "Error clearing chat",
@@ -131,12 +131,12 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun deleteChat(chatId: String) {
+    private fun deleteChat() {
         clearOrDeleteDialog(
             "Delete chat",
             "Are you sure you want to delete this chat?"
         ) {
-            viewModel.deletedChat(chatId) {
+            viewModel.deletedChat {
                 Toast.makeText(
                     this,
                     if (it) "Chat deleted" else "Error deleting chat",
@@ -159,42 +159,42 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
-        //init the recycler view
-        initMenu(chatId, loggedInUsername)
-        initRecyclerView(chatId, loggedInUsername)
-        initUserStatus(chatId, loggedInUsername)
-        initSendingLayout(chatId)
-        initOpenProfile(chatId, loggedInUsername)
-
         binding.loadingLottie.visibility = View.VISIBLE
-        viewModel.getLiveChatDetails(chatId).observe(this) {
-            if (it != null) {
-                //it requires real time updated
+        viewModel.chatDetails.observe(this) {
+            if (it == null) return@observe
+            binding.loadingLottie.visibility = View.GONE
 
-                binding.loadingLottie.visibility = View.GONE
+            //init everything after getting the chat details
+            initMenu(chatId, loggedInUsername)
+            initRecyclerView(loggedInUsername)
+            initUserStatus(loggedInUsername)
+            initSendingLayout()
+            initOpenProfile(chatId, loggedInUsername)
 
-                //setting the profile image
-                val chatProfileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
-                Glide
-                    .with(this)
-                    .load(chatProfileImage)
-                    .placeholder(R.drawable.ic_profile)
-                    .circleCrop()
-                    .into(binding.chattingProfileImage)
+            //setting the profile image
+            val chatProfileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
+            Glide
+                .with(this)
+                .load(chatProfileImage)
+                .placeholder(R.drawable.ic_profile)
+                .circleCrop()
+                .into(binding.chattingProfileImage)
 
-                //setting the username
-                val headerUsername = ChatUtils.getUserChatUsername(it, loggedInUsername)
-                binding.chattingUsername.text = headerUsername
+            //setting the username
+            val headerUsername = ChatUtils.getUserChatUsername(it, loggedInUsername)
+            binding.chattingUsername.text = headerUsername
 
-                //submit the live list to the adapter
-                chattingAdapter.submitList(it.chatMessages) {
-                    //when the list is submitted, then update the seen status
-                    viewModel.updateSeen(this, chatId) {}
-                    //scroll to the bottom of the recycler view
-                    binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
-                }
+            //submit the live list to the adapter
+            chattingAdapter.submitList(it.chatMessages) {
+                //when the list is submitted, then update the seen status
+                viewModel.updateSeen(this) {}
+                //scroll to the bottom of the recycler view
+                binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
             }
+
         }
+
+        viewModel.getLiveChatDetails(chatId)
     }
 
     private fun createNewChat(userModel: UserModel, loggedInUsername: String) {
@@ -222,8 +222,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun initRecyclerView(chatId: String, loggedInUsername: String) {
-        val chatModel = viewModel.getChatDetails(chatId)
+    private fun initRecyclerView(loggedInUsername: String) {
+        val chatModel = viewModel.chatDetails.value
         binding.chattingRv.apply {
             chattingAdapter =
                 ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChatActivity)
@@ -231,7 +231,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
 
         //scroll to the bottom of the recycler view when the keyboard is open acc to live data
-        viewModel.getLiveChatDetails(chatId).observe(this) {
+        viewModel.chatDetails.observe(this) {
             binding.chattingRv.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 //scroll to the bottom of the recycler view on keyboard open
                 if (bottom < oldBottom) {
@@ -241,8 +241,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun initUserStatus(chatId: String, loggedInUsername: String) {
-        viewModel.listenUserStatus(chatId, loggedInUsername) { status ->
+    private fun initUserStatus(loggedInUsername: String) {
+        viewModel.listenUserStatus(loggedInUsername) { status ->
             //setting the status
             if (status == null) {
                 binding.activityChattingStatusCv.visibility = View.GONE
@@ -280,7 +280,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun initSendingLayout(chatId: String) {
+    private fun initSendingLayout() {
         binding.sendMessageBtn.alpha = 0.5f
         binding.sendMessageBtn.isEnabled = false
         binding.sendMessageEt.addTextChangedListener { text ->
@@ -296,7 +296,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         binding.sendMessageBtn.setOnClickListener {
             val message = binding.sendMessageEt.text.toString()
             if (message.isNotEmpty()) {
-                sendMessage(message, chatId)
+                sendMessage(message)
                 binding.sendMessageEt.text?.clear()
             }
         }
@@ -314,7 +314,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         //sticker sending button
         binding.stickerAddBtn.setOnClickListener {
             val stickersBottomSheet = StickersBottomSheet {
-                viewModel.sendSticker(this, chatId, it) {}
+                viewModel.sendSticker(this, it) {}
             }
             stickersBottomSheet.show(supportFragmentManager, stickersBottomSheet.tag)
         }
@@ -366,7 +366,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                     return@registerForActivityResult
                 }
 
-                viewModel.sendImageMessage(this, chatId, selectedImageUri) {
+                viewModel.sendImageMessage(this, selectedImageUri) {
                     if (it == null) {
                         Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
                     }
@@ -410,8 +410,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
             }
         }
 
-    private fun sendMessage(message: String, chatId: String) {
-        viewModel.sendTextMessage(this, chatId, message) {
+    private fun sendMessage(message: String) {
+        viewModel.sendTextMessage(this, message) {
             if (it == null) {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }

@@ -59,17 +59,19 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME)
 
-        initSetGroupImageBtn()
-        initMediaRecycleView()
-        initGroupMembersRecyclerView(groupId!!, loggedInUsername!!)
-        getGroupDetails(groupId!!)
-        initLeaveGroupButton(groupId!!)
+        getGroupDetails(groupId!!, loggedInUsername!!)
     }
 
-    private fun getGroupDetails(groupId: String) {
+    private fun getGroupDetails(groupId: String, loggedInUsername: String) {
         binding.groupProfileImageProgressBar.visibility = View.VISIBLE
-        groupChatViewModel.getLiveGroupChatDetails(groupId).observe(this) {
+        groupChatViewModel.groupChatDetails.observe(this) {
             if (it == null) return@observe
+
+            //init everything after getting group details
+            initSetGroupImageBtn()
+            initMediaRecycleView()
+            initGroupMembersRecyclerView(loggedInUsername)
+            initLeaveGroupButton()
 
             binding.groupProfileImageProgressBar.visibility = View.GONE
             Glide.with(this).load(it.image).placeholder(R.drawable.ic_group).circleCrop()
@@ -91,6 +93,8 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
             mediaAdapter.submitList(chatMediasList)
         }
+
+        groupChatViewModel.getLiveGroupChatDetails(groupId)
     }
 
     private fun initSetGroupImageBtn() {
@@ -155,8 +159,8 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         }
     }
 
-    private fun initGroupMembersRecyclerView(groupId: String, loggedInUsername: String) {
-        val groupChatModel = groupChatViewModel.getGroupChatDetails(groupId) ?: return
+    private fun initGroupMembersRecyclerView(loggedInUsername: String) {
+        val groupChatModel = groupChatViewModel.groupChatDetails.value ?: return
 
         binding.groupProfileMembersRv.apply {
             groupMembersAdapter =
@@ -167,12 +171,12 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         groupMembersAdapter.submitList(groupChatModel.members)
     }
 
-    private fun initLeaveGroupButton(groupId: String) {
+    private fun initLeaveGroupButton() {
         binding.groupProfileExitGroupBtn.setOnClickListener {
             MaterialAlertDialogBuilder(this).setTitle("Leave Group")
                 .setMessage("Are you sure you want to leave this group?")
                 .setPositiveButton("Yes") { _, _ ->
-                    groupChatViewModel.exitGroup(this, groupId) {
+                    groupChatViewModel.exitGroup(this) {
                         setResult(Constants.EXIT_GROUP)
                         finish()
                     }

@@ -91,7 +91,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                             .setTitle("Exit group")
                             .setMessage("Are you sure you want to exit this group?")
                             .setPositiveButton("Yes") { _, _ ->
-                                viewModel.exitGroup(this, groupId) { isExited ->
+                                viewModel.exitGroup(this) { isExited ->
                                     Toast.makeText(
                                         this,
                                         if (isExited) "Exited group" else "Error exiting group",
@@ -111,38 +111,41 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     }
 
     private fun getGroupDetails(groupId: String, loggedInUsername: String) {
-        //init the recycler view
-        initMenu(groupId, loggedInUsername)
-        initRecyclerView(groupId, loggedInUsername)
-        initMembersLayout(groupId)
-        initSendingLayout(groupId)
-        initOpenProfile(groupId, loggedInUsername)
 
         binding.loadingLottie.visibility = View.VISIBLE
-        viewModel.getLiveGroupChatDetails(groupId).observe(this) {
-            if (it != null) {
-                binding.loadingLottie.visibility = View.GONE
+        viewModel.groupChatDetails.observe(this) {
+            if (it == null) return@observe
+            binding.loadingLottie.visibility = View.GONE
 
-                //setting the group image
-                Glide
-                    .with(this)
-                    .load(it.image)
-                    .placeholder(R.drawable.ic_group)
-                    .circleCrop()
-                    .into(binding.groupChatGroupImage)
+            //init everything after getting the group details
+            initMenu(groupId, loggedInUsername)
+            initRecyclerView(loggedInUsername)
+            initMembersLayout()
+            initSendingLayout()
+            initOpenProfile(groupId, loggedInUsername)
 
-                //setting the group name
-                binding.groupChatGroupName.text = it.name
+            //setting the group image
+            Glide
+                .with(this)
+                .load(it.image)
+                .placeholder(R.drawable.ic_group)
+                .circleCrop()
+                .into(binding.groupChatGroupImage)
 
-                //submit the live list to the adapter
-                groupChatAdapter.submitList(it.messages) {
-                    //when the list is submitted, then update the seen status
-                    viewModel.updateSeen(this, groupId) {}
-                    //scroll to the bottom of the recycler view
-                    binding.groupChatRv.smoothScrollToPosition(it.messages.size - 1)
-                }
+            //setting the group name
+            binding.groupChatGroupName.text = it.name
+
+            //submit the live list to the adapter
+            groupChatAdapter.submitList(it.messages) {
+                //when the list is submitted, then update the seen status
+                viewModel.updateSeen(this) {}
+                //scroll to the bottom of the recycler view
+                binding.groupChatRv.smoothScrollToPosition(it.messages.size - 1)
             }
+
         }
+
+        viewModel.getLiveGroupChatDetails(groupId)
     }
 
     private fun createNewGroup(
@@ -176,8 +179,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         }
     }
 
-    private fun initRecyclerView(groupId: String, loggedInUsername: String) {
-        val groupChatModel = viewModel.getGroupChatDetails(groupId)
+    private fun initRecyclerView(loggedInUsername: String) {
+        val groupChatModel = viewModel.groupChatDetails.value
         binding.groupChatRv.apply {
             groupChatAdapter =
                 GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!, this@GroupChatActivity)
@@ -185,7 +188,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         }
 
         //scroll to the bottom of the recycler view when the keyboard is open acc to live data
-        viewModel.getLiveGroupChatDetails(groupId).observe(this) {
+        viewModel.groupChatDetails.observe(this) {
             binding.groupChatRv.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
                 //scroll to the bottom of the recycler view on keyboard open
                 if (bottom < oldBottom) {
@@ -195,8 +198,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         }
     }
 
-    private fun initMembersLayout(groupId: String) {
-        val groupMembers = viewModel.getGroupChatDetails(groupId)!!.members
+    private fun initMembersLayout() {
+        val groupMembers = viewModel.groupChatDetails.value!!.members
         var membersNames = ""
         for (member in groupMembers) {
             membersNames += member.username + ", "
@@ -207,7 +210,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         binding.groupChatMembers.text = membersNames
     }
 
-    private fun initSendingLayout(groupId: String) {
+    private fun initSendingLayout() {
         binding.sendMessageBtn.alpha = 0.5f
         binding.sendMessageBtn.isEnabled = false
         binding.sendMessageEt.addTextChangedListener { text ->
@@ -223,7 +226,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         binding.sendMessageBtn.setOnClickListener {
             val message = binding.sendMessageEt.text.toString()
             if (message.isNotEmpty()) {
-                sendMessage(message, groupId)
+                sendMessage(message)
                 binding.sendMessageEt.text?.clear()
             }
         }
@@ -241,7 +244,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         //sticker sending button
         binding.stickerAddBtn.setOnClickListener {
             val stickersBottomSheet = StickersBottomSheet {
-                viewModel.sendSticker(this, groupId, it) {}
+                viewModel.sendSticker(this, it) {}
             }
             stickersBottomSheet.show(supportFragmentManager, stickersBottomSheet.tag)
         }
@@ -293,7 +296,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                     return@registerForActivityResult
                 }
 
-                viewModel.sendImageMessage(this, groupId!!, selectedImageUri) {
+                viewModel.sendImageMessage(this, selectedImageUri) {
                     if (it == null) {
                         Toast.makeText(this, "Error sending image", Toast.LENGTH_SHORT).show()
                     }
@@ -338,8 +341,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             }
         }
 
-    private fun sendMessage(message: String, chatId: String) {
-        viewModel.sendTextMessage(this, chatId, message) {
+    private fun sendMessage(message: String) {
+        viewModel.sendTextMessage(this, message) {
             if (it == null) {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }

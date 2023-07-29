@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
-import com.example.chitchatapp.repository.ChatsRepository
+import com.example.chitchatapp.repository.HomeRepository
 
 class AddGroupViewModel : ViewModel() {
     private var _searchedUsers = MutableLiveData<List<ChatModel>>()
@@ -19,7 +19,7 @@ class AddGroupViewModel : ViewModel() {
     fun searchUsers(searchQuery: String, loggedInUsername: String) {
         //updating livedata
         _searchedUsers.value =
-            ChatsRepository.homeChats.value?.filter { it.userChat != null }?.map { it.userChat!! }
+            HomeRepository.homeChats.value?.filter { it.userChat != null }?.map { it.userChat!! }
                 ?.filter { homeChat ->
                     //chat name which is displayed in the results list
                     val chatName = ChatUtils.getUserChatUsername(homeChat, loggedInUsername)
