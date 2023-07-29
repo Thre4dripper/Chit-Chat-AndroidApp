@@ -167,6 +167,16 @@
                         android:layout_marginEnd="16dp" />
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="@string/group_profile_activity_mute_notifications_message"
+                    android:textColor="@color/lightGrey" />
+
                 <View style="@style/ChatProfileDividerStyle" />
 
 

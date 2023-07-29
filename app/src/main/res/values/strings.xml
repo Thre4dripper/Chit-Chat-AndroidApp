@@ -122,6 +122,7 @@
     <string name="group_profile_activity_text_username">@string/chat_profile_activity_text_username</string>
     <string name="group_profile_activity_label_medias">@string/chat_profile_activity_label_medias</string>
     <string name="group_profile_activity_mute_notifications">@string/chat_profile_activity_mute_notifications</string>
+    <string name="group_profile_activity_mute_notifications_message">Sender Image will be shown in notification in case there is no group image</string>
     <string name="group_profile_activity_label_members">@string/group_chat_activity_members</string>
     <string name="group_profile_activity_label_exit">@string/group_chat_screen_menu_exit_group</string>
 
