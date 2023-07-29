@@ -55,6 +55,7 @@ class TextNotification {
                 data.put("notifierImage", senderDetails.profileImage)
                 data.put("groupId", groupChatModel.id)
                 data.put("groupName", groupChatModel.name)
+                data.put("groupImage", groupChatModel.image)
                 data.put("text", text)
 
                 payload.put("data", data)
