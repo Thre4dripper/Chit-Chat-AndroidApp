@@ -82,6 +82,19 @@
             app:reverseLayout="true"
             tools:listitem="@layout/item_chat_text_left" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/group_chat_scroll_down_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/textColorSecondary"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintBottom_toBottomOf="@+id/group_chat_rv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white"
+            tools:ignore="ContentDescription" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading_lottie"
             android:layout_width="150dp"

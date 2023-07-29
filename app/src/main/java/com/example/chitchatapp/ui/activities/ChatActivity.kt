@@ -246,8 +246,16 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                     //if the last visible item is the last item in the list, then scroll to bottom
                     scrollToBottom = firstItemPos == 0
+
+                    binding.chatScrollDownFab.visibility =
+                        if (scrollToBottom) View.GONE else View.VISIBLE
                 }
             })
+        }
+
+        //scroll to bottom when the user clicks on the scroll down fab
+        binding.chatScrollDownFab.setOnClickListener {
+            binding.chattingRv.smoothScrollToPosition(0)
         }
     }
 
@@ -422,6 +430,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun sendMessage(message: String) {
         viewModel.sendTextMessage(this, message) {
+            //scrolling to bottom when message is sent
+            binding.chattingRv.scrollToPosition(0)
             if (it == null) {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }

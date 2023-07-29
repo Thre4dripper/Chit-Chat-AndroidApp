@@ -204,8 +204,14 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
                     //if the last visible item is the last item in the list, then scroll to bottom
                     scrollToBottom = firstItemPos == 0
+                    binding.groupChatScrollDownFab.visibility =
+                        if (scrollToBottom) View.GONE else View.VISIBLE
                 }
             })
+        }
+
+        binding.groupChatScrollDownFab.setOnClickListener {
+            binding.groupChatRv.smoothScrollToPosition(0)
         }
     }
 
@@ -354,6 +360,8 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private fun sendMessage(message: String) {
         viewModel.sendTextMessage(this, message) {
+            //scroll to bottom when message is sent
+            binding.groupChatRv.smoothScrollToPosition(0)
             if (it == null) {
                 Toast.makeText(this, "Error sending message", Toast.LENGTH_SHORT).show()
             }
