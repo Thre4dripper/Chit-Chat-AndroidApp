@@ -2,8 +2,8 @@ package com.example.chitchatapp.repository
 
 import android.content.Context
 import android.content.Intent
-import com.example.chitchatapp.firebase.auth.FirebaseUISignIn
 import com.example.chitchatapp.firebase.auth.FireStoreRegister
+import com.example.chitchatapp.firebase.auth.FirebaseUISignIn
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -14,14 +14,11 @@ class AuthRepository {
         }
 
         fun signOutUser(context: Context, onSuccess: (Boolean) -> Unit) {
-            FirebaseUISignIn.signOut(context) {
-                onSuccess(it)
-            }
+            FirebaseUISignIn.signOut(context, onSuccess)
         }
 
         fun onSignInResult(
             res: FirebaseAuthUIAuthenticationResult,
-            fcmToken: String,
             onSuccess: (Boolean) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
@@ -30,7 +27,6 @@ class AuthRepository {
                     FireStoreRegister.registerInitialUser(
                         firestore,
                         firebaseUser,
-                        fcmToken
                     ) { isRegistered ->
                         onSuccess(isRegistered)
                     }

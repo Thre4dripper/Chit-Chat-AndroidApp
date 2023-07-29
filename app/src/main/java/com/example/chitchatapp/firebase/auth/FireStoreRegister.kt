@@ -17,7 +17,6 @@ class FireStoreRegister {
         fun registerInitialUser(
             firestore: FirebaseFirestore,
             user: FirebaseUser,
-            fcmToken: String,
             onSuccess: (Boolean) -> Unit
         ) {
             //check if user is already registered
@@ -35,7 +34,7 @@ class FireStoreRegister {
                     "",
                     UserStatus.Online.name,
                     listOf(),
-                    fcmToken
+                    ""
                 )
 
                 //register user with uid as document id
