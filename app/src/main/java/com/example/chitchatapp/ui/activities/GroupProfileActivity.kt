@@ -1,10 +1,13 @@
 package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.databinding.DataBindingUtil
@@ -25,6 +28,12 @@ import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
 import com.example.chitchatapp.viewModels.GroupProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.yalantis.ucrop.UCrop
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
     private lateinit var binding: ActivityGroupProfileBinding
@@ -33,6 +42,8 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
     private lateinit var mediaAdapter: GroupProfileMediaRecyclerAdapter
     private lateinit var groupMembersAdapter: GroupMembersRecyclerAdapter
+
+    private var groupId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,18 +56,22 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
             onBackPressed()
         }
 
-        val groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
+        groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
         val loggedInUsername = intent.getStringExtra(UserConstants.USERNAME)
+
+        initSetGroupImageBtn()
         initMediaRecycleView()
         initGroupMembersRecyclerView(groupId!!, loggedInUsername!!)
-        getGroupDetails(groupId)
-        initLeaveGroupButton(groupId)
+        getGroupDetails(groupId!!)
+        initLeaveGroupButton(groupId!!)
     }
 
     private fun getGroupDetails(groupId: String) {
+        binding.groupProfileImageProgressBar.visibility = View.VISIBLE
         groupChatViewModel.getLiveGroupChatDetails(groupId).observe(this) {
             if (it == null) return@observe
 
+            binding.groupProfileImageProgressBar.visibility = View.GONE
             Glide.with(this).load(it.image).placeholder(R.drawable.ic_group).circleCrop()
                 .into(binding.groupProfileProfileIv)
 
@@ -77,6 +92,61 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
             mediaAdapter.submitList(chatMediasList)
         }
     }
+
+    private fun initSetGroupImageBtn() {
+        binding.groupProfileImageProgressBar.visibility = View.GONE
+        binding.groupProfileSetProfileImage.setOnClickListener {
+            photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+    }
+
+    /**
+     * Registers a photo picker activity launcher in single-select mode.
+     */
+    private val photoPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+        { pickedPhotoUri ->
+            if (pickedPhotoUri != null) {
+                var uri: Uri? = null
+
+                //async call to create temp file
+                CoroutineScope(Dispatchers.Main).launch {
+                    uri = Uri.fromFile(withContext(Dispatchers.IO) {
+                        val file = File.createTempFile( //creating temp file
+                            "temp", ".jpg", cacheDir
+                        )
+                        file
+                    })
+                }
+                    //on completion of async call
+                    .invokeOnCompletion {
+                        //Crop activity with source and destination uri
+                        val uCrop = UCrop.of(pickedPhotoUri, uri!!).withAspectRatio(1f, 1f)
+                            .withMaxResultSize(1080, 1080)
+
+                        cropImageCallback.launch(uCrop.getIntent(this))
+                    }
+
+            } else {
+                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    /**
+     * CALLBACK FOR CROPPING RECEIVED IMAGE
+     */
+    private var cropImageCallback =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { uCropResult ->
+            if (uCropResult.resultCode == RESULT_OK) {
+                val imageUri = UCrop.getOutput(uCropResult.data!!)!!
+
+                binding.groupProfileImageProgressBar.visibility = View.VISIBLE
+                viewModel.updateGroupImage(imageUri, groupId!!) {
+                    Toast.makeText(this, it, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
 
     private fun initMediaRecycleView() {
         binding.groupProfileMediaRv.apply {

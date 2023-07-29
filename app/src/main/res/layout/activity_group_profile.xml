@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -32,10 +32,44 @@
                     android:id="@+id/group_profile_profile_iv"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:transitionName="@string/group_profile_activity_profile_image_transition"
                     android:layout_gravity="center"
+                    android:layout_marginTop="32dp"
                     android:contentDescription="@string/group_profile_activity_profile_photo"
+                    android:transitionName="@string/group_profile_activity_profile_image_transition"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/group_profile_back_btn"
                     tools:srcCompat="@tools:sample/avatars" />
+
+                <ProgressBar
+                    android:id="@+id/group_profile_image_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintStart_toStartOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintTop_toTopOf="@+id/group_profile_profile_iv" />
+
+
+                <TextView
+                    android:id="@+id/group_profile_set_profile_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/user_details_activity_text_set_profile_photo"
+                    android:textColor="@color/textColorSecondary"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintStart_toStartOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintTop_toBottomOf="@+id/group_profile_profile_iv" />
 
                 <TextView
                     android:id="@+id/group_profile_name_tv"
@@ -47,9 +81,13 @@
                     android:text="@string/group_profile_activity_text_username"
                     android:textColor="@color/textColorPrimary"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintStart_toStartOf="@+id/group_profile_profile_iv"
+                    app:layout_constraintTop_toBottomOf="@+id/group_profile_set_profile_image" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

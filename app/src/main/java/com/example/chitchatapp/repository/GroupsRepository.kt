@@ -10,6 +10,7 @@ import com.example.chitchatapp.firebase.groups.CreateGroup
 import com.example.chitchatapp.firebase.groups.DeleteGroup
 import com.example.chitchatapp.firebase.groups.ExitGroup
 import com.example.chitchatapp.firebase.groups.FindMemberChat
+import com.example.chitchatapp.firebase.groups.UpdateGroup
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatModel
@@ -33,8 +34,7 @@ class GroupsRepository {
             val storage = FirebaseStorage.getInstance()
             val loggedInUsername = UserStore.getUsername(context) ?: return
 
-            val groupChatId =
-                fireStore.collection(FirestoreCollections.GROUPS_COLLECTION).document().id
+            val groupId = fireStore.collection(FirestoreCollections.GROUPS_COLLECTION).document().id
 
             val selectedGroupUsers = selectedUsers.map {
                 val username = ChatUtils.getUserChatUsername(it, loggedInUsername)
@@ -50,7 +50,7 @@ class GroupsRepository {
             if (groupImageUri == null) {
                 CreateGroup.createNewGroup(
                     fireStore,
-                    groupChatId,
+                    groupId,
                     groupName,
                     null,
                     loggedInUsername,
@@ -61,18 +61,31 @@ class GroupsRepository {
             }
 
             StorageUtils.getUrlFromStorage(
-                storage,
-                "${StorageFolders.GROUP_IMAGES_FOLDER}/${groupChatId}",
-                groupImageUri
+                storage, "${StorageFolders.GROUP_IMAGES_FOLDER}/${groupId}", groupImageUri
             ) { imageUrl ->
                 CreateGroup.createNewGroup(
                     fireStore,
-                    groupChatId,
+                    groupId,
                     groupName,
                     imageUrl,
                     loggedInUsername,
                     selectedGroupUsers,
                     onSuccess,
+                )
+            }
+        }
+
+        fun updateGroupImage(
+            groupImage: Uri, groupId: String, callback: (String) -> Unit
+        ) {
+            val storage = FirebaseStorage.getInstance()
+
+            StorageUtils.getUrlFromStorage(
+                storage, "${StorageFolders.GROUP_IMAGES_FOLDER}/${groupId}", groupImage
+            ) { imageUrl ->
+                val fireStore = FirebaseFirestore.getInstance()
+                UpdateGroup.updateGroupImage(
+                    fireStore, groupId, imageUrl, callback
                 )
             }
         }
@@ -127,9 +140,7 @@ class GroupsRepository {
         }
 
         fun findMemberChatId(
-            loggedInUsername: String,
-            memberUsername: String,
-            onSuccess: (String?) -> Unit
+            loggedInUsername: String, memberUsername: String, onSuccess: (String?) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
             FindMemberChat.findChatId(firestore, loggedInUsername, memberUsername, onSuccess)

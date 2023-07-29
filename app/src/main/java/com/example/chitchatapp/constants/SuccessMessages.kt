@@ -7,5 +7,8 @@ class SuccessMessages {
         const val USERNAME_UPDATED_SUCCESSFULLY = "Username updated"
         const val NAME_UPDATED_SUCCESSFULLY = "Name updated"
         const val BIO_UPDATED_SUCCESSFULLY = "Bio updated"
+
+        //group related success messages
+        const val GROUP_IMAGE_UPDATED_SUCCESSFULLY = "Group image updated"
     }
 }

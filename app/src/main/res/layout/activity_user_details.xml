@@ -39,7 +39,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <ProgressBar
-            android:id="@+id/user_details_profile_Image_progress_bar"
+            android:id="@+id/user_details_profile_image_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/user_details_profile_iv"
