@@ -131,7 +131,7 @@ class ChattingRecyclerAdapter(
                 return VIEW_TYPE_FIRST_MESSAGE
             }
 
-            ChatMessageType.TypeMessage -> {
+            ChatMessageType.TypeText -> {
                 return if (item.from == loggedInUsername) {
                     VIEW_TYPE_RIGHT_MESSAGE
                 } else {

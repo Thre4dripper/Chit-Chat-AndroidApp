@@ -2,7 +2,7 @@ package com.example.chitchatapp.enums
 
 enum class ChatMessageType {
     TypeFirstMessage,
-    TypeMessage,
+    TypeText,
     TypeImage,
     TypeSticker,
     TypeDeletedMessage,

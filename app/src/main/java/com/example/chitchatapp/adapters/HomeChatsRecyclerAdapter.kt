@@ -99,7 +99,7 @@ class HomeChatsRecyclerAdapter(
                     TimeUtils.getFormattedTime(chatModel.chatMessages.last().time)
 
                 when (chatModel.chatMessages.last().type) {
-                    ChatMessageType.TypeMessage -> {
+                    ChatMessageType.TypeText -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
                         itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
                     }
@@ -174,7 +174,7 @@ class HomeChatsRecyclerAdapter(
                         )
                     }
 
-                    GroupMessageType.TypeMessage -> {
+                    GroupMessageType.TypeText -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
                         var preview = groupChatModel.messages.last().from.trim()
                         preview += ": "

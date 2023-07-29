@@ -24,7 +24,7 @@ class SendGroupChat {
             newMessagesList.add(
                 GroupMessageModel(
                     id,
-                    GroupMessageType.TypeMessage,
+                    GroupMessageType.TypeText,
                     text,
                     null,
                     null,

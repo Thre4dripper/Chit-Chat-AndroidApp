@@ -57,7 +57,7 @@ class FCMConfig : FirebaseMessagingService() {
         when (chatType.name) {
             ChatType.USER.name -> {
                 when (messageType) {
-                    ChatMessageType.TypeMessage -> {
+                    ChatMessageType.TypeText -> {
                         UserChatNotifications.textNotification(this, payload)
                     }
 
@@ -77,7 +77,7 @@ class FCMConfig : FirebaseMessagingService() {
 
             ChatType.GROUP.name -> {
                 when (messageType) {
-                    ChatMessageType.TypeMessage -> {
+                    ChatMessageType.TypeText -> {
                         GroupChatNotifications.textNotification(this, payload)
                     }
 

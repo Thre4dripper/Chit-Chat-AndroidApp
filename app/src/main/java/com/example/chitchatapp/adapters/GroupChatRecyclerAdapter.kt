@@ -150,7 +150,7 @@ class GroupChatRecyclerAdapter(
             GroupMessageType.TypeCreatedGroup -> VIEW_TYPE_CREATED_GROUP
             GroupMessageType.TypeLeavedMember -> VIEW_TYPE_LEAVED_GROUP
 
-            GroupMessageType.TypeMessage -> {
+            GroupMessageType.TypeText -> {
                 return if (item.from == loggedInUsername) {
                     VIEW_TYPE_RIGHT_MESSAGE
                 } else {

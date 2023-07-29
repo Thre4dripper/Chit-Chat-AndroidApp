@@ -25,7 +25,7 @@ class SendChat {
             newMessagesList.add(
                 ChatMessageModel(
                     id,
-                    ChatMessageType.TypeMessage,
+                    ChatMessageType.TypeText,
                     text,
                     null,
                     null,

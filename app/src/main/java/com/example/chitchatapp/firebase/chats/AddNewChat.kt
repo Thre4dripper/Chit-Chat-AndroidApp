@@ -47,7 +47,7 @@ class AddNewChat {
                     ),
                     ChatMessageModel(
                         UUID.randomUUID().toString(),
-                        ChatMessageType.TypeMessage,
+                        ChatMessageType.TypeText,
                         "Hi, I am ${currentUser.username}.",
                         null,
                         null,
