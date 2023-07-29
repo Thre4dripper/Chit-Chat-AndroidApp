@@ -86,7 +86,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
             mediaAdapter.submitList(chatMediasList)
         }
 
-        chatViewModel.getLiveChatDetails(chatId)
+        chatViewModel.getLiveChatDetails(this, chatId)
     }
 
     private fun initMediaRecycleView() {

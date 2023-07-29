@@ -194,7 +194,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
         }
 
-        viewModel.getLiveChatDetails(chatId)
+        viewModel.getLiveChatDetails(this, chatId)
     }
 
     private fun createNewChat(userModel: UserModel, loggedInUsername: String) {

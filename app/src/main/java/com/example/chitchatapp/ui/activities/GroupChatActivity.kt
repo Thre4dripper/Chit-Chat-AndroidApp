@@ -145,7 +145,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
         }
 
-        viewModel.getLiveGroupChatDetails(groupId)
+        viewModel.getLiveGroupChatDetails(this, groupId)
     }
 
     private fun createNewGroup(

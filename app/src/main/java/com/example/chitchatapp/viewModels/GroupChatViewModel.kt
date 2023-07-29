@@ -2,6 +2,7 @@ package com.example.chitchatapp.viewModels
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.repository.GroupChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
+import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.store.UserStore
 
 class GroupChatViewModel : ViewModel() {
@@ -20,9 +22,20 @@ class GroupChatViewModel : ViewModel() {
         return UserStore.getUsername(context)
     }
 
-    fun getLiveGroupChatDetails(groupId: String) {
-        GroupChatsRepository.getGroupChatById(groupId) {
-            _groupChatDetails.value = it
+    fun getLiveGroupChatDetails(lifecycleOwner: LifecycleOwner, groupId: String) {
+        //when chat is already loaded in home fragment then take it from there
+        if (HomeRepository.homeChats.value != null) {
+            HomeRepository.homeChats.observe(lifecycleOwner) {
+                val groupChatModel =
+                    it?.find { chat -> chat.groupChat?.id == groupId }?.groupChat
+                _groupChatDetails.value = groupChatModel
+            }
+        }
+        //otherwise load it from firebase (open from notification case)
+        else {
+            GroupChatsRepository.getGroupChatById(groupId) {
+                _groupChatDetails.value = it
+            }
         }
     }
 
