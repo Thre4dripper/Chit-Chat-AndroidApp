@@ -14,6 +14,7 @@ class StickerNotification {
         fun sendStickerNotification(
             context: Context,
             firestore: FirebaseFirestore,
+            chatId: String,
             from: String,
             to: String,
         ) {
@@ -21,11 +22,11 @@ class StickerNotification {
             var receiverDetails: UserModel? = null
             GetDetails.getUserDetails(firestore, from) {
                 senderDetails = it!!
-                preparePayload(context, senderDetails, receiverDetails)
+                preparePayload(context, senderDetails, receiverDetails, chatId)
             }
             GetDetails.getUserDetails(firestore, to) {
                 receiverDetails = it!!
-                preparePayload(context, senderDetails, receiverDetails)
+                preparePayload(context, senderDetails, receiverDetails, chatId)
             }
         }
 
@@ -33,6 +34,7 @@ class StickerNotification {
             context: Context,
             senderDetails: UserModel?,
             receiverDetails: UserModel?,
+            chatId: String
         ) {
             if (senderDetails == null || receiverDetails == null) return
 
@@ -45,6 +47,7 @@ class StickerNotification {
             data.put("notifierName", senderDetails.username)
             data.put("notifierId", senderDetails.uid)
             data.put("notifierImage", senderDetails.profileImage)
+            data.put("chatId", chatId)
 
             payload.put("data", data)
 

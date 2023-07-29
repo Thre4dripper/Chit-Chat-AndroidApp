@@ -59,6 +59,7 @@ class UserChatNotifications {
             val notifierName = payload.getString("notifierName")
             val notifierId = payload.getString("notifierId")
             val notifierImage = payload.getString("notifierImage")
+            val chatId = payload.getString("chatId")
             val image = payload.getString("image")
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
@@ -67,6 +68,16 @@ class UserChatNotifications {
 
             val notificationUserImage = FCMConfig.getBitmapFromUrl(notifierImage)
             val notificationImage = FCMConfig.getBitmapFromUrl(image)
+
+            val intent = Intent(context, ChatActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            intent.putExtra(ChatConstants.CHAT_ID, chatId)
+
+            val pendingIntent = PendingIntent.getActivity(
+                context, notificationId, intent, PendingIntent.FLAG_MUTABLE
+            )
+
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground).setContentTitle(notifierName)
@@ -74,7 +85,9 @@ class UserChatNotifications {
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setLargeIcon(notificationUserImage).setStyle(
                         NotificationCompat.BigPictureStyle().bigPicture(notificationImage)
-                    ).setAutoCancel(true).build()
+                    )
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true).build()
 
             with(NotificationManagerCompat.from(context)) {
                 try {
@@ -89,18 +102,30 @@ class UserChatNotifications {
             val notifierName = payload.getString("notifierName")
             val notifierId = payload.getString("notifierId")
             val notifierImage = payload.getString("notifierImage")
+            val chatId = payload.getString("chatId")
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
             val notificationId =
                 ("${NotificationConstants.USER_STICKER_NOTIFICATION_ID}$notificationHash").toInt()
 
             val notificationUserImage = FCMConfig.getBitmapFromUrl(notifierImage)
+
+            val intent = Intent(context, ChatActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            intent.putExtra(ChatConstants.CHAT_ID, chatId)
+
+            val pendingIntent = PendingIntent.getActivity(
+                context, notificationId, intent, PendingIntent.FLAG_MUTABLE
+            )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_launcher_foreground).setContentTitle(notifierName)
                     .setContentText("\uD83C\uDF20 Sticker")
                     .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setLargeIcon(notificationUserImage).setAutoCancel(true).build()
+                    .setLargeIcon(notificationUserImage)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true).build()
 
             with(NotificationManagerCompat.from(context)) {
                 try {

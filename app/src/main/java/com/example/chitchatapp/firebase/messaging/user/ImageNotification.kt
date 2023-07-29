@@ -14,6 +14,7 @@ class ImageNotification {
         fun sendImageNotification(
             context: Context,
             firestore: FirebaseFirestore,
+            chatId: String,
             imageUrl: String,
             from: String,
             to: String
@@ -22,11 +23,11 @@ class ImageNotification {
             var receiverDetails: UserModel? = null
             GetDetails.getUserDetails(firestore, from) {
                 senderDetails = it!!
-                preparePayload(context, senderDetails, receiverDetails, imageUrl)
+                preparePayload(context, senderDetails, receiverDetails, chatId, imageUrl)
             }
             GetDetails.getUserDetails(firestore, to) {
                 receiverDetails = it!!
-                preparePayload(context, senderDetails, receiverDetails, imageUrl)
+                preparePayload(context, senderDetails, receiverDetails, chatId, imageUrl)
             }
         }
 
@@ -34,6 +35,7 @@ class ImageNotification {
             context: Context,
             senderDetails: UserModel?,
             receiverDetails: UserModel?,
+            chatId: String,
             imageUrl: String
         ) {
             if (senderDetails == null || receiverDetails == null) return
@@ -47,6 +49,7 @@ class ImageNotification {
             data.put("notifierName", senderDetails.username)
             data.put("notifierId", senderDetails.uid)
             data.put("notifierImage", senderDetails.profileImage)
+            data.put("chatId", chatId)
             data.put("image", imageUrl)
 
             payload.put("data", data)

@@ -86,7 +86,9 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    ImageNotification.sendImageNotification(context, firestore, imageUrl, from, to)
+                    ImageNotification.sendImageNotification(
+                        context, firestore, chatModel.chatId, imageUrl, from, to
+                    )
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
@@ -124,7 +126,9 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    StickerNotification.sendStickerNotification(context, firestore, from, to)
+                    StickerNotification.sendStickerNotification(
+                        context, firestore, chatModel.chatId, from, to
+                    )
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
