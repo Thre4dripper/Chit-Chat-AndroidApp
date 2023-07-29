@@ -15,6 +15,8 @@ class FirestoreSearchUsers {
             searchResult: (List<UserModel>) -> Unit
         ) {
             firestore.collection(FirestoreCollections.USERS_COLLECTION)
+                //do not show initial registered users
+                .whereNotEqualTo(UserConstants.USERNAME, "")
                 .orderBy(UserConstants.USERNAME)
                 .startAt(searchQuery)
                 .endAt(searchQuery + "\uf8ff")
