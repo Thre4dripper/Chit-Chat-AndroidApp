@@ -3,6 +3,8 @@ package com.example.chitchatapp.notifications
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.chitchatapp.constants.NotificationConstants
 import com.example.chitchatapp.enums.ChatMessageType
@@ -11,6 +13,10 @@ import com.example.chitchatapp.store.UserStore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import org.json.JSONObject
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.math.abs
 
 class FCMConfig : FirebaseMessagingService() {
     private val TAG = "FCMConfig"
@@ -46,17 +52,23 @@ class FCMConfig : FirebaseMessagingService() {
     }
 
     private fun notifyByChatType(
-        chatType: ChatType,
-        payload: JSONObject,
-        messageType: ChatMessageType
+        chatType: ChatType, payload: JSONObject, messageType: ChatMessageType
     ) {
-        when (chatType) {
-            ChatType.USER -> {
-                //notify user chat
+        when (chatType.name) {
+            ChatType.USER.name -> {
+                if (messageType == ChatMessageType.TypeMessage) {
+                    UserChatNotification.textNotification(this, payload)
+                } else if (messageType == ChatMessageType.TypeImage) {
+                    //todo
+                }
             }
 
-            ChatType.GROUP -> {
-                //notify group chat
+            ChatType.GROUP.name -> {
+                if (messageType == ChatMessageType.TypeMessage) {
+                    //todo
+                } else if (messageType == ChatMessageType.TypeImage) {
+                    //todo
+                }
             }
         }
     }
@@ -74,5 +86,29 @@ class FCMConfig : FirebaseMessagingService() {
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    companion object {
+        fun getBitmapFromUrl(imageUrl: String): Bitmap? {
+            return try {
+                val url = URL(imageUrl)
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val input: InputStream = connection.inputStream
+                return BitmapFactory.decodeStream(input)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        fun stringToUniqueHash(string: String): Int {
+            var hash = 0
+            for (i in string.indices) {
+                hash = string[i].code + (hash shl 6) + (hash shl 16) - hash
+            }
+            return abs(hash).toString().substring(2).toInt()
+        }
     }
 }
