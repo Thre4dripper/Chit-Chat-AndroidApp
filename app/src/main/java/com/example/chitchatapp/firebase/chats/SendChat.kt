@@ -28,6 +28,7 @@ class SendChat {
             val oldMessagesList = chatModel.chatMessages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 ChatMessageModel(
                     id,
                     ChatMessageType.TypeText,
@@ -68,6 +69,7 @@ class SendChat {
             val oldMessagesList = chatModel.chatMessages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 ChatMessageModel(
                     id,
                     ChatMessageType.TypeImage,
@@ -108,6 +110,7 @@ class SendChat {
             val oldMessagesList = chatModel.chatMessages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 ChatMessageModel(
                     id,
                     ChatMessageType.TypeSticker,

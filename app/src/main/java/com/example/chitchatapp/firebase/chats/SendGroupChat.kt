@@ -27,6 +27,7 @@ class SendGroupChat {
             val oldMessagesList = groupChatModel.messages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 GroupMessageModel(
                     id,
                     GroupMessageType.TypeText,
@@ -65,6 +66,7 @@ class SendGroupChat {
             val oldMessagesList = groupChatModel.messages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 GroupMessageModel(
                     id,
                     GroupMessageType.TypeImage,
@@ -103,6 +105,7 @@ class SendGroupChat {
             val oldMessagesList = groupChatModel.messages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 GroupMessageModel(
                     id,
                     GroupMessageType.TypeSticker,

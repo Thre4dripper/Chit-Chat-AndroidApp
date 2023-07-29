@@ -189,7 +189,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                 //when the list is submitted, then update the seen status
                 viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
-                binding.chattingRv.smoothScrollToPosition(it.chatMessages.size - 1)
+                binding.chattingRv.smoothScrollToPosition(0)
             }
 
         }
@@ -223,21 +223,13 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     }
 
     private fun initRecyclerView(loggedInUsername: String) {
+        //since this func called everytime list is submitted, so we need to check if it is already initialized
+        if (this::chattingAdapter.isInitialized) return
         val chatModel = viewModel.chatDetails.value
         binding.chattingRv.apply {
             chattingAdapter =
                 ChattingRecyclerAdapter(loggedInUsername, chatModel!!, this@ChatActivity)
             adapter = chattingAdapter
-        }
-
-        //scroll to the bottom of the recycler view when the keyboard is open acc to live data
-        viewModel.chatDetails.observe(this) {
-            binding.chattingRv.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-                //scroll to the bottom of the recycler view on keyboard open
-                if (bottom < oldBottom) {
-                    binding.chattingRv.smoothScrollToPosition(it!!.chatMessages.size - 1)
-                }
-            }
         }
     }
 

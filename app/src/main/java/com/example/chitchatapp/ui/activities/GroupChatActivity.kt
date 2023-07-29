@@ -140,7 +140,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 //when the list is submitted, then update the seen status
                 viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
-                binding.groupChatRv.smoothScrollToPosition(it.messages.size - 1)
+                binding.groupChatRv.smoothScrollToPosition(0)
             }
 
         }
@@ -180,21 +180,14 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     }
 
     private fun initRecyclerView(loggedInUsername: String) {
+        //since this func called everytime list is submitted, so we need to check if it is already initialized
+        if (this::groupChatAdapter.isInitialized) return
+
         val groupChatModel = viewModel.groupChatDetails.value
         binding.groupChatRv.apply {
             groupChatAdapter =
                 GroupChatRecyclerAdapter(loggedInUsername, groupChatModel!!, this@GroupChatActivity)
             adapter = groupChatAdapter
-        }
-
-        //scroll to the bottom of the recycler view when the keyboard is open acc to live data
-        viewModel.groupChatDetails.observe(this) {
-            binding.groupChatRv.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-                //scroll to the bottom of the recycler view on keyboard open
-                if (bottom < oldBottom) {
-                    binding.groupChatRv.smoothScrollToPosition(groupChatModel!!.messages.size - 1)
-                }
-            }
         }
     }
 
