@@ -11,16 +11,16 @@ class GetProfile {
         fun getProfile(
             firestore: FirebaseFirestore,
             user: FirebaseUser?,
-            username: String,
+            username: String?,
             profile: (UserModel?) -> Unit
         ) {
-            getProfileFromUidDoc(firestore, user?.uid) { uidDocProfile ->
-                if (uidDocProfile == null) {
-                    getProfileFromUsernameDoc(firestore, username) { usernameDocProfile ->
-                        profile(usernameDocProfile)
+            getProfileFromUsernameDoc(firestore, username) { usernameDocProfile ->
+                if (usernameDocProfile == null) {
+                    getProfileFromUidDoc(firestore, user?.uid) { uidDocProfile ->
+                        profile(uidDocProfile)
                     }
                 } else {
-                    profile(uidDocProfile)
+                    profile(usernameDocProfile)
                 }
             }
         }
@@ -44,9 +44,13 @@ class GetProfile {
 
         private fun getProfileFromUsernameDoc(
             firestore: FirebaseFirestore,
-            username: String,
+            username: String?,
             profile: (UserModel?) -> Unit
         ) {
+            if (username == null) {
+                profile(null)
+                return
+            }
             firestore.collection(FirestoreCollections.USERS_COLLECTION)
                 .document(username)
                 .get()

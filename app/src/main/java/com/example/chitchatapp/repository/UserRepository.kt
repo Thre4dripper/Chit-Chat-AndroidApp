@@ -28,7 +28,7 @@ class UserRepository {
         fun getUserDetails(context: Context, onSuccess: (Boolean) -> Unit) {
             val firestore = FirebaseFirestore.getInstance()
             val user = FirebaseAuth.getInstance().currentUser
-            val username = UserStore.getUsername(context) ?: ""
+            val username = UserStore.getUsername(context)
 
             GetProfile.getProfile(firestore, user, username) { profile ->
                 if (profile != null) {

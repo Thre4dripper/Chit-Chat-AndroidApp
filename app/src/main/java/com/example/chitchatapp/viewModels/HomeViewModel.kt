@@ -71,21 +71,26 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         HomeRepository.checkInitialRegistration(onSuccess)
 
         HomeRepository.checkCompleteRegistration {
-            if (it) initUserDetails()
+            //init user details everytime even if the user is not completely registered
+            //it will handle it inside the function
+            initUserDetails()
         }
     }
 
     private fun initUserDetails() {
-        getCurrentUser() ?: return
+        val context = getApplication<Application>().applicationContext
+        val fcmToken = UserStore.getFCMToken(context)
+
         HomeRepository.getUsername { username ->
-            if (username == null) return@getUsername
-
-            val context = getApplication<Application>().applicationContext
-            val fcmToken = UserStore.getFCMToken(context)
-
-            //order of statements is important, first save username then do other stuff
+            //save username even if it is null
             UserStore.saveUsername(context, username)
+
+            //when username is null,then user details will be fetched from uid doc
             UserRepository.getUserDetails(context) {}
+
+            //username is null when the user is not completely registered
+            if (username == null) return@getUsername
+            //update status and token only when username is not null
             UserRepository.updateStatus(context, UserStatus.Online)
             UserRepository.updateToken(context, fcmToken)
         }

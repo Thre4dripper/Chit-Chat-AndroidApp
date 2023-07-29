@@ -174,7 +174,6 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     ) { res ->
         viewModel.onSignInResult(res) {
             if (it) {
-                setProfileImage()
                 //after sign in, initCompleteProfile will be called again
                 initHomeLottieLayouts()
             } else {
@@ -234,7 +233,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         }
 
         viewModel.userDetails.observe(this) {
-            if (it == null) return@observe
+            if (it == null || it.username.isEmpty()) return@observe
 
             binding.homeChatRv.apply {
                 homeChatsAdapter = HomeChatsRecyclerAdapter(it.username, this@HomeActivity)
