@@ -21,11 +21,11 @@ class SendTextNotification {
         ) {
             var senderDetails: UserModel? = null
             var receiverDetails: UserModel? = null
-            GetDetails.getLiveUserDetails(firestore, from) {
+            GetDetails.getUserDetails(firestore, from) {
                 senderDetails = it!!
                 preparePayload(context, senderDetails, receiverDetails, text)
             }
-            GetDetails.getLiveUserDetails(firestore, to) {
+            GetDetails.getUserDetails(firestore, to) {
                 receiverDetails = it!!
                 preparePayload(context, senderDetails, receiverDetails, text)
             }
@@ -42,18 +42,15 @@ class SendTextNotification {
             val payload = JSONObject()
             payload.put("to", receiverDetails.fcmToken)
 
-            val body = JSONObject()
-            body.put("chatType", ChatType.USER)
-            body.put("messageType", ChatMessageType.TypeText)
-            body.put("notifierName", senderDetails.username)
-            body.put("notifierId", senderDetails.uid)
-            body.put("notifierImage", senderDetails.profileImage)
-            body.put("text", text)
+            val data = JSONObject()
+            data.put("chatType", ChatType.USER)
+            data.put("messageType", ChatMessageType.TypeText)
+            data.put("notifierName", senderDetails.username)
+            data.put("notifierId", senderDetails.uid)
+            data.put("notifierImage", senderDetails.profileImage)
+            data.put("text", text)
 
-//            val notification = JSONObject()
-//            notification.put("data", body)
-
-            payload.put("data", body)
+            payload.put("data", data)
 
             Messaging.fireNotification(context, payload)
         }

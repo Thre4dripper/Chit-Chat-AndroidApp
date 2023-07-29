@@ -24,5 +24,23 @@ class GetDetails {
                     onSuccess(data)
                 }
         }
+
+        fun getUserDetails(
+            firestore: FirebaseFirestore,
+            username: String,
+            onSuccess: (UserModel?) -> Unit,
+        ) {
+
+            firestore.collection(FirestoreCollections.USERS_COLLECTION)
+                .document(username)
+                .get()
+                .addOnSuccessListener {
+                    val data = it.toObject(UserModel::class.java)
+                    onSuccess(data)
+                }
+                .addOnFailureListener {
+                    onSuccess(null)
+                }
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import com.example.chitchatapp.MyApplication
 import com.example.chitchatapp.constants.NotificationConstants
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.ChatType
@@ -48,7 +49,7 @@ class FCMConfig : FirebaseMessagingService() {
         val chatType = ChatType.valueOf(payload.getString("chatType"))
         val messageType = ChatMessageType.valueOf(payload.getString("messageType"))
 
-        notifyByChatType(chatType, payload, messageType)
+        if (MyApplication.activityReferences == 0) notifyByChatType(chatType, payload, messageType)
     }
 
     private fun notifyByChatType(
