@@ -1,6 +1,8 @@
 package com.example.chitchatapp.firebase.messaging.group
 
 import android.content.Context
+import com.example.chitchatapp.constants.GroupConstants
+import com.example.chitchatapp.constants.NotificationConstants
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.ChatType
 import com.example.chitchatapp.firebase.groups.GetGroupDetails
@@ -46,19 +48,19 @@ class TextNotification {
             // Send notification to all the members of the group
             tokens.forEach { token ->
                 val payload = JSONObject()
-                payload.put("to", token)
+                payload.put(NotificationConstants.TO, token)
 
                 val data = JSONObject()
-                data.put("chatType", ChatType.GROUP)
-                data.put("messageType", ChatMessageType.TypeText)
-                data.put("notifierName", senderDetails.username)
-                data.put("notifierImage", senderDetails.profileImage)
-                data.put("groupId", groupChatModel.id)
-                data.put("groupName", groupChatModel.name)
-                data.put("groupImage", groupChatModel.image)
-                data.put("text", text)
+                data.put(NotificationConstants.CHAT_TYPE, ChatType.GROUP)
+                data.put(NotificationConstants.MESSAGE_TYPE, ChatMessageType.TypeText)
+                data.put(NotificationConstants.NOTIFIER_NAME, senderDetails.username)
+                data.put(NotificationConstants.NOTIFIER_IMAGE, senderDetails.profileImage)
+                data.put(GroupConstants.GROUP_ID, groupChatModel.id)
+                data.put(GroupConstants.GROUP_NAME, groupChatModel.name)
+                data.put(GroupConstants.GROUP_IMAGE, groupChatModel.image)
+                data.put(NotificationConstants.TEXT, text)
 
-                payload.put("data", data)
+                payload.put(NotificationConstants.DATA, data)
 
                 Messaging.fireNotification(context, payload)
             }

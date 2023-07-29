@@ -17,11 +17,11 @@ class UserChatNotifications {
         private val TAG = "UserChatNotification"
         fun textNotification(context: Context, payload: JSONObject) {
 
-            val notifierName = payload.getString("notifierName")
-            val notifierId = payload.getString("notifierId")
-            val notifierImage = payload.getString("notifierImage")
-            val chatId = payload.getString("chatId")
-            val text = payload.getString("text")
+            val notifierName = payload.getString(NotificationConstants.NOTIFIER_NAME)
+            val notifierId = payload.getString(NotificationConstants.NOTIFIER_ID)
+            val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
+            val chatId = payload.getString(ChatConstants.CHAT_ID)
+            val text = payload.getString(NotificationConstants.TEXT)
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
             val notificationId =
@@ -56,11 +56,11 @@ class UserChatNotifications {
         }
 
         fun imageNotification(context: Context, payload: JSONObject) {
-            val notifierName = payload.getString("notifierName")
-            val notifierId = payload.getString("notifierId")
-            val notifierImage = payload.getString("notifierImage")
-            val chatId = payload.getString("chatId")
-            val image = payload.getString("image")
+            val notifierName = payload.getString(NotificationConstants.NOTIFIER_NAME)
+            val notifierId = payload.getString(NotificationConstants.NOTIFIER_ID)
+            val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
+            val chatId = payload.getString(ChatConstants.CHAT_ID)
+            val image = payload.getString(NotificationConstants.IMAGE)
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
             val notificationId =
@@ -99,10 +99,10 @@ class UserChatNotifications {
         }
 
         fun stickerNotification(context: Context, payload: JSONObject) {
-            val notifierName = payload.getString("notifierName")
-            val notifierId = payload.getString("notifierId")
-            val notifierImage = payload.getString("notifierImage")
-            val chatId = payload.getString("chatId")
+            val notifierName = payload.getString(NotificationConstants.NOTIFIER_NAME)
+            val notifierId = payload.getString(NotificationConstants.NOTIFIER_ID)
+            val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
+            val chatId = payload.getString(ChatConstants.CHAT_ID)
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
             val notificationId =

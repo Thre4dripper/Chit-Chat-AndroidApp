@@ -1,6 +1,8 @@
 package com.example.chitchatapp.firebase.messaging.user
 
 import android.content.Context
+import com.example.chitchatapp.constants.ChatConstants
+import com.example.chitchatapp.constants.NotificationConstants
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.enums.ChatType
 import com.example.chitchatapp.firebase.messaging.Messaging
@@ -42,18 +44,18 @@ class TextNotification {
             if (senderDetails == null || receiverDetails == null) return
 
             val payload = JSONObject()
-            payload.put("to", receiverDetails.fcmToken)
+            payload.put(NotificationConstants.TO, receiverDetails.fcmToken)
 
             val data = JSONObject()
-            data.put("chatType", ChatType.USER)
-            data.put("messageType", ChatMessageType.TypeText)
-            data.put("notifierName", senderDetails.username)
-            data.put("notifierId", senderDetails.uid)
-            data.put("notifierImage", senderDetails.profileImage)
-            data.put("chatId", chatId)
-            data.put("text", text)
+            data.put(NotificationConstants.CHAT_TYPE, ChatType.USER)
+            data.put(NotificationConstants.MESSAGE_TYPE, ChatMessageType.TypeText)
+            data.put(NotificationConstants.NOTIFIER_NAME, senderDetails.username)
+            data.put(NotificationConstants.NOTIFIER_ID, senderDetails.uid)
+            data.put(NotificationConstants.NOTIFIER_IMAGE, senderDetails.profileImage)
+            data.put(ChatConstants.CHAT_ID, chatId)
+            data.put(NotificationConstants.TEXT, text)
 
-            payload.put("data", data)
+            payload.put(NotificationConstants.DATA, data)
 
             Messaging.fireNotification(context, payload)
         }

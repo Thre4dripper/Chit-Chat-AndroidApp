@@ -46,8 +46,8 @@ class FCMConfig : FirebaseMessagingService() {
         val payload = JSONObject((message.data as Map<*, *>?)!!)
         Log.d(TAG, "onMessageReceived: $payload")
 
-        val chatType = ChatType.valueOf(payload.getString("chatType"))
-        val messageType = ChatMessageType.valueOf(payload.getString("messageType"))
+        val chatType = ChatType.valueOf(payload.getString(NotificationConstants.CHAT_TYPE))
+        val messageType = ChatMessageType.valueOf(payload.getString(NotificationConstants.MESSAGE_TYPE))
 
         if (MyApplication.activityReferences == 0) notifyByChatType(chatType, payload, messageType)
     }

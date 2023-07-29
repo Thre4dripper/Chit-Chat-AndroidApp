@@ -17,20 +17,20 @@ class GroupChatNotifications {
         private val TAG = "GroupChatNotifications"
         fun textNotification(context: Context, payload: JSONObject) {
 
-            val notifierName = payload.getString("notifierName")
-            val notifierImage = payload.getString("notifierImage")
-            val groupId = payload.getString("groupId")
-            val groupName = payload.getString("groupName")
+            val notifierName = payload.getString(NotificationConstants.NOTIFIER_NAME)
+            val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
+            val groupId = payload.getString(GroupConstants.GROUP_ID)
+            val groupName = payload.getString(GroupConstants.GROUP_NAME)
 
             // notificationImage is the group image if it exists, otherwise it is the notifierImage
-            val notificationImage = payload.has("groupImage").let {
+            val notificationImage = payload.has(GroupConstants.GROUP_IMAGE).let {
                 if (it) {
-                    payload.getString("groupImage")
+                    payload.getString(GroupConstants.GROUP_IMAGE)
                 } else {
                     notifierImage
                 }
             }
-            val text = payload.getString("text")
+            val text = payload.getString(NotificationConstants.TEXT)
 
             val notificationHash = FCMConfig.stringToUniqueHash(groupId)
             val notificationId =
@@ -70,18 +70,18 @@ class GroupChatNotifications {
         }
 
         fun imageNotification(context: Context, payload: JSONObject) {
-            val notifierName = payload.getString("notifierName")
-            val notifierImage = payload.getString("notifierImage")
-            val groupId = payload.getString("groupId")
-            val groupName = payload.getString("groupName")
-            val notificationImage = payload.has("groupImage").let {
+            val notifierName = payload.getString(NotificationConstants.NOTIFIER_NAME)
+            val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
+            val groupId = payload.getString(GroupConstants.GROUP_ID)
+            val groupName = payload.getString(GroupConstants.GROUP_NAME)
+            val notificationImage = payload.has(GroupConstants.GROUP_IMAGE).let {
                 if (it) {
-                    payload.getString("groupImage")
+                    payload.getString(GroupConstants.GROUP_IMAGE)
                 } else {
                     notifierImage
                 }
             }
-            val image = payload.getString("image")
+            val image = payload.getString(NotificationConstants.IMAGE)
 
             val notificationHash = FCMConfig.stringToUniqueHash(groupId)
             val notificationId =
@@ -121,13 +121,13 @@ class GroupChatNotifications {
         }
 
         fun stickerNotification(context: Context, payload: JSONObject) {
-            val notifierName = payload.getString("notifierName")
-            val notifierImage = payload.getString("notifierImage")
-            val groupId = payload.getString("groupId")
-            val groupName = payload.getString("groupName")
-            val notificationImage = payload.has("groupImage").let {
+            val notifierName = payload.getString(NotificationConstants.NOTIFIER_NAME)
+            val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
+            val groupId = payload.getString(GroupConstants.GROUP_ID)
+            val groupName = payload.getString(GroupConstants.GROUP_NAME)
+            val notificationImage = payload.has(GroupConstants.GROUP_IMAGE).let {
                 if (it) {
-                    payload.getString("groupImage")
+                    payload.getString(GroupConstants.GROUP_IMAGE)
                 } else {
                     notifierImage
                 }
