@@ -42,7 +42,7 @@ class FCMConfig : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val payload = JSONObject(message.notification?.body!!)
+        val payload = JSONObject((message.data as Map<*, *>?)!!)
         Log.d(TAG, "onMessageReceived: $payload")
 
         val chatType = ChatType.valueOf(payload.getString("chatType"))

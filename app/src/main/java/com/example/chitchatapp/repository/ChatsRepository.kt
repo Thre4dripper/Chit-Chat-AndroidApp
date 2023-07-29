@@ -85,6 +85,7 @@ class ChatsRepository {
         }
 
         fun sendTextMessage(
+            context: Context,
             chatModel: ChatModel,
             text: String,
             from: String,
@@ -93,7 +94,7 @@ class ChatsRepository {
         ) {
             val firestore = FirebaseFirestore.getInstance()
 
-            SendChat.sendTextMessage(firestore, chatModel, text, from, to, chatMessageId)
+            SendChat.sendTextMessage(context, firestore, chatModel, text, from, to, chatMessageId)
         }
 
         fun sendImage(

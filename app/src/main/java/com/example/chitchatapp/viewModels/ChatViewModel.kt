@@ -65,7 +65,7 @@ class ChatViewModel : ViewModel() {
         val chatModel = getChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getUserChatUsername(chatModel, from)
-        ChatsRepository.sendTextMessage(chatModel, text, from, to, chatMessageId)
+        ChatsRepository.sendTextMessage(context, chatModel, text, from, to, chatMessageId)
     }
 
     fun sendImageMessage(

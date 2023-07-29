@@ -77,4 +77,7 @@ dependencies {
 
     //zoomable image view
     implementation "com.github.MikeOrtiz:TouchImageView:3.2.1"
+
+    //volley library
+    implementation 'com.android.volley:volley:1.2.1'
 }

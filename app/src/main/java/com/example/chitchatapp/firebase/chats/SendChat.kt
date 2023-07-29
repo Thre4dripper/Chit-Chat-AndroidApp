@@ -1,7 +1,9 @@
 package com.example.chitchatapp.firebase.chats
 
+import android.content.Context
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.ChatMessageType
+import com.example.chitchatapp.firebase.messaging.user.SendTextNotification
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.ChatModel
 import com.google.firebase.Timestamp
@@ -12,6 +14,7 @@ import java.util.UUID
 class SendChat {
     companion object {
         fun sendTextMessage(
+            context: Context,
             firestore: FirebaseFirestore,
             chatModel: ChatModel,
             text: String,
@@ -39,13 +42,11 @@ class SendChat {
             val updatedChatModel = chatModel.copy(
                 chatMessages = newMessagesList
             )
-            firestore.collection(FirestoreCollections.CHATS_COLLECTION)
-                .document(chatModel.chatId)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
+                .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
+                    SendTextNotification.sendTextNotification(context, firestore, text, from, to)
                     chatMessageId(id)
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     chatMessageId(null)
                 }
         }
@@ -78,13 +79,10 @@ class SendChat {
             val updatedChatModel = chatModel.copy(
                 chatMessages = newMessagesList
             )
-            firestore.collection(FirestoreCollections.CHATS_COLLECTION)
-                .document(chatModel.chatId)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
+                .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
                     chatMessageId(id)
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     chatMessageId(null)
                 }
         }
@@ -117,13 +115,10 @@ class SendChat {
             val updatedChatModel = chatModel.copy(
                 chatMessages = newMessagesList
             )
-            firestore.collection(FirestoreCollections.CHATS_COLLECTION)
-                .document(chatModel.chatId)
-                .set(updatedChatModel, SetOptions.merge())
-                .addOnSuccessListener {
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
+                .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
                     chatMessageId(id)
-                }
-                .addOnFailureListener {
+                }.addOnFailureListener {
                     chatMessageId(null)
                 }
         }
