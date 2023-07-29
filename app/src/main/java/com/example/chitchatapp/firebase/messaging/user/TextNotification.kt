@@ -9,7 +9,7 @@ import com.example.chitchatapp.models.UserModel
 import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONObject
 
-class SendTextNotification {
+class TextNotification {
     companion object {
         private val TAG = "SendUserNotifications"
         fun sendTextNotification(

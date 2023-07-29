@@ -3,7 +3,8 @@ package com.example.chitchatapp.firebase.chats
 import android.content.Context
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.ChatMessageType
-import com.example.chitchatapp.firebase.messaging.user.SendTextNotification
+import com.example.chitchatapp.firebase.messaging.user.ImageNotification
+import com.example.chitchatapp.firebase.messaging.user.TextNotification
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.ChatModel
 import com.google.firebase.Timestamp
@@ -44,7 +45,7 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    SendTextNotification.sendTextNotification(context, firestore, text, from, to)
+                    TextNotification.sendTextNotification(context, firestore, text, from, to)
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
@@ -52,6 +53,7 @@ class SendChat {
         }
 
         fun sendImage(
+            context: Context,
             firestore: FirebaseFirestore,
             chatModel: ChatModel,
             imageUrl: String,
@@ -81,6 +83,7 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
+                    ImageNotification.sendImageNotification(context, firestore, imageUrl, from, to)
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)

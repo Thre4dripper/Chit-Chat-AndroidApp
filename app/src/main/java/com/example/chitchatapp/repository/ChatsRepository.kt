@@ -98,6 +98,7 @@ class ChatsRepository {
         }
 
         fun sendImage(
+            context: Context,
             chatModel: ChatModel,
             imageUri: Uri,
             from: String,
@@ -116,7 +117,7 @@ class ChatsRepository {
                     chatMessageId(null)
                     return@getUrlFromStorage
                 }
-                SendChat.sendImage(firestore, chatModel, url, from, to, chatMessageId)
+                SendChat.sendImage(context, firestore, chatModel, url, from, to, chatMessageId)
             }
         }
 

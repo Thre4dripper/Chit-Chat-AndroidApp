@@ -77,7 +77,7 @@ class ChatViewModel : ViewModel() {
         val chatModel = getChatDetails(chatId) ?: return
         val from = getLoggedInUsername(context) ?: return
         val to = ChatUtils.getUserChatUsername(chatModel, from)
-        ChatsRepository.sendImage(chatModel, imageUri, from, to, chatMessageId)
+        ChatsRepository.sendImage(context, chatModel, imageUri, from, to, chatMessageId)
     }
 
     fun sendSticker(
