@@ -34,7 +34,9 @@ class FireStoreRegister {
                     "",
                     UserStatus.Online.name,
                     listOf(),
-                    ""
+                    "",
+                    listOf(),
+                    listOf(),
                 )
 
                 //register user with uid as document id

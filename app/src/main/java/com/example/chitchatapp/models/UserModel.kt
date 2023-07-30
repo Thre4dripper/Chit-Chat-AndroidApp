@@ -10,7 +10,9 @@ data class UserModel(
     val bio: String,
     val status: String,
     val favourites: List<String>,
-    val fcmToken: String
+    val fcmToken: String,
+    val groups: List<String>,
+    val mutedChats: List<String>,
 ) : Serializable {
-    constructor() : this("", "", "", "", "", "", listOf(), "")
+    constructor() : this("", "", "", "", "", "", listOf(), "", listOf(), listOf())
 }

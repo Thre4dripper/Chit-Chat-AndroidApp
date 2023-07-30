@@ -11,6 +11,7 @@ import com.example.chitchatapp.firebase.groups.DeleteGroup
 import com.example.chitchatapp.firebase.groups.ExitGroup
 import com.example.chitchatapp.firebase.groups.FindMemberChat
 import com.example.chitchatapp.firebase.groups.UpdateGroup
+import com.example.chitchatapp.firebase.user.RemoveGroup
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.ChatModel
@@ -100,32 +101,42 @@ class GroupsRepository {
 
             val membersCount = groupChatModel.members.size
 
-            // if only one member is left in the group, delete the group
-            if (membersCount == 1) {
-                val storage = FirebaseStorage.getInstance()
-
-                DeleteGroup.deleteGroup(fireStore, groupChatModel, onSuccess)
-                DeleteGroup.deleteGroupImage(storage, groupChatModel.id) {}
-
-                val hasImages = groupChatModel.messages.any { message ->
-                    message.type == GroupMessageType.TypeImage
-                }
-                if (!hasImages) {
-                    onSuccess(true)
-                    return
-                }
-                DeleteGroup.deleteGroupChatImages(storage, groupChatModel.id) {}
-                onSuccess(true)
-                return
-            }
-
-            //otherwise, exit the group
-            ExitGroup.exitGroup(
+            RemoveGroup.removeFromUserCollection(
                 fireStore,
-                groupChatModel,
                 loggedInUsername,
-                onSuccess,
-            )
+                groupChatModel.id
+            ) { success ->
+                if (!success) {
+                    onSuccess(false)
+                    return@removeFromUserCollection
+                }
+                // if only one member is left in the group, delete the group
+                if (membersCount == 1) {
+                    val storage = FirebaseStorage.getInstance()
+
+                    DeleteGroup.deleteGroup(fireStore, groupChatModel, onSuccess)
+                    DeleteGroup.deleteGroupImage(storage, groupChatModel.id) {}
+
+                    val hasImages = groupChatModel.messages.any { message ->
+                        message.type == GroupMessageType.TypeImage
+                    }
+                    if (!hasImages) {
+                        onSuccess(true)
+                        return@removeFromUserCollection
+                    }
+                    DeleteGroup.deleteGroupChatImages(storage, groupChatModel.id) {}
+                    onSuccess(true)
+                    return@removeFromUserCollection
+                }
+
+                //otherwise, exit the group
+                ExitGroup.exitGroup(
+                    fireStore,
+                    groupChatModel,
+                    loggedInUsername,
+                    onSuccess,
+                )
+            }
         }
 
         fun findCommonGroups(

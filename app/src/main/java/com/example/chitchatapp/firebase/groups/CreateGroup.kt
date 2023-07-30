@@ -2,6 +2,7 @@ package com.example.chitchatapp.firebase.groups
 
 import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.enums.GroupMessageType
+import com.example.chitchatapp.firebase.user.GetDetails
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.GroupMessageModel
@@ -39,6 +40,8 @@ class CreateGroup {
                 ),
             )
 
+
+            //add in groups collection
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupChatId)
                 .set(group)
                 .addOnSuccessListener {
@@ -47,6 +50,21 @@ class CreateGroup {
                 .addOnFailureListener {
                     onSuccess(null)
                 }
+
+            //add in users collection
+            selectedUsers.forEach { user ->
+                GetDetails.getUserDetails(firestore, user.username) {
+                    if (it == null) return@getUserDetails
+                    val updatedUserModel = it.copy(
+                        groups = it.groups.toMutableList().apply {
+                            add(groupChatId)
+                        }
+                    )
+
+                    firestore.collection(FirestoreCollections.USERS_COLLECTION).document(user.username)
+                        .set(updatedUserModel)
+                }
+            }
         }
     }
 }
