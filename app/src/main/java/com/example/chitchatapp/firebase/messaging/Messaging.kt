@@ -5,7 +5,10 @@ import android.util.Log
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.chitchatapp.R
+import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.constants.NotificationConstants
+import com.example.chitchatapp.models.ChatModel
+import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONObject
 
 class Messaging {
@@ -29,6 +32,32 @@ class Messaging {
             }
 
             queue.add(request)
+        }
+
+        fun muteUnMuteUserNotifications(
+            firestore: FirebaseFirestore,
+            chatModel: ChatModel,
+            loggedInUsername: String,
+            mute: Boolean,
+            onSuccess: (Boolean) -> Unit,
+        ) {
+            val updatedChatModel = chatModel.copy(
+                mutedBy = if (mute) {
+                    chatModel.mutedBy + loggedInUsername
+                } else {
+                    chatModel.mutedBy - loggedInUsername
+                }
+            )
+
+            firestore.collection(FirestoreCollections.CHATS_COLLECTION)
+                .document(chatModel.chatId)
+                .set(updatedChatModel)
+                .addOnSuccessListener {
+                    onSuccess(true)
+                }
+                .addOnFailureListener {
+                    onSuccess(false)
+                }
         }
     }
 }

@@ -12,7 +12,6 @@ data class UserModel(
     val favourites: List<String>,
     val fcmToken: String,
     val groups: List<String>,
-    val mutedChats: List<String>,
 ) : Serializable {
-    constructor() : this("", "", "", "", "", "", listOf(), "", listOf(), listOf())
+    constructor() : this("", "", "", "", "", "", listOf(), "", listOf())
 }

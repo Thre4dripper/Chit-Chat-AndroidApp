@@ -2,7 +2,6 @@ package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -24,6 +23,7 @@ import com.example.chitchatapp.databinding.ActivityChatProfileBinding
 import com.example.chitchatapp.enums.ChatMessageType
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatMessageModel
+import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.viewModels.ChatProfileViewModel
 import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -61,6 +61,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
 
             //init everything after chat details are fetched
             initMediaRecycleView()
+            initMuteSwitch(chatModel, loggedInUsername)
             initCommonGroupsRecyclerView(loggedInUsername)
             initBottomButtons(chatId, loggedInUsername)
 
@@ -90,13 +91,34 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
     }
 
     private fun initMediaRecycleView() {
+        //do not initialize again if already initialized
+        if (this::mediaAdapter.isInitialized) return
+
         binding.chatProfileMediaRv.apply {
             mediaAdapter = ChatProfileMediaRecyclerAdapter(this@ChatProfileActivity)
             adapter = mediaAdapter
         }
     }
 
+    private fun initMuteSwitch(chatModel: ChatModel, loggedInUsername: String) {
+        val isMuted = chatModel.mutedBy.contains(loggedInUsername)
+        binding.chatProfileMuteSwitch.isChecked = isMuted
+
+        binding.chatProfileMuteSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.muteUnMuteChat(chatModel, loggedInUsername, isChecked) {
+                Toast.makeText(
+                    this,
+                    if (isChecked) "Muted" else "UnMuted",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
     private fun initCommonGroupsRecyclerView(loggedInUsername: String) {
+        //do not initialize again if already initialized
+        if (this::commonGroupsAdapter.isInitialized) return
+
         val chatModel = chatViewModel.chatDetails.value ?: return
         val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
         val chatUserImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
@@ -114,7 +136,6 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
                 binding.chatProfileNoGroupsTv.visibility = View.GONE
                 binding.chatProfileGroupsRv.visibility = View.VISIBLE
             }
-            Log.d(TAG, "initCommonGroupsRecyclerView: $it")
             commonGroupsAdapter.submitList(it)
         }
     }

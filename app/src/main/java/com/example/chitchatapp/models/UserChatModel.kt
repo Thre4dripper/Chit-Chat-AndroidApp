@@ -7,12 +7,14 @@ data class ChatModel(
     val dmChatUser1: DMChatUserModel,
     val dmChatUser2: DMChatUserModel,
     val chatMessages: List<ChatMessageModel>,
+    val mutedBy: List<String>
 ) {
     constructor() : this(
         "",
         DMChatUserModel(),
         DMChatUserModel(),
         listOf(),
+        listOf()
     )
 }
 

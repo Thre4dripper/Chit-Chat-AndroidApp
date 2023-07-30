@@ -36,7 +36,6 @@ class FireStoreRegister {
                     listOf(),
                     "",
                     listOf(),
-                    listOf(),
                 )
 
                 //register user with uid as document id

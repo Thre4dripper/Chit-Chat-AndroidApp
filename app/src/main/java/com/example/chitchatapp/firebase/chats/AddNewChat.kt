@@ -56,7 +56,8 @@ class AddNewChat {
                         currentUser.username,
                         newChatUser.username,
                     )
-                )
+                ),
+                listOf()
             )
 
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatDocId)
