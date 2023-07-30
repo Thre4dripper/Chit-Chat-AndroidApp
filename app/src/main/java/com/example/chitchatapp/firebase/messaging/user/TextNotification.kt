@@ -44,7 +44,7 @@ class TextNotification {
             if (senderDetails == null || receiverDetails == null) return
 
             val payload = JSONObject()
-            payload.put(NotificationConstants.TO, receiverDetails.fcmToken)
+            payload.put(NotificationConstants.NOTIFICATION_TOKEN, receiverDetails.fcmToken)
 
             val data = JSONObject()
             data.put(NotificationConstants.CHAT_TYPE, ChatType.USER)
@@ -53,9 +53,9 @@ class TextNotification {
             data.put(NotificationConstants.NOTIFIER_ID, senderDetails.uid)
             data.put(NotificationConstants.NOTIFIER_IMAGE, senderDetails.profileImage)
             data.put(ChatConstants.CHAT_ID, chatId)
-            data.put(NotificationConstants.TEXT, text)
+            data.put(NotificationConstants.NOTIFICATION_TEXT, text)
 
-            payload.put(NotificationConstants.DATA, data)
+            payload.put(NotificationConstants.NOTIFICATION_DATA, data)
 
             Messaging.fireNotification(context, payload)
         }

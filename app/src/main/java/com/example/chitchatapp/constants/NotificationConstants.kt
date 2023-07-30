@@ -19,16 +19,16 @@ class NotificationConstants {
         const val GROUP_IMAGE_NOTIFICATION_ID = 5
         const val GROUP_STICKER_NOTIFICATION_ID = 6
 
-        const val TO = "to"
+        const val NOTIFICATION_TOKEN = "to"
         const val CHAT_TYPE = "chatType"
         const val MESSAGE_TYPE = "messageType"
-        const val DATA = "data"
+        const val NOTIFICATION_DATA = "data"
 
         const val NOTIFIER_NAME = "notifierName"
         const val NOTIFIER_ID = "notifierId"
         const val NOTIFIER_IMAGE = "notifierImage"
-        const val TEXT = "text"
-        const val IMAGE = "image"
+        const val NOTIFICATION_TEXT = "notificationText"
+        const val NOTIFICATION_IMAGE = "notificationImage"
 
     }
 }

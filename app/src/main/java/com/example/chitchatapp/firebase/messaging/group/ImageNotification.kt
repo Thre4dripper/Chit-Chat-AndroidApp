@@ -47,7 +47,7 @@ class ImageNotification {
             // Send notification to all the members of the group
             tokens.forEach { token ->
                 val payload = JSONObject()
-                payload.put(NotificationConstants.TO, token)
+                payload.put(NotificationConstants.NOTIFICATION_TOKEN, token)
 
                 val data = JSONObject()
                 data.put(NotificationConstants.CHAT_TYPE, ChatType.GROUP)
@@ -57,9 +57,9 @@ class ImageNotification {
                 data.put(GroupConstants.GROUP_ID, groupChatModel.id)
                 data.put(GroupConstants.GROUP_NAME, groupChatModel.name)
                 data.put(GroupConstants.GROUP_IMAGE, groupChatModel.image)
-                data.put(NotificationConstants.IMAGE, imageUrl)
+                data.put(NotificationConstants.NOTIFICATION_IMAGE, imageUrl)
 
-                payload.put(NotificationConstants.DATA, data)
+                payload.put(NotificationConstants.NOTIFICATION_DATA, data)
 
                 Messaging.fireNotification(context, payload)
             }

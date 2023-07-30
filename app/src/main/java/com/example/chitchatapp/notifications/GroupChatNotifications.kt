@@ -30,7 +30,7 @@ class GroupChatNotifications {
                     notifierImage
                 }
             }
-            val text = payload.getString(NotificationConstants.TEXT)
+            val text = payload.getString(NotificationConstants.NOTIFICATION_TEXT)
 
             val notificationHash = FCMConfig.stringToUniqueHash(groupId)
             val notificationId =
@@ -81,7 +81,7 @@ class GroupChatNotifications {
                     notifierImage
                 }
             }
-            val image = payload.getString(NotificationConstants.IMAGE)
+            val image = payload.getString(NotificationConstants.NOTIFICATION_IMAGE)
 
             val notificationHash = FCMConfig.stringToUniqueHash(groupId)
             val notificationId =

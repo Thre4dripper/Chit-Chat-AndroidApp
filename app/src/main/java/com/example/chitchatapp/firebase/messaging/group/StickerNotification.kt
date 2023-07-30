@@ -45,7 +45,7 @@ class StickerNotification {
             // Send notification to all the members of the group
             tokens.forEach { token ->
                 val payload = JSONObject()
-                payload.put(NotificationConstants.TO, token)
+                payload.put(NotificationConstants.NOTIFICATION_TOKEN, token)
 
                 val data = JSONObject()
                 data.put(NotificationConstants.CHAT_TYPE, ChatType.GROUP)
@@ -56,7 +56,7 @@ class StickerNotification {
                 data.put(GroupConstants.GROUP_NAME, groupChatModel.name)
                 data.put(GroupConstants.GROUP_IMAGE, groupChatModel.image)
 
-                payload.put(NotificationConstants.DATA, data)
+                payload.put(NotificationConstants.NOTIFICATION_DATA, data)
 
                 Messaging.fireNotification(context, payload)
             }

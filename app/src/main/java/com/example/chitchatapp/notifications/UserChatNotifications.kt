@@ -21,7 +21,7 @@ class UserChatNotifications {
             val notifierId = payload.getString(NotificationConstants.NOTIFIER_ID)
             val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
             val chatId = payload.getString(ChatConstants.CHAT_ID)
-            val text = payload.getString(NotificationConstants.TEXT)
+            val text = payload.getString(NotificationConstants.NOTIFICATION_TEXT)
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
             val notificationId =
@@ -60,7 +60,7 @@ class UserChatNotifications {
             val notifierId = payload.getString(NotificationConstants.NOTIFIER_ID)
             val notifierImage = payload.getString(NotificationConstants.NOTIFIER_IMAGE)
             val chatId = payload.getString(ChatConstants.CHAT_ID)
-            val image = payload.getString(NotificationConstants.IMAGE)
+            val image = payload.getString(NotificationConstants.NOTIFICATION_IMAGE)
 
             val notificationHash = FCMConfig.stringToUniqueHash(notifierId)
             val notificationId =
