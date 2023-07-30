@@ -164,13 +164,20 @@ class HomeChatsRecyclerAdapter(
 
                 when (groupChatModel.messages.first().type) {
                     GroupMessageType.TypeCreatedGroup -> {
-                        val date = groupChatModel.messages.first().time.toDate()
-                        val formattedDate =
-                            SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
+                        itemHomeChatMessagePhoto.visibility = View.GONE
                         itemHomeChatMessage.text = context.resources.getString(
                             R.string.item_group_chat_group_created,
                             groupChatModel.messages.first().from,
-                            formattedDate
+                            ""
+                        )
+                    }
+
+                    GroupMessageType.TypeLeavedMember -> {
+                        itemHomeChatMessagePhoto.visibility = View.GONE
+                        itemHomeChatMessage.text = context.resources.getString(
+                            R.string.item_group_chat_left_group,
+                            groupChatModel.messages.first().from,
+                            ""
                         )
                     }
 
@@ -198,7 +205,8 @@ class HomeChatsRecyclerAdapter(
 
                     else -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
-                        itemHomeChatMessage.text = groupChatModel.messages.first().text?.trim() ?: ""
+                        itemHomeChatMessage.text =
+                            groupChatModel.messages.first().text?.trim() ?: ""
                     }
                 }
 

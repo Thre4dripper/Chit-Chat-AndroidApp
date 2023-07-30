@@ -188,7 +188,7 @@ class GroupChatRecyclerAdapter(
             binding.itemGroupCreatedTv.text = context.getString(
                 R.string.item_group_chat_group_created,
                 groupMessageModel.from,
-                formattedDate
+                "on $formattedDate"
             )
         }
     }
@@ -203,7 +203,7 @@ class GroupChatRecyclerAdapter(
             binding.itemGroupCreatedTv.text = context.getString(
                 R.string.item_group_chat_left_group,
                 groupMessageModel.from,
-                formattedDate
+                "on $formattedDate"
             )
         }
     }
