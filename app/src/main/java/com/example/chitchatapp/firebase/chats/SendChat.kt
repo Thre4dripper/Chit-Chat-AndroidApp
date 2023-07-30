@@ -47,9 +47,11 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    TextNotification.sendTextNotification(
-                        context, firestore, chatModel.chatId, text, from, to
-                    )
+                    if (!chatModel.mutedBy.contains(to)) {
+                        TextNotification.sendTextNotification(
+                            context, firestore, chatModel.chatId, text, from, to
+                        )
+                    }
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
@@ -88,9 +90,12 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    ImageNotification.sendImageNotification(
-                        context, firestore, chatModel.chatId, imageUrl, from, to
-                    )
+
+                    if (!chatModel.mutedBy.contains(to)) {
+                        ImageNotification.sendImageNotification(
+                            context, firestore, chatModel.chatId, imageUrl, from, to
+                        )
+                    }
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
@@ -129,9 +134,11 @@ class SendChat {
             )
             firestore.collection(FirestoreCollections.CHATS_COLLECTION).document(chatModel.chatId)
                 .set(updatedChatModel, SetOptions.merge()).addOnSuccessListener {
-                    StickerNotification.sendStickerNotification(
-                        context, firestore, chatModel.chatId, from, to
-                    )
+                    if (!chatModel.mutedBy.contains(to)) {
+                        StickerNotification.sendStickerNotification(
+                            context, firestore, chatModel.chatId, from, to
+                        )
+                    }
                     chatMessageId(id)
                 }.addOnFailureListener {
                     chatMessageId(null)
