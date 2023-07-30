@@ -62,6 +62,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
             if (chatModel == null) return@observe
 
             //init everything after chat details are fetched
+            initNameAndBio(chatModel, loggedInUsername)
             initMediaRecycleView()
             initMuteSwitch(chatModel, loggedInUsername)
             initCommonGroupsRecyclerView(loggedInUsername)
@@ -90,6 +91,27 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         }
 
         chatViewModel.getLiveChatDetails(this, chatId)
+    }
+
+    private fun initNameAndBio(chatModel: ChatModel, loggedInUsername: String) {
+        val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
+
+        viewModel.getNameAndBio(chatUsername) { name, bio ->
+            if (name.isEmpty()) {
+                binding.chatProfileNameTv.visibility = View.GONE
+            } else {
+                binding.chatProfileNameTv.visibility = View.VISIBLE
+                binding.chatProfileNameTv.text = name
+            }
+
+            if (bio.isEmpty()) {
+                binding.chatProfileBioTv.visibility = View.GONE
+            } else {
+                binding.chatProfileBioTv.visibility = View.VISIBLE
+                binding.chatProfileBioTv.text = bio
+            }
+        }
+
     }
 
     private fun initMediaRecycleView() {
