@@ -13,34 +13,39 @@ class GetGroupDetails {
             groupId: String,
             groupDetails: (GroupChatModel?, List<String>) -> Unit,
         ) {
-            firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
-                .document(groupId)
-                .get()
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupId).get()
                 .addOnSuccessListener {
-                    val data = it.toObject(GroupChatModel::class.java)
+                    val groupModel = it.toObject(GroupChatModel::class.java)
 
-                    getUserTokens(firestore, groupId) { tokens ->
-                        groupDetails(data, tokens)
+                    if (groupModel == null) {
+                        groupDetails(null, emptyList())
+                        return@addOnSuccessListener
                     }
-                }
-                .addOnFailureListener {
+
+                    getUserTokens(firestore, groupModel) { tokens ->
+                        groupDetails(groupModel, tokens)
+                    }
+                }.addOnFailureListener {
                     groupDetails(null, emptyList())
                 }
         }
 
         private fun getUserTokens(
             firestore: FirebaseFirestore,
-            groupId: String,
+            groupChatModel: GroupChatModel,
             tokens: (List<String>) -> Unit,
         ) {
             firestore.collection(FirestoreCollections.USERS_COLLECTION)
-                .whereArrayContains(UserConstants.GROUPS, groupId)
-                .get()
+                .whereArrayContains(UserConstants.GROUPS, groupChatModel.id).get()
                 .addOnSuccessListener {
                     val fcmTokens = mutableListOf<String>()
 
                     for (document in it) {
                         val userModel = document.toObject(UserModel::class.java)
+
+                        //do not take muted users tokens
+                        if (groupChatModel.mutedBy.contains(userModel.username)) continue
+
                         fcmTokens.add(userModel.fcmToken)
                     }
 
