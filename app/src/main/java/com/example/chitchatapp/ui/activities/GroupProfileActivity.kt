@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityOptionsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -50,6 +51,8 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_profile)
         groupChatViewModel = ViewModelProvider(this)[GroupChatViewModel::class.java]
         viewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding.groupProfileBackBtn.setOnClickListener {
             supportFinishAfterTransition()

@@ -2,6 +2,7 @@ package com.example.chitchatapp.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.R
 import com.example.chitchatapp.enums.FragmentType
@@ -13,6 +14,8 @@ class SetDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_details)
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val fragmentType = intent.getStringExtra(Constants.FRAGMENT_TYPE)
 

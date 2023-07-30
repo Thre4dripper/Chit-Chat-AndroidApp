@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -55,6 +56,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chatting)
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         //getting intent data
         chatId = intent.getStringExtra(ChatConstants.CHAT_ID)

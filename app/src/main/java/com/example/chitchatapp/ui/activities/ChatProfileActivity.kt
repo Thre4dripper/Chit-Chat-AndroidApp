@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
@@ -42,6 +43,8 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_profile)
         viewModel = ViewModelProvider(this)[ChatProfileViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding.chatProfileBackBtn.setOnClickListener {
             supportFinishAfterTransition()
