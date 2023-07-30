@@ -201,6 +201,12 @@ class ChattingRecyclerAdapter(
             binding.itemChatLeftTextMessage.text = chatMessageModel.text
             binding.itemChatLeftTextTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.time)
+
+            binding.itemChatLeftIv.setOnClickListener {
+                chatMessageClickInterface.onUserImageClicked(
+                    binding.itemChatLeftIv
+                )
+            }
         }
     }
 
@@ -267,6 +273,18 @@ class ChattingRecyclerAdapter(
                 chatMessageClickInterface.onImageClicked(
                     chatMessageModel,
                     binding.itemChatLeftImage
+                )
+            }
+
+            binding.itemChatLeftIv.setOnClickListener {
+                chatMessageClickInterface.onUserImageClicked(
+                    binding.itemChatLeftIv
+                )
+            }
+
+            binding.itemChatLeftIv.setOnClickListener {
+                chatMessageClickInterface.onUserImageClicked(
+                    binding.itemChatLeftIv
                 )
             }
         }

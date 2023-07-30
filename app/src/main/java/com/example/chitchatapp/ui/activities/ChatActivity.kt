@@ -93,7 +93,10 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
-                        R.id.action_view_contact -> openProfile(chatId, loggedInUsername)
+                        R.id.action_view_contact -> openProfile(
+                            chatId, loggedInUsername, binding.chattingProfileImage
+                        )
+
                         R.id.action_favorite -> markFavourite(userModel!!, chatId)
                         R.id.action_clear_chat -> clearChat()
                         R.id.action_delete_chat -> deleteChat()
@@ -107,28 +110,21 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun markFavourite(userModel: UserModel, favourite: String) {
         viewModel.favouriteChat(userModel, favourite) {
-            if (it == null)
-                return@favouriteChat
+            if (it == null) return@favouriteChat
             Toast.makeText(
-                this,
-                if (!userModel.favourites.contains(favourite))
-                    "Marked as Favourite"
-                else "Clear Favourite",
-                Toast.LENGTH_SHORT
+                this, if (!userModel.favourites.contains(favourite)) "Marked as Favourite"
+                else "Clear Favourite", Toast.LENGTH_SHORT
             ).show()
         }
     }
 
     private fun clearChat() {
         clearOrDeleteDialog(
-            "Clear chat",
-            "Are you sure you want to clear this chat?"
+            "Clear chat", "Are you sure you want to clear this chat?"
         ) {
             viewModel.clearChat {
                 Toast.makeText(
-                    this,
-                    if (it) "Chat cleared" else "Error clearing chat",
-                    Toast.LENGTH_SHORT
+                    this, if (it) "Chat cleared" else "Error clearing chat", Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -136,14 +132,11 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun deleteChat() {
         clearOrDeleteDialog(
-            "Delete chat",
-            "Are you sure you want to delete this chat?"
+            "Delete chat", "Are you sure you want to delete this chat?"
         ) {
             viewModel.deletedChat {
                 Toast.makeText(
-                    this,
-                    if (it) "Chat deleted" else "Error deleting chat",
-                    Toast.LENGTH_SHORT
+                    this, if (it) "Chat deleted" else "Error deleting chat", Toast.LENGTH_SHORT
                 ).show()
                 finish()
             }
@@ -151,14 +144,10 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     }
 
     private fun clearOrDeleteDialog(title: String, message: String, action: () -> Unit) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setMessage(message)
+        MaterialAlertDialogBuilder(this).setTitle(title).setMessage(message)
             .setPositiveButton("Yes") { _, _ ->
                 action()
-            }
-            .setNegativeButton("No") { _, _ -> }
-            .show()
+            }.setNegativeButton("No") { _, _ -> }.show()
     }
 
     private fun getChatDetails(chatId: String, loggedInUsername: String) {
@@ -176,11 +165,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
             //setting the profile image
             val chatProfileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
-            Glide
-                .with(this)
-                .load(chatProfileImage)
-                .placeholder(R.drawable.ic_profile)
-                .circleCrop()
+            Glide.with(this).load(chatProfileImage).placeholder(R.drawable.ic_profile).circleCrop()
                 .into(binding.chattingProfileImage)
 
             //setting the username
@@ -192,8 +177,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                 //when the list is submitted, then update the seen status
                 viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
-                if (scrollToBottom)
-                    binding.chattingRv.smoothScrollToPosition(0)
+                if (scrollToBottom) binding.chattingRv.smoothScrollToPosition(0)
             }
 
         }
@@ -206,12 +190,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
         //set the header with available details so far
         binding.chattingUsername.text = userModel.username
-        Glide
-            .with(this)
-            .load(userModel.profileImage)
-            .placeholder(R.drawable.ic_profile)
-            .circleCrop()
-            .into(binding.chattingProfileImage)
+        Glide.with(this).load(userModel.profileImage).placeholder(R.drawable.ic_profile)
+            .circleCrop().into(binding.chattingProfileImage)
 
         viewModel.createNewChat(userModel) {
             binding.loadingLottie.visibility = View.GONE
@@ -273,8 +253,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                 binding.activityChattingStatusCv.setCardBackgroundColor(
                     resources.getColor(
-                        R.color.green,
-                        null
+                        R.color.green, null
                     )
                 )
                 binding.chattingStatus.text = UserStatus.Online.name
@@ -284,8 +263,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
                 binding.activityChattingStatusCv.setCardBackgroundColor(
                     resources.getColor(
-                        R.color.yellow,
-                        null
+                        R.color.yellow, null
                     )
                 )
                 //getting the last seen time
@@ -340,8 +318,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     // Registers a photo picker activity launcher in single-select mode.
     private val photoPickerLauncher =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia())
-        { pickedPhotoUri ->
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { pickedPhotoUri ->
             if (pickedPhotoUri != null) {
                 var uri: Uri? = null
 
@@ -357,8 +334,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                     //on completion of async call
                     .invokeOnCompletion {
                         //Crop activity with source and destination uri
-                        val uCrop = UCrop.of(pickedPhotoUri, uri!!)
-                            .withMaxResultSize(1080, 1080)
+                        val uCrop = UCrop.of(pickedPhotoUri, uri!!).withMaxResultSize(1080, 1080)
 
                         cropImageCallback.launch(uCrop.getIntent(this))
                     }
@@ -399,24 +375,22 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
     private fun initOpenProfile(chatId: String, loggedInUsername: String) {
         binding.chattingProfileImage.setOnClickListener {
-            openProfile(chatId, loggedInUsername)
+            openProfile(chatId, loggedInUsername, binding.chattingProfileImage)
         }
         binding.chattingUsername.setOnClickListener {
-            openProfile(chatId, loggedInUsername)
+            openProfile(chatId, loggedInUsername, binding.chattingProfileImage)
         }
         binding.activityChattingStatusCv.setOnClickListener {
-            openProfile(chatId, loggedInUsername)
+            openProfile(chatId, loggedInUsername, binding.chattingProfileImage)
         }
     }
 
-    private fun openProfile(chatId: String, loggedInUsername: String) {
+    private fun openProfile(chatId: String, loggedInUsername: String, animationView: ImageView) {
         val intent = Intent(this, ChatProfileActivity::class.java)
         intent.putExtra(ChatConstants.CHAT_ID, chatId)
         intent.putExtra(UserConstants.USERNAME, loggedInUsername)
         val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this,
-            binding.chattingProfileImage,
-            getString(R.string.chat_profile_activity_profile_image_transition)
+            this, animationView, getString(R.string.chat_profile_activity_profile_image_transition)
         )
         profileLauncher.launch(intent, activityOptionsCompat)
     }
@@ -441,13 +415,15 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     override fun onImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView) {
         val intent = Intent(this, ZoomActivity::class.java)
         intent.putExtra(Constants.ZOOM_IMAGE_URL, chatMessageModel.image)
-        val activityOptionsCompat =
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                chatImageIv,
-                getString(R.string.chatting_activity_chat_image_transition)
-            )
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this, chatImageIv, getString(R.string.chatting_activity_chat_image_transition)
+        )
 
         startActivity(intent, activityOptionsCompat.toBundle())
+    }
+
+    override fun onUserImageClicked(chatImageIv: ImageView) {
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+        openProfile(chatId!!, loggedInUsername!!, chatImageIv)
     }
 }
