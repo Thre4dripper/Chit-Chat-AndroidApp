@@ -38,8 +38,17 @@ class ExitGroup {
                 )
             )
 
+            val oldMutedBy = groupChatModel.mutedBy
+            val newMutedBy = oldMutedBy.filter { mutedBy ->
+                mutedBy != loggedInUsername
+            }
+
             val newGroupChatModel =
-                groupChatModel.copy(members = newMembers, messages = newMessagesList)
+                groupChatModel.copy(
+                    members = newMembers,
+                    messages = newMessagesList,
+                    mutedBy = newMutedBy
+                )
             fireStore.collection(FirestoreCollections.GROUPS_COLLECTION)
                 .document(groupChatModel.id)
                 .set(newGroupChatModel, SetOptions.merge())
