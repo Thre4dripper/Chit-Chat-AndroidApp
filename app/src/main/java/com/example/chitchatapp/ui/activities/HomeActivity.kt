@@ -1,8 +1,12 @@
 package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityOptionsCompat
@@ -73,6 +77,9 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
 
         //do nothing, after sign in this func will be called again
         if (viewModel.getCurrentUser() == null) return
+
+        //notification permission
+        initPermissions()
 
         binding.completeProfileBtn.setOnClickListener {
             val intent = Intent(this, SetDetailsActivity::class.java)
@@ -284,4 +291,52 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
         startActivity(intent)
     }
+
+    private fun initPermissions() {
+        //request notification permission whether it is granted or not
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    private var requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (!isGranted) {
+                when {
+                    //this should handle the case when user has denied the permission but not permanently
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS) -> {
+                        MaterialAlertDialogBuilder(this)
+                            .setTitle("Notifications Permission")
+                            .setMessage("Notifications permission is required to receive device notifications")
+                            .setPositiveButton("Enable") { dialog, _ ->
+                                dialog.dismiss()
+                                initPermissions()
+                            }
+                            .setNegativeButton("Cancel") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
+                    }
+
+                    //this should handle the case when user has permanently denied the permission
+                    else -> {
+                        MaterialAlertDialogBuilder(this)
+                            .setTitle("Notifications Permission")
+                            .setMessage("It seems like you have permanently denied notifications permission. You can enable it from settings")
+                            .setPositiveButton("Settings") { dialog, _ ->
+                                dialog.dismiss()
+                                //open settings of the app
+                                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                val uri = Uri.fromParts("package", packageName, null)
+                                intent.data = uri
+                                startActivity(intent)
+                            }
+                            .setNegativeButton("Cancel") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
+                    }
+                }
+            }
+        }
 }
