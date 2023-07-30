@@ -164,6 +164,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
                 viewModel.signOutUser(this) {
                     if (it) {
                         finish()
+                        startActivity(Intent(this, HomeActivity::class.java))
                     } else {
                         dialog.dismiss()
                         signOut()
