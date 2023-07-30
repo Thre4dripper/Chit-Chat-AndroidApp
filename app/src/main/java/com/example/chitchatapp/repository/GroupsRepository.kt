@@ -99,8 +99,6 @@ class GroupsRepository {
             val fireStore = FirebaseFirestore.getInstance()
             val loggedInUsername = UserStore.getUsername(context) ?: return
 
-            val membersCount = groupChatModel.members.size
-
             RemoveGroup.removeFromUserCollection(
                 fireStore,
                 loggedInUsername,
@@ -110,8 +108,24 @@ class GroupsRepository {
                     onSuccess(false)
                     return@removeFromUserCollection
                 }
-                // if only one member is left in the group, delete the group
-                if (membersCount == 1) {
+
+                ExitGroup.exitFromGroup(
+                    fireStore,
+                    groupChatModel,
+                    loggedInUsername,
+                ) {
+                    if (it == null) {
+                        onSuccess(false)
+                        return@exitFromGroup
+                    }
+
+                    if (it.members.isNotEmpty()) {
+                        onSuccess(true)
+                        return@exitFromGroup
+                    }
+
+                    //when group has no members, delete group
+
                     val storage = FirebaseStorage.getInstance()
 
                     DeleteGroup.deleteGroup(fireStore, groupChatModel, onSuccess)
@@ -122,20 +136,12 @@ class GroupsRepository {
                     }
                     if (!hasImages) {
                         onSuccess(true)
-                        return@removeFromUserCollection
+                        return@exitFromGroup
                     }
                     DeleteGroup.deleteGroupChatImages(storage, groupChatModel.id) {}
                     onSuccess(true)
-                    return@removeFromUserCollection
+                    return@exitFromGroup
                 }
-
-                //otherwise, exit the group
-                ExitGroup.exitGroup(
-                    fireStore,
-                    groupChatModel,
-                    loggedInUsername,
-                    onSuccess,
-                )
             }
         }
 

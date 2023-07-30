@@ -11,11 +11,11 @@ import java.util.UUID
 
 class ExitGroup {
     companion object {
-        fun exitGroup(
+        fun exitFromGroup(
             fireStore: FirebaseFirestore,
             groupChatModel: GroupChatModel,
             loggedInUsername: String,
-            onSuccess: (Boolean) -> Unit,
+            onSuccess: (GroupChatModel?) -> Unit,
         ) {
             val oldMembers = groupChatModel.members
             val newMembers = oldMembers.filter { member ->
@@ -53,10 +53,10 @@ class ExitGroup {
                 .document(groupChatModel.id)
                 .set(newGroupChatModel, SetOptions.merge())
                 .addOnSuccessListener {
-                    onSuccess(true)
+                    onSuccess(newGroupChatModel)
                 }
                 .addOnFailureListener {
-                    onSuccess(false)
+                    onSuccess(null)
                 }
         }
     }
