@@ -54,4 +54,9 @@ class AddGroupViewModel : ViewModel() {
         updatedList?.remove(chatModel)
         selectedUsers.value = updatedList
     }
+
+    override fun onCleared() {
+        selectedUsers.value = mutableListOf()
+        super.onCleared()
+    }
 }
