@@ -302,7 +302,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         binding.sendMessageBtn.alpha = 0.5f
         binding.sendMessageBtn.isEnabled = false
         binding.sendMessageEt.addTextChangedListener { text ->
-            if (text.isNullOrEmpty()) {
+            if (text?.trim().isNullOrEmpty()) {
                 binding.sendMessageBtn.alpha = 0.5f
                 binding.sendMessageBtn.isEnabled = false
             } else {
