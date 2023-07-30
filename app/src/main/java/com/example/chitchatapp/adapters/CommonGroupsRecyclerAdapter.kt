@@ -36,15 +36,11 @@ class CommonGroupsRecyclerAdapter(private var chatProfileClickInterface: ChatPro
             val context = itemView.context
 
             val groupImage = groupChatModel.image
-            if (groupImage == null)
-                binding.itemCommonGroupImage.imageTintList =
-                    ContextCompat.getColorStateList(context, R.color.fabColor)
+            if (groupImage == null) binding.itemCommonGroupImage.imageTintList =
+                ContextCompat.getColorStateList(context, R.color.fabColor)
 
-            Glide.with(context)
-                .load(groupChatModel.image)
-                .placeholder(R.drawable.ic_group)
-                .circleCrop()
-                .into(binding.itemCommonGroupImage)
+            Glide.with(context).load(groupChatModel.image).placeholder(R.drawable.ic_group)
+                .circleCrop().into(binding.itemCommonGroupImage)
 
             binding.itemCommonGroupNameTv.text = groupChatModel.name
 
@@ -59,7 +55,9 @@ class CommonGroupsRecyclerAdapter(private var chatProfileClickInterface: ChatPro
             binding.itemCommonGroupMembersTv.text = members
 
             binding.root.setOnClickListener {
-                chatProfileClickInterface.onCommonGroupClicked(groupChatModel.id)
+                chatProfileClickInterface.onCommonGroupClicked(
+                    groupChatModel.id, binding.itemCommonGroupImage
+                )
             }
         }
     }

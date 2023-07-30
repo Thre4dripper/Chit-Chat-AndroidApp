@@ -52,7 +52,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         viewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 
         binding.groupProfileBackBtn.setOnClickListener {
-            @Suppress("DEPRECATION") onBackPressed()
+            supportFinishAfterTransition()
         }
 
         groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
@@ -207,7 +207,9 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
-    override fun onGroupMemberClicked(loggedInUsername: String, memberUsername: String) {
+    override fun onGroupMemberClicked(
+        loggedInUsername: String, memberUsername: String, clickedIv: ImageView
+    ) {
         val loaderDialog =
             MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
                 .show()
@@ -222,8 +224,10 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(ChatConstants.CHAT_ID, chatId)
-            startActivity(intent)
-            return@findGroupMember
+            val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, clickedIv, getString(R.string.chat_activity_chat_profile_image_transition)
+            )
+            startActivity(intent, activityOptionsCompat.toBundle())
         }
     }
 }

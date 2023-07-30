@@ -27,6 +27,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:contentDescription="@string/group_chat_activity_desc_image"
+            android:transitionName="@string/group_chat_activity_group_profile_image_transition"
             app:layout_constraintStart_toEndOf="@+id/group_chat_back_btn"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />

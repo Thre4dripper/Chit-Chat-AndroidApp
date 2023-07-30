@@ -44,8 +44,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         binding.chatProfileBackBtn.setOnClickListener {
-            @Suppress("DEPRECATION")
-            onBackPressed()
+            supportFinishAfterTransition()
         }
 
 
@@ -239,9 +238,15 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
-    override fun onCommonGroupClicked(groupId: String) {
+    override fun onCommonGroupClicked(groupId: String, clickedIv: ImageView) {
         val intent = Intent(this, GroupChatActivity::class.java)
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
-        startActivity(intent)
+        val activityOptionsCompat =
+            ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                clickedIv,
+                getString(R.string.group_chat_activity_group_profile_image_transition)
+            )
+        startActivity(intent, activityOptionsCompat.toBundle())
     }
 }

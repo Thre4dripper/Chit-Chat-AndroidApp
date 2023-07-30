@@ -5,5 +5,5 @@ import com.example.chitchatapp.models.ChatMessageModel
 
 interface ChatProfileClickInterface {
     fun onMediaImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView)
-    fun onCommonGroupClicked(groupId: String)
+    fun onCommonGroupClicked(groupId: String, clickedIv: ImageView)
 }

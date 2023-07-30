@@ -27,6 +27,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:contentDescription="@string/chatting_activity_desc_profile_image"
+            android:transitionName="@string/chat_activity_chat_profile_image_transition"
             app:layout_constraintStart_toEndOf="@+id/chatting_back_btn"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />

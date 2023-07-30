@@ -16,10 +16,9 @@ import com.example.chitchatapp.models.GroupChatUserModel
 class GroupMembersRecyclerAdapter(
     private var loggedInUsername: String,
     private var groupProfileClickInterface: GroupProfileClickInterface
-) :
-    ListAdapter<GroupChatUserModel, GroupMembersRecyclerAdapter.GroupMemberViewHolder>(
-        GroupMemberDiffUtil()
-    ) {
+) : ListAdapter<GroupChatUserModel, GroupMembersRecyclerAdapter.GroupMemberViewHolder>(
+    GroupMemberDiffUtil()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupMemberViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,10 +35,8 @@ class GroupMembersRecyclerAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(groupChatUserModel: GroupChatUserModel) {
-            Glide.with(itemView)
-                .load(groupChatUserModel.profileImage)
-                .placeholder(R.drawable.ic_profile)
-                .circleCrop()
+            Glide.with(itemView).load(groupChatUserModel.profileImage)
+                .placeholder(R.drawable.ic_profile).circleCrop()
                 .into(binding.itemGroupProfileUserIv)
 
             if (groupChatUserModel.username == loggedInUsername) {
@@ -49,7 +46,8 @@ class GroupMembersRecyclerAdapter(
                 binding.root.setOnClickListener {
                     groupProfileClickInterface.onGroupMemberClicked(
                         loggedInUsername,
-                        groupChatUserModel.username
+                        groupChatUserModel.username,
+                        binding.itemGroupProfileUserIv
                     )
                 }
             }
@@ -58,15 +56,13 @@ class GroupMembersRecyclerAdapter(
 
     class GroupMemberDiffUtil : DiffUtil.ItemCallback<GroupChatUserModel>() {
         override fun areItemsTheSame(
-            oldItem: GroupChatUserModel,
-            newItem: GroupChatUserModel
+            oldItem: GroupChatUserModel, newItem: GroupChatUserModel
         ): Boolean {
             return oldItem.username == newItem.username
         }
 
         override fun areContentsTheSame(
-            oldItem: GroupChatUserModel,
-            newItem: GroupChatUserModel
+            oldItem: GroupChatUserModel, newItem: GroupChatUserModel
         ): Boolean {
             return oldItem == newItem
         }
