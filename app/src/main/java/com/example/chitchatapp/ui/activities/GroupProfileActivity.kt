@@ -23,6 +23,7 @@ import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupProfileBinding
 import com.example.chitchatapp.enums.GroupMessageType
+import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
@@ -70,6 +71,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
             //init everything after getting group details
             initSetGroupImageBtn()
             initMediaRecycleView()
+            initMuteSwitch(it, loggedInUsername)
             initGroupMembersRecyclerView(loggedInUsername)
             initLeaveGroupButton()
 
@@ -156,6 +158,21 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         binding.groupProfileMediaRv.apply {
             mediaAdapter = GroupProfileMediaRecyclerAdapter(this@GroupProfileActivity)
             adapter = mediaAdapter
+        }
+    }
+
+    private fun initMuteSwitch(groupChatModel: GroupChatModel, loggedInUsername: String) {
+        val isMuted = groupChatModel.mutedBy.contains(loggedInUsername)
+        binding.groupProfileMuteSwitch.isChecked = isMuted
+
+        binding.groupProfileMuteSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.muteUnMuteGroup(groupChatModel, loggedInUsername, isChecked) {
+                Toast.makeText(
+                    this,
+                    if (isChecked) "Muted" else "UnMuted",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

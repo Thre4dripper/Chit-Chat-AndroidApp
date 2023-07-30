@@ -7,6 +7,7 @@ import com.example.chitchatapp.enums.ChatType
 import com.example.chitchatapp.firebase.chats.GetGroupChats
 import com.example.chitchatapp.firebase.chats.SendGroupChat
 import com.example.chitchatapp.firebase.chats.UpdateSeen
+import com.example.chitchatapp.firebase.messaging.Messaging
 import com.example.chitchatapp.firebase.utils.StorageUtils
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupChatUserModel
@@ -108,6 +109,18 @@ class GroupChatsRepository {
             val firestore = FirebaseFirestore.getInstance()
             val loggedInUser = UserStore.getUsername(context) ?: return
             UpdateSeen.updateGroupSeen(firestore, groupChatModel, loggedInUser, onSuccess)
+        }
+
+        fun muteUnMuteGroup(
+            groupChatModel: GroupChatModel,
+            loggedInUsername: String,
+            mute: Boolean,
+            onSuccess: (Boolean) -> Unit,
+        ) {
+            val firestore = FirebaseFirestore.getInstance()
+            Messaging.muteUnMuteGroupNotifications(
+                firestore, groupChatModel, loggedInUsername, mute, onSuccess
+            )
         }
     }
 }

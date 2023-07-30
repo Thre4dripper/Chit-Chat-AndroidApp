@@ -38,6 +38,7 @@ class CreateGroup {
                         loggedInUsername,
                     )
                 ),
+                listOf()
             )
 
 
@@ -61,7 +62,8 @@ class CreateGroup {
                         }
                     )
 
-                    firestore.collection(FirestoreCollections.USERS_COLLECTION).document(user.username)
+                    firestore.collection(FirestoreCollections.USERS_COLLECTION)
+                        .document(user.username)
                         .set(updatedUserModel)
                 }
             }

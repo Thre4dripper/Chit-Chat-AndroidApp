@@ -5,9 +5,10 @@ data class GroupChatModel(
     val name: String,
     val image: String?,
     val members: List<GroupChatUserModel>,
-    val messages: List<GroupMessageModel>
+    val messages: List<GroupMessageModel>,
+    val mutedBy: List<String>
 ) {
-    constructor() : this("", "", null, listOf(), listOf())
+    constructor() : this("", "", null, listOf(), listOf(), listOf())
 }
 
 data class GroupChatUserModel(

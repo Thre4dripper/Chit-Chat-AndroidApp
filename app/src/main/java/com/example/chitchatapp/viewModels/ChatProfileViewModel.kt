@@ -26,7 +26,5 @@ class ChatProfileViewModel : ViewModel() {
         loggedInUsername: String,
         mute: Boolean,
         onSuccess: (Boolean) -> Unit
-    ) {
-        UserChatsRepository.muteUnMuteChat(chatModel, loggedInUsername, mute, onSuccess)
-    }
+    ) = UserChatsRepository.muteUnMuteChat(chatModel, loggedInUsername, mute, onSuccess)
 }
