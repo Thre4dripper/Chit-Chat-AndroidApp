@@ -33,7 +33,7 @@ class UserChatsRepository {
                 updatedList.removeIf { it.type == ChatType.USER }
                 updatedList.addAll(userChats.map {
                     HomeChatModel(
-                        it.chatId, ChatType.USER, it, null, it.chatMessages.last().time
+                        it.chatId, ChatType.USER, it, null, it.chatMessages.first().time
                     )
                 })
 

@@ -96,31 +96,31 @@ class HomeChatsRecyclerAdapter(
                 )
                 itemHomeChatUsername.text = username
                 itemHomeChatMessageTime.text =
-                    TimeUtils.getFormattedTime(chatModel.chatMessages.last().time)
+                    TimeUtils.getFormattedTime(chatModel.chatMessages.first().time)
 
-                when (chatModel.chatMessages.last().type) {
+                when (chatModel.chatMessages.first().type) {
                     ChatMessageType.TypeText -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
-                        itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
+                        itemHomeChatMessage.text = chatModel.chatMessages.first().text?.trim() ?: ""
                     }
 
                     ChatMessageType.TypeImage -> {
                         itemHomeChatMessagePhoto.visibility = View.VISIBLE
                         itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_photo)
                         itemHomeChatMessage.text =
-                            chatModel.chatMessages.last().text?.trim() ?: "Photo"
+                            chatModel.chatMessages.first().text?.trim() ?: "Photo"
                     }
 
                     ChatMessageType.TypeSticker -> {
                         itemHomeChatMessagePhoto.visibility = View.VISIBLE
                         itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_sticker)
                         itemHomeChatMessage.text =
-                            chatModel.chatMessages.last().text?.trim() ?: "Sticker"
+                            chatModel.chatMessages.first().text?.trim() ?: "Sticker"
                     }
 
                     else -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
-                        itemHomeChatMessage.text = chatModel.chatMessages.last().text?.trim() ?: ""
+                        itemHomeChatMessage.text = chatModel.chatMessages.first().text?.trim() ?: ""
                     }
                 }
 
@@ -160,25 +160,25 @@ class HomeChatsRecyclerAdapter(
 
                 itemHomeChatUsername.text = groupChatModel.name
                 itemHomeChatMessageTime.text =
-                    TimeUtils.getFormattedTime(groupChatModel.messages.last().time)
+                    TimeUtils.getFormattedTime(groupChatModel.messages.first().time)
 
-                when (groupChatModel.messages.last().type) {
+                when (groupChatModel.messages.first().type) {
                     GroupMessageType.TypeCreatedGroup -> {
-                        val date = groupChatModel.messages.last().time.toDate()
+                        val date = groupChatModel.messages.first().time.toDate()
                         val formattedDate =
                             SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
                         itemHomeChatMessage.text = context.resources.getString(
                             R.string.item_group_chat_group_created,
-                            groupChatModel.messages.last().from,
+                            groupChatModel.messages.first().from,
                             formattedDate
                         )
                     }
 
                     GroupMessageType.TypeText -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
-                        var preview = groupChatModel.messages.last().from.trim()
+                        var preview = groupChatModel.messages.first().from.trim()
                         preview += ": "
-                        preview += groupChatModel.messages.last().text?.trim() ?: ""
+                        preview += groupChatModel.messages.first().text?.trim() ?: ""
                         itemHomeChatMessage.text = preview
                     }
 
@@ -186,19 +186,19 @@ class HomeChatsRecyclerAdapter(
                         itemHomeChatMessagePhoto.visibility = View.VISIBLE
                         itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_photo)
                         itemHomeChatMessage.text =
-                            groupChatModel.messages.last().text?.trim() ?: "Photo"
+                            groupChatModel.messages.first().text?.trim() ?: "Photo"
                     }
 
                     GroupMessageType.TypeSticker -> {
                         itemHomeChatMessagePhoto.visibility = View.VISIBLE
                         itemHomeChatMessagePhoto.setImageResource(R.drawable.ic_sticker)
                         itemHomeChatMessage.text =
-                            groupChatModel.messages.last().text?.trim() ?: "Sticker"
+                            groupChatModel.messages.first().text?.trim() ?: "Sticker"
                     }
 
                     else -> {
                         itemHomeChatMessagePhoto.visibility = View.GONE
-                        itemHomeChatMessage.text = groupChatModel.messages.last().text?.trim() ?: ""
+                        itemHomeChatMessage.text = groupChatModel.messages.first().text?.trim() ?: ""
                     }
                 }
 

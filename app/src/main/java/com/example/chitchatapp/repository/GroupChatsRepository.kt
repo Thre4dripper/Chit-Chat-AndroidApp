@@ -30,7 +30,7 @@ class GroupChatsRepository {
                 updatedList.removeIf { it.type == ChatType.GROUP }
                 updatedList.addAll(groupChats.map {
                     HomeChatModel(
-                        it.id, ChatType.GROUP, null, it, it.messages.last().time
+                        it.id, ChatType.GROUP, null, it, it.messages.first().time
                     )
                 })
 
