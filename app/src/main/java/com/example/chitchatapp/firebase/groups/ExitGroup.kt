@@ -25,6 +25,7 @@ class ExitGroup {
             val oldMessagesList = groupChatModel.messages
             val newMessagesList = oldMessagesList.toMutableList()
             newMessagesList.add(
+                0,
                 GroupMessageModel(
                     UUID.randomUUID().toString(),
                     GroupMessageType.TypeLeavedMember,

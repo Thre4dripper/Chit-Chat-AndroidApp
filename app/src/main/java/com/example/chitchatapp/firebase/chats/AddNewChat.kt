@@ -36,8 +36,8 @@ class AddNewChat {
                 listOf(
                     ChatMessageModel(
                         UUID.randomUUID().toString(),
-                        ChatMessageType.TypeFirstMessage,
-                        null,
+                        ChatMessageType.TypeText,
+                        "Hi, I am ${currentUser.username}.",
                         null,
                         null,
                         Timestamp.now(),
@@ -47,8 +47,8 @@ class AddNewChat {
                     ),
                     ChatMessageModel(
                         UUID.randomUUID().toString(),
-                        ChatMessageType.TypeText,
-                        "Hi, I am ${currentUser.username}.",
+                        ChatMessageType.TypeFirstMessage,
+                        null,
                         null,
                         null,
                         Timestamp.now(),
