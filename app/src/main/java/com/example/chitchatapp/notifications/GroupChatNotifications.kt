@@ -48,7 +48,7 @@ class GroupChatNotifications {
             )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.GROUP_CHAT_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle(groupName)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setContentText("$notifierName: $text")
@@ -100,7 +100,7 @@ class GroupChatNotifications {
             )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.GROUP_CHAT_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle(groupName)
                     .setContentText("$notifierName: \uD83D\uDCF7 Image")
                     .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -149,7 +149,7 @@ class GroupChatNotifications {
             )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.GROUP_CHAT_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle(groupName)
                     .setContentText("$notifierName: \uD83C\uDF20 Sticker")
                     .setPriority(NotificationCompat.PRIORITY_MAX)

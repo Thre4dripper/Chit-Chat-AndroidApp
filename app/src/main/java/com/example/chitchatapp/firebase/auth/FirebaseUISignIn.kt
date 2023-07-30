@@ -3,6 +3,7 @@ package com.example.chitchatapp.firebase.auth
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import com.example.chitchatapp.R
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +23,8 @@ class FirebaseUISignIn {
                 .setAlwaysShowSignInMethodScreen(true)
                 .setAvailableProviders(providers)
                 .setIsSmartLockEnabled(false)
+                .setTheme(R.style.Theme_ChitChat)
+                .setLogo(R.drawable.auth_ui_logo)
                 .build()
         }
 

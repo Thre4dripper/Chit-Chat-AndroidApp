@@ -39,7 +39,7 @@ class UserChatNotifications {
             )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setContentTitle(notifierName)
+                    .setSmallIcon(R.drawable.notification_icon).setContentTitle(notifierName)
                     .setPriority(NotificationCompat.PRIORITY_MAX).setContentText(text)
                     .setLargeIcon(notificationUserImage).setStyle(
                         NotificationCompat.BigTextStyle().setBigContentTitle(notifierName)
@@ -80,7 +80,7 @@ class UserChatNotifications {
 
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setContentTitle(notifierName)
+                    .setSmallIcon(R.drawable.notification_icon).setContentTitle(notifierName)
                     .setContentText("\uD83D\uDCF7 Image")
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setLargeIcon(notificationUserImage).setStyle(
@@ -120,7 +120,7 @@ class UserChatNotifications {
             )
             val builder =
                 NotificationCompat.Builder(context, NotificationConstants.USER_CHAT_CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setContentTitle(notifierName)
+                    .setSmallIcon(R.drawable.notification_icon).setContentTitle(notifierName)
                     .setContentText("\uD83C\uDF20 Sticker")
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setLargeIcon(notificationUserImage)
