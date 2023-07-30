@@ -46,12 +46,11 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         //all the click listeners
         binding.profileImageBtn.setOnClickListener {
             val intent = Intent(this, UserDetailsActivity::class.java)
-            val activityOptionsCompat =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this,
-                    binding.profileImageBtn,
-                    getString(R.string.user_details_activity_profile_image_transition)
-                )
+            val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                binding.profileImageBtn,
+                getString(R.string.user_details_activity_profile_image_transition)
+            )
             startActivity(intent, activityOptionsCompat.toBundle())
         }
         binding.logoutBtn.setOnClickListener {
@@ -217,15 +216,17 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             if (homeChats != null) {
                 homeChatsAdapter.submitList(homeChats)
 
-                //visibility control for home label chats and home chat recycler view
-                binding.homeLabelChatsTv.visibility =
-                    if (homeChats.isEmpty()) View.GONE else View.VISIBLE
-                binding.homeChatRv.visibility = if (homeChats.isEmpty()) View.GONE else View.VISIBLE
-
-                //visibility control for add chats layout and fabs
-                binding.addChatsLl.visibility = if (homeChats.isEmpty()) View.VISIBLE else View.GONE
-                binding.homeActionFab.visibility =
-                    if (homeChats.isEmpty()) View.GONE else View.VISIBLE
+                if (homeChats.isEmpty()) {
+                    binding.homeLabelChatsTv.visibility = View.GONE
+                    binding.homeChatRv.visibility = View.GONE
+                    binding.addChatsLl.visibility = View.VISIBLE
+                    binding.homeActionFab.visibility = View.GONE
+                } else {
+                    binding.homeLabelChatsTv.visibility = View.VISIBLE
+                    binding.homeChatRv.visibility = View.VISIBLE
+                    binding.addChatsLl.visibility = View.GONE
+                    binding.homeActionFab.visibility = View.VISIBLE
+                }
 
                 //hiding loading lottie on loading complete
                 binding.loadingLottie.visibility = View.GONE
@@ -252,16 +253,22 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             viewModel.listenFavChats(it.username) { userModel ->
                 //visibility control for home label fav chats and home fav chat recycler view
                 val hasFavourites = userModel!!.favourites.isNotEmpty()
-                binding.homeLabelFavChatsTv.visibility =
-                    if (hasFavourites) View.VISIBLE else View.GONE
-                binding.homeChatFavRv.visibility = if (hasFavourites) View.VISIBLE else View.GONE
+
+                if (hasFavourites) {
+                    binding.homeLabelFavChatsTv.visibility = View.VISIBLE
+                    binding.homeChatFavRv.visibility = View.VISIBLE
+                } else {
+                    binding.homeLabelFavChatsTv.visibility = View.GONE
+                    binding.homeChatFavRv.visibility = View.GONE
+                }
 
                 //filtering home chats for fav chats
-                val homeChats = viewModel.homeChats.value ?: return@listenFavChats
-                val favChats = homeChats.filter { homeChat ->
-                    userModel.favourites.contains(homeChat.userChat?.chatId)
+                viewModel.homeChats.observe(this@HomeActivity) { homeChats ->
+                    val favChats = homeChats?.filter { homeChat ->
+                        userModel.favourites.contains(homeChat.userChat?.chatId)
+                    }
+                    homeFavChatsAdapter.submitList(favChats)
                 }
-                homeFavChatsAdapter.submitList(favChats)
             }
         }
     }
