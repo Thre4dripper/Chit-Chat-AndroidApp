@@ -11,6 +11,7 @@ import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.repository.GroupChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
 import com.example.chitchatapp.repository.HomeRepository
+import com.example.chitchatapp.repository.UserChatsRepository
 import com.example.chitchatapp.store.UserStore
 
 class GroupChatViewModel : ViewModel() {
@@ -22,7 +23,7 @@ class GroupChatViewModel : ViewModel() {
         return UserStore.getUsername(context)
     }
 
-    fun getLiveGroupChatDetails(lifecycleOwner: LifecycleOwner, groupId: String) {
+    fun getLiveGroupChatDetails(context: Context, lifecycleOwner: LifecycleOwner, groupId: String) {
         //when chat is already loaded in home fragment then take it from there
         if (HomeRepository.homeChats.value != null) {
             HomeRepository.homeChats.observe(lifecycleOwner) {
@@ -36,6 +37,9 @@ class GroupChatViewModel : ViewModel() {
             GroupChatsRepository.getGroupChatById(groupId) {
                 _groupChatDetails.value = it
             }
+            //it will fetch all the chats of the user in background
+            //and it will never execute if chats are already loaded
+            UserChatsRepository.getAllUserChats(context)
         }
     }
 

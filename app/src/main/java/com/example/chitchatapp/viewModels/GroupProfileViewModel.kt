@@ -6,6 +6,7 @@ import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.repository.AddChatsRepository
 import com.example.chitchatapp.repository.GroupChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
+import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserRepository
 
 class GroupProfileViewModel : ViewModel() {
@@ -28,11 +29,20 @@ class GroupProfileViewModel : ViewModel() {
         memberUsername: String,
         onSuccess: (String?) -> Unit
     ) {
+        val chatId = HomeRepository.homeChats.value?.find {
+            it.userChat?.dmChatUser1?.username == memberUsername
+                    || it.userChat?.dmChatUser2?.username == memberUsername
+        }?.userChat?.chatId
 
-        GroupsRepository.findMemberChatId(loggedInUsername, memberUsername) { chatId ->
+        if (chatId != null) {
+            onSuccess(chatId)
+            return
+        }
+
+        GroupsRepository.findMemberChatId(loggedInUsername, memberUsername) {
             //when chat already exists
-            if (chatId != null) {
-                onSuccess(chatId)
+            if (it != null) {
+                onSuccess(it)
                 return@findMemberChatId
             }
 
@@ -45,8 +55,8 @@ class GroupProfileViewModel : ViewModel() {
                 }
 
                 //add new chat
-                AddChatsRepository.addChat(userModel) {
-                    onSuccess(it)
+                AddChatsRepository.addChat(userModel) { chatId ->
+                    onSuccess(chatId)
                 }
             }
         }

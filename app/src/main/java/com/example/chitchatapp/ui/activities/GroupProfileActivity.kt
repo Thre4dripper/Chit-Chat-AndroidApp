@@ -94,7 +94,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
             mediaAdapter.submitList(chatMediasList)
         }
 
-        groupChatViewModel.getLiveGroupChatDetails(this, groupId)
+        groupChatViewModel.getLiveGroupChatDetails(this, this, groupId)
     }
 
     private fun initSetGroupImageBtn() {
