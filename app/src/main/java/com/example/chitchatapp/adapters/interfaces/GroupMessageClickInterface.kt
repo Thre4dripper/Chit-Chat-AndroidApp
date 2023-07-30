@@ -5,4 +5,5 @@ import com.example.chitchatapp.models.GroupMessageModel
 
 interface GroupMessageClickInterface {
     fun onImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView)
+    fun onUserImageClicked(clickedUsername: String, chatImageIv: ImageView)
 }

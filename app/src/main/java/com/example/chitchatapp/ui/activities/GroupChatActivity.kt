@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
+import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.UserConstants
@@ -29,6 +30,7 @@ import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
+import com.example.chitchatapp.viewModels.GroupProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.CoroutineScope
@@ -40,6 +42,7 @@ import java.io.File
 class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     private lateinit var binding: ActivityGroupChatBinding
     private lateinit var viewModel: GroupChatViewModel
+    private lateinit var groupProfileViewModel: GroupProfileViewModel
 
     private lateinit var groupChatAdapter: GroupChatRecyclerAdapter
     private var groupId: String? = null
@@ -49,6 +52,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_chat)
         viewModel = ViewModelProvider(this)[GroupChatViewModel::class.java]
+        groupProfileViewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 
         //getting intent data
         groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
@@ -66,14 +70,10 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         //1. From the chats screen
         //2. From the add group screen
         //If it is opened from the chats screen, then groupId will not be null
-        if (groupId != null)
-            getGroupDetails(groupId!!, loggedInUsername!!)
+        if (groupId != null) getGroupDetails(groupId!!, loggedInUsername!!)
         else {
             createNewGroup(
-                groupName,
-                groupImage,
-                groupMembers!!,
-                loggedInUsername!!
+                groupName, groupImage, groupMembers!!, loggedInUsername!!
             )
         }
 
@@ -86,12 +86,11 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             popupMenu.menuInflater.inflate(R.menu.group_chat_screen_menu, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.action_view_details -> openProfile(groupId, loggedInUsername)
+                    R.id.action_view_details -> openGroupProfile(groupId, loggedInUsername)
 
 
                     R.id.action_exit_group -> {
-                        MaterialAlertDialogBuilder(this)
-                            .setTitle("Exit group")
+                        MaterialAlertDialogBuilder(this).setTitle("Exit group")
                             .setMessage("Are you sure you want to exit this group?")
                             .setPositiveButton("Yes") { _, _ ->
                                 viewModel.exitGroup(this) { isExited ->
@@ -102,9 +101,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                                     ).show()
                                     finish()
                                 }
-                            }
-                            .setNegativeButton("No") { _, _ -> }
-                            .show()
+                            }.setNegativeButton("No") { _, _ -> }.show()
                     }
                 }
                 true
@@ -128,11 +125,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             initOpenProfile(groupId, loggedInUsername)
 
             //setting the group image
-            Glide
-                .with(this)
-                .load(it.image)
-                .placeholder(R.drawable.ic_group)
-                .circleCrop()
+            Glide.with(this).load(it.image).placeholder(R.drawable.ic_group).circleCrop()
                 .into(binding.groupChatGroupImage)
 
             //setting the group name
@@ -143,8 +136,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                 //when the list is submitted, then update the seen status
                 viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
-                if (scrollToBottom)
-                    binding.groupChatRv.smoothScrollToPosition(0)
+                if (scrollToBottom) binding.groupChatRv.smoothScrollToPosition(0)
             }
 
         }
@@ -162,11 +154,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
         //set the header with available details so far
         binding.groupChatGroupName.text = groupName
-        Glide
-            .with(this)
-            .load(groupImage)
-            .placeholder(R.drawable.ic_group)
-            .circleCrop()
+        Glide.with(this).load(groupImage).placeholder(R.drawable.ic_group).circleCrop()
             .into(binding.groupChatGroupImage)
 
         val groupImageUri = if (groupImage.isEmpty()) null else Uri.parse(groupImage)
@@ -269,8 +257,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     // Registers a photo picker activity launcher in single-select mode.
     private val photoPickerLauncher =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia())
-        { pickedPhotoUri ->
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { pickedPhotoUri ->
             if (pickedPhotoUri != null) {
                 var uri: Uri? = null
 
@@ -286,8 +273,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
                     //on completion of async call
                     .invokeOnCompletion {
                         //Crop activity with source and destination uri
-                        val uCrop = UCrop.of(pickedPhotoUri, uri!!)
-                            .withMaxResultSize(1080, 1080)
+                        val uCrop = UCrop.of(pickedPhotoUri, uri!!).withMaxResultSize(1080, 1080)
 
                         cropImageCallback.launch(uCrop.getIntent(this))
                     }
@@ -328,26 +314,25 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
 
     private fun initOpenProfile(groupId: String, loggedInUsername: String) {
         binding.groupChatGroupImage.setOnClickListener {
-            openProfile(groupId, loggedInUsername)
+            openGroupProfile(groupId, loggedInUsername)
         }
         binding.groupChatGroupName.setOnClickListener {
-            openProfile(groupId, loggedInUsername)
+            openGroupProfile(groupId, loggedInUsername)
         }
         binding.groupChatMembers.setOnClickListener {
-            openProfile(groupId, loggedInUsername)
+            openGroupProfile(groupId, loggedInUsername)
         }
     }
 
-    private fun openProfile(groupId: String, loggedInUsername: String) {
+    private fun openGroupProfile(groupId: String, loggedInUsername: String) {
         val intent = Intent(this, GroupProfileActivity::class.java)
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
         intent.putExtra(UserConstants.USERNAME, loggedInUsername)
-        val activityOptionsCompat =
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                binding.groupChatGroupImage,
-                getString(R.string.group_profile_activity_profile_image_transition)
-            )
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            binding.groupChatGroupImage,
+            getString(R.string.group_profile_activity_profile_image_transition)
+        )
         profileLauncher.launch(intent, activityOptionsCompat)
     }
 
@@ -371,13 +356,42 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     override fun onImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {
         val intent = Intent(this, ZoomActivity::class.java)
         intent.putExtra(Constants.ZOOM_IMAGE_URL, groupMessageModel.image)
-        val activityOptionsCompat =
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                chatImageIv,
-                getString(R.string.chatting_activity_chat_image_transition)
-            )
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this, chatImageIv, getString(R.string.chatting_activity_chat_image_transition)
+        )
 
         startActivity(intent, activityOptionsCompat.toBundle())
+    }
+
+    override fun onUserImageClicked(clickedUsername: String, chatImageIv: ImageView) {
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+
+        val loaderDialog =
+            MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
+                .show()
+
+        groupProfileViewModel.findGroupMember(
+            loggedInUsername!!, clickedUsername
+        ) { chatId ->
+            loaderDialog.dismiss()
+            if (chatId == null) {
+                Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
+                return@findGroupMember
+            }
+
+            openUserProfile(chatId, loggedInUsername, chatImageIv)
+        }
+    }
+
+    private fun openUserProfile(
+        chatId: String, loggedInUsername: String, animationView: ImageView
+    ) {
+        val intent = Intent(this, ChatProfileActivity::class.java)
+        intent.putExtra(ChatConstants.CHAT_ID, chatId)
+        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this, animationView, getString(R.string.chat_profile_activity_profile_image_transition)
+        )
+        profileLauncher.launch(intent, activityOptionsCompat)
     }
 }

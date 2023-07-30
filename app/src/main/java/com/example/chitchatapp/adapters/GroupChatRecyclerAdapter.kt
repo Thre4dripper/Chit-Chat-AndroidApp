@@ -245,6 +245,13 @@ class GroupChatRecyclerAdapter(
             binding.itemChatLeftTextMessage.text = groupMessageModel.text
             binding.itemChatLeftTextTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)
+
+            binding.itemChatLeftIv.setOnClickListener {
+                groupMessageClickInterface.onUserImageClicked(
+                    groupMessageModel.from,
+                    binding.itemChatLeftIv
+                )
+            }
         }
     }
 
@@ -303,6 +310,13 @@ class GroupChatRecyclerAdapter(
                     binding.itemChatLeftImage
                 )
             }
+
+            binding.itemChatLeftIv.setOnClickListener {
+                groupMessageClickInterface.onUserImageClicked(
+                    groupMessageModel.from,
+                    binding.itemChatLeftIv
+                )
+            }
         }
     }
 
@@ -339,6 +353,13 @@ class GroupChatRecyclerAdapter(
 
             binding.itemChatLeftStickerTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)
+
+            binding.itemChatLeftIv.setOnClickListener {
+                groupMessageClickInterface.onUserImageClicked(
+                    groupMessageModel.from,
+                    binding.itemChatLeftIv
+                )
+            }
         }
     }
 

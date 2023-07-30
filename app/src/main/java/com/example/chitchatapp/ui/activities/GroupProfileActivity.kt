@@ -25,7 +25,6 @@ import com.example.chitchatapp.databinding.ActivityGroupProfileBinding
 import com.example.chitchatapp.enums.GroupMessageType
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.models.GroupMessageModel
-import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
 import com.example.chitchatapp.viewModels.GroupProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -53,8 +52,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         viewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 
         binding.groupProfileBackBtn.setOnClickListener {
-            @Suppress("DEPRECATION")
-            onBackPressed()
+            @Suppress("DEPRECATION") onBackPressed()
         }
 
         groupId = intent.getStringExtra(GroupConstants.GROUP_ID)
@@ -110,8 +108,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
      * Registers a photo picker activity launcher in single-select mode.
      */
     private val photoPickerLauncher =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia())
-        { pickedPhotoUri ->
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { pickedPhotoUri ->
             if (pickedPhotoUri != null) {
                 var uri: Uri? = null
 
@@ -148,8 +145,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
                 binding.groupProfileImageProgressBar.visibility = View.VISIBLE
                 viewModel.updateGroupImage(imageUri, groupId!!) {
-                    Toast.makeText(this, it, Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -168,9 +164,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
         binding.groupProfileMuteSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.muteUnMuteGroup(groupChatModel, loggedInUsername, isChecked) {
                 Toast.makeText(
-                    this,
-                    if (isChecked) "Muted" else "UnMuted",
-                    Toast.LENGTH_SHORT
+                    this, if (isChecked) "Muted" else "UnMuted", Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -218,54 +212,18 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
             MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
                 .show()
 
-        findChat(loggedInUsername, memberUsername) { chatId ->
-            if (chatId != null) {
-                loaderDialog.dismiss()
-                return@findChat
-            }
+        viewModel.findGroupMember(loggedInUsername, memberUsername) { chatId ->
+            loaderDialog.dismiss()
 
-            findUser(memberUsername) {
-                if (it != null) {
-                    loaderDialog.dismiss()
-                    return@findUser
-                }
-
-                Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun findChat(
-        loggedInUsername: String,
-        memberUsername: String,
-        onSuccess: (String?) -> Unit,
-    ) {
-        viewModel.findChatId(loggedInUsername, memberUsername) { chatId ->
             if (chatId == null) {
-                onSuccess(null)
-                return@findChatId
+                Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
+                return@findGroupMember
             }
 
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(ChatConstants.CHAT_ID, chatId)
             startActivity(intent)
-            onSuccess(chatId)
-        }
-    }
-
-    private fun findUser(
-        memberUsername: String, onSuccess: (UserModel?) -> Unit
-    ) {
-        viewModel.getUserModel(memberUsername) { userModel ->
-            if (userModel == null) {
-                onSuccess(null)
-                return@getUserModel
-            }
-
-            val intent = Intent(this, ChatActivity::class.java)
-            intent.putExtra(UserConstants.USER_MODEL, userModel)
-            startActivity(intent)
-            onSuccess(userModel)
+            return@findGroupMember
         }
     }
 }
