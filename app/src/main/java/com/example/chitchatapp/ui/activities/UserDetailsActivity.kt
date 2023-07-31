@@ -67,6 +67,10 @@ class UserDetailsActivity : AppCompatActivity() {
                         text = getString(R.string.user_details_activity_no_username)
                         setTextColor(ContextCompat.getColor(context, R.color.red))
                     } else {
+                        //only enable edit username button if username is set
+                        //i.e. username can only be set once
+                        binding.userDetailsEditUsername.isEnabled = false
+                        binding.userDetailsEditUsername.alpha = 0.5f
                         setTextColor(ContextCompat.getColor(context, R.color.darkGrey))
                     }
                 }

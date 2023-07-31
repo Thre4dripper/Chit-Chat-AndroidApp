@@ -33,7 +33,7 @@
     //Username Fragment
     <string name="username_fragment_label">Username</string>
     <string name="username_fragment_text_set_username">Set Username</string>
-    <string name="username_fragment_instructions">You have to choose a username on Chit Chat in order to be find by the people. People will be able to find you by this username and contact you.\n\nYou can use a–z, 0–9 and underscores. Minimum length is 5 Characters and it has to be unique</string>
+    <string name="username_fragment_instructions">You have to choose a username on Chit Chat in order to be find by the people. People will be able to find you by this username and contact you.\n\nYou can use a–z, 0–9 and underscores. Minimum length is 5 Characters and it has to be unique.\n\nRemember Username can only be set once</string>
 
     //Name Fragment
     <string name="name_fragment_label">Name</string>
