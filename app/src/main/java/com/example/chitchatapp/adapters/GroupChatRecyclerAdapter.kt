@@ -210,6 +210,13 @@ class GroupChatRecyclerAdapter(
 
     inner class RightTextViewHolder(itemView: View) : ViewHolder(itemView) {
         private var binding = ItemChatTextRightBinding.bind(itemView)
+        private var imageStatusIvs = listOf(
+            binding.itemChatMessageStatusIv1,
+            binding.itemChatMessageStatusIv2,
+            binding.itemChatMessageStatusIv3,
+            binding.itemChatMessageStatusIv4,
+            binding.itemChatMessageStatusIv5
+        )
 
         fun bind(groupMessageModel: GroupMessageModel) {
             binding.itemChatRightTextMessage.text = groupMessageModel.text
@@ -223,9 +230,27 @@ class GroupChatRecyclerAdapter(
                 .load(senderImage)
                 .circleCrop()
                 .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatMessageStatusIv)
+                .into(binding.itemChatMessageStatusIv1)
 
-            binding.itemChatMessageStatusIv.visibility = View.GONE
+            //take last 5 seen by except sender
+            val lastFiveSeenBy = groupMessageModel.seenBy
+                .filter { it != groupMessageModel.from }
+                .takeLast(5)
+
+            repeat(5) {
+                imageStatusIvs[it].visibility = View.GONE
+            }
+            for (i in lastFiveSeenBy.indices) {
+                imageStatusIvs[i].visibility = View.VISIBLE
+                val seenBy = lastFiveSeenBy[i]
+                val seenByImage = ChatUtils.getGroupChatProfileImage(groupChatModel, seenBy)
+                Glide
+                    .with(itemView.context)
+                    .load(seenByImage)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_profile)
+                    .into(imageStatusIvs[i])
+            }
         }
     }
 
@@ -267,7 +292,7 @@ class GroupChatRecyclerAdapter(
                 .into(binding.itemChatImageRightIv)
 
             //hide status icon in group chat
-            binding.itemChatMessageStatusIv.visibility = View.GONE
+            binding.itemChatImageStatusIv1.visibility = View.GONE
 
             binding.itemChatRightImageTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)
@@ -327,7 +352,7 @@ class GroupChatRecyclerAdapter(
             binding.itemChatRightLottie.setAnimation(LottieStickers.getSticker(groupMessageModel.sticker!!))
 
             //hide status icon in group chat
-            binding.itemChatStickerStatusIv.visibility = View.GONE
+            binding.itemChatStickerStatusIv1.visibility = View.GONE
 
             binding.itemChatRightStickerTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)

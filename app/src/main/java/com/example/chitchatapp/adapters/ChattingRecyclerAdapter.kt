@@ -174,15 +174,20 @@ class ChattingRecyclerAdapter(
                 .load(senderImage)
                 .circleCrop()
                 .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatMessageStatusIv)
+                .into(binding.itemChatMessageStatusIv1)
 
             val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
-            binding.itemChatMessageStatusIv.visibility =
+            binding.itemChatMessageStatusIv1.visibility =
                 if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
                     View.GONE
                 }
+
+            binding.itemChatMessageStatusIv2.visibility = View.GONE
+            binding.itemChatMessageStatusIv3.visibility = View.GONE
+            binding.itemChatMessageStatusIv4.visibility = View.GONE
+            binding.itemChatMessageStatusIv5.visibility = View.GONE
         }
     }
 
@@ -227,10 +232,10 @@ class ChattingRecyclerAdapter(
                 .load(senderImage)
                 .circleCrop()
                 .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatMessageStatusIv)
+                .into(binding.itemChatImageStatusIv1)
 
             val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
-            binding.itemChatMessageStatusIv.visibility =
+            binding.itemChatImageStatusIv1.visibility =
                 if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
@@ -246,6 +251,11 @@ class ChattingRecyclerAdapter(
                     binding.itemChatImageRightIv
                 )
             }
+
+            binding.itemChatImageStatusIv2.visibility = View.GONE
+            binding.itemChatImageStatusIv3.visibility = View.GONE
+            binding.itemChatImageStatusIv4.visibility = View.GONE
+            binding.itemChatImageStatusIv5.visibility = View.GONE
         }
     }
 
@@ -302,10 +312,10 @@ class ChattingRecyclerAdapter(
                 .load(senderImage)
                 .circleCrop()
                 .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatStickerStatusIv)
+                .into(binding.itemChatStickerStatusIv1)
 
             val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
-            binding.itemChatStickerStatusIv.visibility =
+            binding.itemChatStickerStatusIv1.visibility =
                 if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
@@ -314,6 +324,11 @@ class ChattingRecyclerAdapter(
 
             binding.itemChatRightStickerTime.text =
                 TimeUtils.getFormattedTime(chatMessageModel.time)
+
+            binding.itemChatStickerStatusIv2.visibility = View.GONE
+            binding.itemChatStickerStatusIv3.visibility = View.GONE
+            binding.itemChatStickerStatusIv4.visibility = View.GONE
+            binding.itemChatStickerStatusIv5.visibility = View.GONE
         }
     }
 
