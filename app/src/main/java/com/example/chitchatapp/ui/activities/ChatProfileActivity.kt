@@ -62,6 +62,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
             if (chatModel == null) return@observe
 
             //init everything after chat details are fetched
+            initOpenChatButton(chatModel)
             initNameAndBio(chatModel, loggedInUsername)
             initMediaRecycleView()
             initMuteSwitch(chatModel, loggedInUsername)
@@ -91,6 +92,21 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         }
 
         chatViewModel.getLiveChatDetails(this, chatId)
+    }
+
+    private fun initOpenChatButton(chatModel: ChatModel) {
+        binding.chatProfileOpenChatBtn.setOnClickListener {
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(ChatConstants.CHAT_ID, chatModel.chatId)
+            intent.putExtra(Constants.PREV_ACTIVITY, true)
+
+            val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                binding.chatProfileOpenChatBtn,
+                getString(R.string.chat_activity_chat_profile_image_transition)
+            )
+            startActivity(intent, activityOptionsCompat.toBundle())
+        }
     }
 
     private fun initNameAndBio(chatModel: ChatModel, loggedInUsername: String) {
@@ -131,9 +147,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
         binding.chatProfileMuteSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.muteUnMuteChat(chatModel, loggedInUsername, isChecked) {
                 Toast.makeText(
-                    this,
-                    if (isChecked) "Muted" else "UnMuted",
-                    Toast.LENGTH_SHORT
+                    this, if (isChecked) "Muted" else "UnMuted", Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -208,14 +222,11 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
 
     private fun clearChat() {
         clearOrDeleteDialog(
-            "Clear chat",
-            "Are you sure you want to clear this chat?"
+            "Clear chat", "Are you sure you want to clear this chat?"
         ) {
             chatViewModel.clearChat {
                 Toast.makeText(
-                    this,
-                    if (it) "Chat cleared" else "Error clearing chat",
-                    Toast.LENGTH_SHORT
+                    this, if (it) "Chat cleared" else "Error clearing chat", Toast.LENGTH_SHORT
                 ).show()
                 finish()
             }
@@ -224,14 +235,11 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
 
     private fun deleteChat() {
         clearOrDeleteDialog(
-            "Delete chat",
-            "Are you sure you want to delete this chat?"
+            "Delete chat", "Are you sure you want to delete this chat?"
         ) {
             chatViewModel.deletedChat {
                 Toast.makeText(
-                    this,
-                    if (it) "Chat deleted" else "Error deleting chat",
-                    Toast.LENGTH_SHORT
+                    this, if (it) "Chat deleted" else "Error deleting chat", Toast.LENGTH_SHORT
                 ).show()
                 setResult(Constants.DELETE_CHAT)
                 finish()
@@ -240,25 +248,18 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
     }
 
     private fun clearOrDeleteDialog(title: String, message: String, action: () -> Unit) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setMessage(message)
+        MaterialAlertDialogBuilder(this).setTitle(title).setMessage(message)
             .setPositiveButton("Yes") { _, _ ->
                 action()
-            }
-            .setNegativeButton("No") { _, _ -> }
-            .show()
+            }.setNegativeButton("No") { _, _ -> }.show()
     }
 
     override fun onMediaImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView) {
         val intent = Intent(this, ZoomActivity::class.java)
         intent.putExtra(Constants.ZOOM_IMAGE_URL, chatMessageModel.image)
-        val activityOptionsCompat =
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                chatImageIv,
-                getString(R.string.chatting_activity_chat_image_transition)
-            )
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this, chatImageIv, getString(R.string.chatting_activity_chat_image_transition)
+        )
 
         startActivity(intent, activityOptionsCompat.toBundle())
     }
@@ -266,12 +267,9 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
     override fun onCommonGroupClicked(groupId: String, clickedIv: ImageView) {
         val intent = Intent(this, GroupChatActivity::class.java)
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
-        val activityOptionsCompat =
-            ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                clickedIv,
-                getString(R.string.group_chat_activity_group_profile_image_transition)
-            )
+        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this, clickedIv, getString(R.string.group_chat_activity_group_profile_image_transition)
+        )
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 }

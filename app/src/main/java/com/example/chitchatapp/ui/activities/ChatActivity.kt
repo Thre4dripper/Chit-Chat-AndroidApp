@@ -91,7 +91,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         if (!prevActivity) {
             startActivity(Intent(this, HomeActivity::class.java))
         }
-        finish()
+        supportFinishAfterTransition()
     }
 
     private fun initMenu(chatId: String, loggedInUsername: String) {

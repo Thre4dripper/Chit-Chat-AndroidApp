@@ -227,6 +227,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
 
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(ChatConstants.CHAT_ID, chatId)
+            intent.putExtra(Constants.PREV_ACTIVITY, true)
             val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 this, clickedIv, getString(R.string.chat_activity_chat_profile_image_transition)
             )
