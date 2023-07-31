@@ -42,7 +42,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
-    private val TAG = "ChattingActivity"
+    private val TAG = "ChatActivity"
 
     private lateinit var binding: ActivityChattingBinding
     private lateinit var viewModel: ChatViewModel
@@ -51,6 +51,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     private var chatId: String? = null
     private var scrollToBottom = true
     private var prevActivity = false
+    private var isFirstTimeLoad = true
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,7 +190,12 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
             //submit the live list to the adapter
             chattingAdapter.submitList(it.chatMessages) {
                 //when the list is submitted, then update the seen status
-                viewModel.updateSeen(this) {}
+                if (prevActivity || !isFirstTimeLoad) {
+                    //when list is first time rendered from notifications, it is of old messages
+                    //strange behaviour of firestore, so don't update seen status on first time load
+                    viewModel.updateSeen(this) {}
+                }
+                isFirstTimeLoad = false
                 //scroll to the bottom of the recycler view
                 if (scrollToBottom) binding.chattingRv.smoothScrollToPosition(0)
             }
