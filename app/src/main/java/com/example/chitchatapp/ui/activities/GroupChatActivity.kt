@@ -421,7 +421,15 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
         }
         seenByAdapter.submitList(list)
 
-        popupWindow.showAsDropDown(anchor, -600, -700, Gravity.END)
+        val yOffset = when {
+            list.size >= 5 -> -700
+            list.isEmpty() -> -400
+            else -> list.size * -150
+        }
+
+        popupBinding.seenByNoOne.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+
+        popupWindow.showAsDropDown(anchor, -750, yOffset, Gravity.END)
     }
 
     override fun onSeenByClicked(

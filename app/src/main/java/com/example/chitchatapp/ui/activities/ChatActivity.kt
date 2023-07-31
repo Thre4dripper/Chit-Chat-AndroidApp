@@ -456,7 +456,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
         openProfile(chatId!!, loggedInUsername!!, chatImageIv)
     }
 
-    override fun onSeenByClicked(groupMessageModel: ChatMessageModel, anchor: View) {
+    override fun onSeenByClicked(chatMessageModel: ChatMessageModel, anchor: View) {
         val popupWindow = PopupWindow(this)
         val popupBinding = SeenByPopupWindowBinding.inflate(layoutInflater)
         popupWindow.contentView = popupBinding.root
@@ -477,13 +477,17 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
 
         val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername!!)
         val chatProfileImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-        seenByAdapter.submitList(
-            listOf(
-                GroupChatUserModel(chatUsername, chatProfileImage)
+
+        val list = if (chatMessageModel.seenBy.contains(chatUsername)) listOf(
+            GroupChatUserModel(
+                chatUsername, chatProfileImage
             )
         )
+        else emptyList()
+        seenByAdapter.submitList(list)
 
-        popupWindow.showAsDropDown(anchor, -600, -700, Gravity.END)
+        popupBinding.seenByNoOne.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+        popupWindow.showAsDropDown(anchor, -750, -350, Gravity.END)
     }
 
     override fun onSeenByClicked(seenByUsername: String, clickedIv: ImageView) {

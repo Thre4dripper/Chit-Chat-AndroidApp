@@ -11,7 +11,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/root_cv"
             android:layout_width="200dp"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
@@ -22,9 +22,10 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -51,10 +52,25 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="@color/darkGrey" />
 
+                <TextView
+                    android:id="@+id/seen_by_no_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/seen_by_popup_window_no_one"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/seen_by_rv"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:clipToPadding="true"
@@ -64,6 +80,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_max="300dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_close"
                     tools:listitem="@layout/item_group_profile_member" />

@@ -246,7 +246,7 @@ class GroupChatRecyclerAdapter(
             binding.root.setOnLongClickListener {
                 groupMessageClickInterface.onSeenByClicked(
                     groupMessageModel,
-                    statusIvs[0]
+                    binding.root
                 )
                 true
             }
@@ -320,7 +320,7 @@ class GroupChatRecyclerAdapter(
             binding.root.setOnLongClickListener {
                 groupMessageClickInterface.onSeenByClicked(
                     groupMessageModel,
-                    statusIvs[0]
+                    binding.root
                 )
                 true
             }
@@ -395,7 +395,7 @@ class GroupChatRecyclerAdapter(
             binding.root.setOnLongClickListener {
                 groupMessageClickInterface.onSeenByClicked(
                     groupMessageModel,
-                    statusIvs[0]
+                    binding.root
                 )
                 true
             }

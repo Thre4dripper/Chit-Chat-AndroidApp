@@ -179,14 +179,14 @@ class ChattingRecyclerAdapter(
                 }
                 setOnClickListener {
                     chatMessageClickInterface.onSeenByClicked(
-                        chatMessageModel, binding.itemChatMessageStatusIv1
+                        chatMessageModel, binding.root
                     )
                 }
             }
 
             binding.root.setOnLongClickListener {
                 chatMessageClickInterface.onSeenByClicked(
-                    chatMessageModel, binding.itemChatMessageStatusIv1
+                    chatMessageModel, binding.root
                 )
                 true
             }
@@ -238,14 +238,14 @@ class ChattingRecyclerAdapter(
                 }
                 setOnClickListener {
                     chatMessageClickInterface.onSeenByClicked(
-                        chatMessageModel, binding.itemChatImageStatusIv1
+                        chatMessageModel, binding.root
                     )
                 }
             }
 
             binding.root.setOnLongClickListener {
                 chatMessageClickInterface.onSeenByClicked(
-                    chatMessageModel, binding.itemChatImageStatusIv1
+                    chatMessageModel, binding.root
                 )
                 true
             }
@@ -313,14 +313,14 @@ class ChattingRecyclerAdapter(
                 }
                 setOnClickListener {
                     chatMessageClickInterface.onSeenByClicked(
-                        chatMessageModel, binding.itemChatStickerStatusIv1
+                        chatMessageModel, binding.root
                     )
                 }
             }
 
             binding.root.setOnLongClickListener {
                 chatMessageClickInterface.onSeenByClicked(
-                    chatMessageModel, binding.itemChatStickerStatusIv1
+                    chatMessageModel, binding.root
                 )
                 true
             }

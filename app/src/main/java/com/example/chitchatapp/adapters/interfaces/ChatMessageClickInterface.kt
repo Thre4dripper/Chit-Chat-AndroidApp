@@ -7,5 +7,5 @@ import com.example.chitchatapp.models.ChatMessageModel
 interface ChatMessageClickInterface {
     fun onImageClicked(chatMessageModel: ChatMessageModel, chatImageIv: ImageView)
     fun onUserImageClicked(chatImageIv: ImageView)
-    fun onSeenByClicked(groupMessageModel: ChatMessageModel, anchor: View)
+    fun onSeenByClicked(chatMessageModel: ChatMessageModel, anchor: View)
 }
