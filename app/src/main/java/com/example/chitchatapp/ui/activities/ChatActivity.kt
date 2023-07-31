@@ -1,11 +1,15 @@
 package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,15 +24,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.ChattingRecyclerAdapter
+import com.example.chitchatapp.adapters.SeenByRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.ChatMessageClickInterface
+import com.example.chitchatapp.adapters.interfaces.SeenByClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityChattingBinding
+import com.example.chitchatapp.databinding.SeenByPopupWindowBinding
 import com.example.chitchatapp.enums.UserStatus
 import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
+import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
 import com.example.chitchatapp.viewModels.ChatViewModel
@@ -41,7 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
+class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClickInterface {
     private val TAG = "ChatActivity"
 
     private lateinit var binding: ActivityChattingBinding
@@ -179,8 +187,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
             //setting the profile image
             val chatProfileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
-            Glide.with(this).load(chatProfileImage).placeholder(R.drawable.ic_profile)
-                .circleCrop()
+            Glide.with(this).load(chatProfileImage).placeholder(R.drawable.ic_profile).circleCrop()
                 .into(binding.chattingProfileImage)
 
             //setting the username
@@ -354,8 +361,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                     //on completion of async call
                     .invokeOnCompletion {
                         //Crop activity with source and destination uri
-                        val uCrop =
-                            UCrop.of(pickedPhotoUri, uri!!).withMaxResultSize(1080, 1080)
+                        val uCrop = UCrop.of(pickedPhotoUri, uri!!).withMaxResultSize(1080, 1080)
 
                         cropImageCallback.launch(uCrop.getIntent(this))
                     }
@@ -407,17 +413,13 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     }
 
     private fun openProfile(
-        chatId: String,
-        loggedInUsername: String,
-        animationView: ImageView
+        chatId: String, loggedInUsername: String, animationView: ImageView
     ) {
         val intent = Intent(this, ChatProfileActivity::class.java)
         intent.putExtra(ChatConstants.CHAT_ID, chatId)
         intent.putExtra(UserConstants.USERNAME, loggedInUsername)
         val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this,
-            animationView,
-            getString(R.string.chat_profile_activity_profile_image_transition)
+            this, animationView, getString(R.string.chat_profile_activity_profile_image_transition)
         )
         profileLauncher.launch(intent, activityOptionsCompat)
     }
@@ -452,5 +454,39 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     override fun onUserImageClicked(chatImageIv: ImageView) {
         val loggedInUsername = viewModel.getLoggedInUsername(this)
         openProfile(chatId!!, loggedInUsername!!, chatImageIv)
+    }
+
+    override fun onSeenByClicked(groupMessageModel: ChatMessageModel, anchor: View) {
+        val popupWindow = PopupWindow(this)
+        val popupBinding = SeenByPopupWindowBinding.inflate(layoutInflater)
+        popupWindow.contentView = popupBinding.root
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        popupBinding.btnClose.setOnClickListener {
+            popupWindow.dismiss()
+        }
+
+        val chatModel = viewModel.chatDetails.value!!
+
+        val seenByAdapter = SeenByRecyclerAdapter(this@ChatActivity)
+        popupBinding.seenByRv.apply {
+            adapter = seenByAdapter
+        }
+
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+
+        val chatUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername!!)
+        val chatProfileImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
+        seenByAdapter.submitList(
+            listOf(
+                GroupChatUserModel(chatUsername, chatProfileImage)
+            )
+        )
+
+        popupWindow.showAsDropDown(anchor, -600, -700, Gravity.END)
+    }
+
+    override fun onSeenByClicked(seenByUsername: String, clickedIv: ImageView) {
+        openProfile(chatId!!, seenByUsername, clickedIv)
     }
 }

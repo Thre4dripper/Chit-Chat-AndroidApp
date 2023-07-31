@@ -205,7 +205,7 @@ class GroupChatRecyclerAdapter(
 
     inner class RightTextViewHolder(itemView: View) : ViewHolder(itemView) {
         private var binding = ItemChatTextRightBinding.bind(itemView)
-        private var imageStatusIvs = listOf(
+        private var statusIvs = listOf(
             binding.itemChatMessageStatusIv1,
             binding.itemChatMessageStatusIv2,
             binding.itemChatMessageStatusIv3,
@@ -228,24 +228,25 @@ class GroupChatRecyclerAdapter(
 
             //hide all status image view initially
             repeat(5) {
-                imageStatusIvs[it].visibility = View.GONE
+                statusIvs[it].visibility = View.GONE
             }
             for (i in lastFiveSeenBy.indices) {
-                imageStatusIvs[i].visibility = View.VISIBLE
+                statusIvs[i].visibility = View.VISIBLE
                 val seenBy = lastFiveSeenBy[i]
                 val seenByImage = ChatUtils.getGroupChatProfileImage(groupChatModel, seenBy)
                 Glide.with(itemView.context).load(seenByImage).circleCrop()
-                    .placeholder(R.drawable.ic_profile).into(imageStatusIvs[i])
+                    .placeholder(R.drawable.ic_profile).into(statusIvs[i])
 
-                imageStatusIvs[i].setOnClickListener {
-                    groupMessageClickInterface.onSeenByClicked(groupMessageModel, imageStatusIvs[i])
+                statusIvs[i].setOnClickListener {
+                    //anchor will be same for all status views
+                    groupMessageClickInterface.onSeenByClicked(groupMessageModel, statusIvs[0])
                 }
             }
 
             binding.root.setOnLongClickListener {
                 groupMessageClickInterface.onSeenByClicked(
                     groupMessageModel,
-                    binding.itemChatRightTextMessage
+                    statusIvs[0]
                 )
                 true
             }
@@ -274,14 +275,18 @@ class GroupChatRecyclerAdapter(
 
     inner class RightImageViewHolder(itemView: View) : ViewHolder(itemView) {
         private var binding = ItemChatImageRightBinding.bind(itemView)
+        private var statusIvs = listOf(
+            binding.itemChatImageStatusIv1,
+            binding.itemChatImageStatusIv2,
+            binding.itemChatImageStatusIv3,
+            binding.itemChatImageStatusIv4,
+            binding.itemChatImageStatusIv5
+        )
 
         fun bind(groupMessageModel: GroupMessageModel) {
 
             Glide.with(itemView.context).load(groupMessageModel.image)
                 .placeholder(R.drawable.ic_profile).into(binding.itemChatImageRightIv)
-
-            //hide status icon in group chat
-            binding.itemChatImageStatusIv1.visibility = View.GONE
 
             binding.itemChatRightImageTime.text = TimeUtils.getFormattedTime(groupMessageModel.time)
 
@@ -289,6 +294,35 @@ class GroupChatRecyclerAdapter(
                 groupMessageClickInterface.onImageClicked(
                     groupMessageModel, binding.itemChatImageRightIv
                 )
+            }
+
+            //take last 5 seen by except sender
+            val lastFiveSeenBy =
+                groupMessageModel.seenBy.filter { it != groupMessageModel.from }.takeLast(5)
+
+            //hide all status image view initially
+            repeat(5) {
+                statusIvs[it].visibility = View.GONE
+            }
+            for (i in lastFiveSeenBy.indices) {
+                statusIvs[i].visibility = View.VISIBLE
+                val seenBy = lastFiveSeenBy[i]
+                val seenByImage = ChatUtils.getGroupChatProfileImage(groupChatModel, seenBy)
+                Glide.with(itemView.context).load(seenByImage).circleCrop()
+                    .placeholder(R.drawable.ic_profile).into(statusIvs[i])
+
+                statusIvs[i].setOnClickListener {
+                    //anchor will be same for all status views
+                    groupMessageClickInterface.onSeenByClicked(groupMessageModel, statusIvs[0])
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                groupMessageClickInterface.onSeenByClicked(
+                    groupMessageModel,
+                    statusIvs[0]
+                )
+                true
             }
         }
     }
@@ -324,15 +358,47 @@ class GroupChatRecyclerAdapter(
 
     inner class RightStickerViewHolder(itemView: View) : ViewHolder(itemView) {
         private var binding = ItemChatStickerRightBinding.bind(itemView)
-
+        private var statusIvs = listOf(
+            binding.itemChatStickerStatusIv1,
+            binding.itemChatStickerStatusIv2,
+            binding.itemChatStickerStatusIv3,
+            binding.itemChatStickerStatusIv4,
+            binding.itemChatStickerStatusIv5
+        )
         fun bind(groupMessageModel: GroupMessageModel) {
             binding.itemChatRightLottie.setAnimation(LottieStickers.getSticker(groupMessageModel.sticker!!))
 
-            //hide status icon in group chat
-            binding.itemChatStickerStatusIv1.visibility = View.GONE
-
             binding.itemChatRightStickerTime.text =
                 TimeUtils.getFormattedTime(groupMessageModel.time)
+
+            //take last 5 seen by except sender
+            val lastFiveSeenBy =
+                groupMessageModel.seenBy.filter { it != groupMessageModel.from }.takeLast(5)
+
+            //hide all status image view initially
+            repeat(5) {
+                statusIvs[it].visibility = View.GONE
+            }
+            for (i in lastFiveSeenBy.indices) {
+                statusIvs[i].visibility = View.VISIBLE
+                val seenBy = lastFiveSeenBy[i]
+                val seenByImage = ChatUtils.getGroupChatProfileImage(groupChatModel, seenBy)
+                Glide.with(itemView.context).load(seenByImage).circleCrop()
+                    .placeholder(R.drawable.ic_profile).into(statusIvs[i])
+
+                statusIvs[i].setOnClickListener {
+                    //anchor will be same for all status views
+                    groupMessageClickInterface.onSeenByClicked(groupMessageModel, statusIvs[0])
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                groupMessageClickInterface.onSeenByClicked(
+                    groupMessageModel,
+                    statusIvs[0]
+                )
+                true
+            }
         }
     }
 

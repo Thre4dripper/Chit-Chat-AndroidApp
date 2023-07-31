@@ -26,8 +26,7 @@ class ChattingRecyclerAdapter(
     private var loggedInUsername: String,
     private var chatModel: ChatModel,
     private var chatMessageClickInterface: ChatMessageClickInterface
-) :
-    ListAdapter<ChatMessageModel, ViewHolder>(ChatMessageDiffCallback()) {
+) : ListAdapter<ChatMessageModel, ViewHolder>(ChatMessageDiffCallback()) {
     private val TAG = "ChattingRecyclerAdapter"
 
     companion object {
@@ -165,24 +164,32 @@ class ChattingRecyclerAdapter(
 
         fun bind(chatMessageModel: ChatMessageModel) {
             binding.itemChatRightTextMessage.text = chatMessageModel.text
-            binding.itemChatRightTextTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.time)
+            binding.itemChatRightTextTime.text = TimeUtils.getFormattedTime(chatMessageModel.time)
 
             val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatMessageStatusIv1)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatMessageStatusIv1)
 
             val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
-            binding.itemChatMessageStatusIv1.visibility =
-                if (chatMessageModel.seenBy.contains(senderUsername)) {
+            binding.itemChatMessageStatusIv1.apply {
+                visibility = if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
                     View.GONE
                 }
+                setOnClickListener {
+                    chatMessageClickInterface.onSeenByClicked(
+                        chatMessageModel, binding.itemChatMessageStatusIv1
+                    )
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                chatMessageClickInterface.onSeenByClicked(
+                    chatMessageModel, binding.itemChatMessageStatusIv1
+                )
+                true
+            }
 
             binding.itemChatMessageStatusIv2.visibility = View.GONE
             binding.itemChatMessageStatusIv3.visibility = View.GONE
@@ -196,16 +203,11 @@ class ChattingRecyclerAdapter(
 
         fun bind(chatMessageModel: ChatMessageModel) {
             val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatLeftIv)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatLeftIv)
 
             binding.itemChatLeftTextMessage.text = chatMessageModel.text
-            binding.itemChatLeftTextTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.time)
+            binding.itemChatLeftTextTime.text = TimeUtils.getFormattedTime(chatMessageModel.time)
 
             binding.itemChatLeftIv.setOnClickListener {
                 chatMessageClickInterface.onUserImageClicked(
@@ -220,35 +222,39 @@ class ChattingRecyclerAdapter(
 
         fun bind(chatMessageModel: ChatMessageModel) {
 
-            Glide
-                .with(itemView.context)
-                .load(chatMessageModel.image)
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatImageRightIv)
+            Glide.with(itemView.context).load(chatMessageModel.image)
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatImageRightIv)
 
             val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatImageStatusIv1)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatImageStatusIv1)
 
             val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
-            binding.itemChatImageStatusIv1.visibility =
-                if (chatMessageModel.seenBy.contains(senderUsername)) {
+            binding.itemChatImageStatusIv1.apply {
+                visibility = if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
                     View.GONE
                 }
+                setOnClickListener {
+                    chatMessageClickInterface.onSeenByClicked(
+                        chatMessageModel, binding.itemChatImageStatusIv1
+                    )
+                }
+            }
 
-            binding.itemChatRightImageTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.time)
+            binding.root.setOnLongClickListener {
+                chatMessageClickInterface.onSeenByClicked(
+                    chatMessageModel, binding.itemChatImageStatusIv1
+                )
+                true
+            }
+
+            binding.itemChatRightImageTime.text = TimeUtils.getFormattedTime(chatMessageModel.time)
 
             binding.itemChatImageRightIv.setOnClickListener {
                 chatMessageClickInterface.onImageClicked(
-                    chatMessageModel,
-                    binding.itemChatImageRightIv
+                    chatMessageModel, binding.itemChatImageRightIv
                 )
             }
 
@@ -264,31 +270,17 @@ class ChattingRecyclerAdapter(
 
         fun bind(chatMessageModel: ChatMessageModel) {
             val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatLeftIv)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatLeftIv)
 
-            Glide
-                .with(itemView.context)
-                .load(chatMessageModel.image)
+            Glide.with(itemView.context).load(chatMessageModel.image)
                 .into(binding.itemChatLeftImage)
 
-            binding.itemChatLeftImageTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.time)
+            binding.itemChatLeftImageTime.text = TimeUtils.getFormattedTime(chatMessageModel.time)
 
             binding.itemChatLeftImage.setOnClickListener {
                 chatMessageClickInterface.onImageClicked(
-                    chatMessageModel,
-                    binding.itemChatLeftImage
-                )
-            }
-
-            binding.itemChatLeftIv.setOnClickListener {
-                chatMessageClickInterface.onUserImageClicked(
-                    binding.itemChatLeftIv
+                    chatMessageModel, binding.itemChatLeftImage
                 )
             }
 
@@ -305,25 +297,34 @@ class ChattingRecyclerAdapter(
 
         fun bind(chatMessageModel: ChatMessageModel) {
             binding.itemChatRightLottie.setAnimation(LottieStickers.getSticker(chatMessageModel.sticker!!))
+            binding.itemChatRightStickerTime.text =
+                TimeUtils.getFormattedTime(chatMessageModel.time)
 
             val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatStickerStatusIv1)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatStickerStatusIv1)
 
             val senderUsername = ChatUtils.getUserChatUsername(chatModel, loggedInUsername)
-            binding.itemChatStickerStatusIv1.visibility =
-                if (chatMessageModel.seenBy.contains(senderUsername)) {
+            binding.itemChatStickerStatusIv1.apply {
+                visibility = if (chatMessageModel.seenBy.contains(senderUsername)) {
                     View.VISIBLE
                 } else {
                     View.GONE
                 }
+                setOnClickListener {
+                    chatMessageClickInterface.onSeenByClicked(
+                        chatMessageModel, binding.itemChatStickerStatusIv1
+                    )
+                }
+            }
 
-            binding.itemChatRightStickerTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.time)
+            binding.root.setOnLongClickListener {
+                chatMessageClickInterface.onSeenByClicked(
+                    chatMessageModel, binding.itemChatStickerStatusIv1
+                )
+                true
+            }
+
 
             binding.itemChatStickerStatusIv2.visibility = View.GONE
             binding.itemChatStickerStatusIv3.visibility = View.GONE
@@ -337,31 +338,24 @@ class ChattingRecyclerAdapter(
 
         fun bind(chatMessageModel: ChatMessageModel) {
             val senderImage = ChatUtils.getUserChatProfileImage(chatModel, loggedInUsername)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatLeftIv)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatLeftIv)
 
             binding.itemChatLeftLottie.setAnimation(LottieStickers.getSticker(chatMessageModel.sticker!!))
 
-            binding.itemChatLeftStickerTime.text =
-                TimeUtils.getFormattedTime(chatMessageModel.time)
+            binding.itemChatLeftStickerTime.text = TimeUtils.getFormattedTime(chatMessageModel.time)
         }
     }
 
     class ChatMessageDiffCallback : DiffUtil.ItemCallback<ChatMessageModel>() {
         override fun areItemsTheSame(
-            oldItem: ChatMessageModel,
-            newItem: ChatMessageModel
+            oldItem: ChatMessageModel, newItem: ChatMessageModel
         ): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: ChatMessageModel,
-            newItem: ChatMessageModel
+            oldItem: ChatMessageModel, newItem: ChatMessageModel
         ): Boolean {
             return oldItem == newItem
         }
