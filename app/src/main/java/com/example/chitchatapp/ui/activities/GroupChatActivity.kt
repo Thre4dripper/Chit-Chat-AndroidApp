@@ -433,8 +433,11 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
     }
 
     override fun onSeenByClicked(
-        seenByUsername: String, clickedIv: ImageView
-    ) = openUserProfile(seenByUsername, clickedIv)
+        clickedIv: ImageView
+    ) {
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+        openUserProfile(loggedInUsername!!, clickedIv)
+    }
 
 
     private fun openUserProfile(clickedUsername: String, animationView: ImageView) {

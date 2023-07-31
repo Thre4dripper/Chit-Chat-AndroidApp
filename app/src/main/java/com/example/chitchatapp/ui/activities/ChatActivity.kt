@@ -38,6 +38,7 @@ import com.example.chitchatapp.firebase.utils.TimeUtils
 import com.example.chitchatapp.models.ChatMessageModel
 import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.UserModel
+import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
 import com.example.chitchatapp.viewModels.ChatViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -97,6 +98,10 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (!prevActivity) {
+            //home chats are fetched in background
+            //so we need to clear them if this is first activity in the stack (from notifications)
+            //so that they are fetched again when we open the home activity, with no errors
+            HomeRepository.homeChats.value = null
             startActivity(Intent(this, HomeActivity::class.java))
         }
         supportFinishAfterTransition()
@@ -490,7 +495,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
         popupWindow.showAsDropDown(anchor, -750, -350, Gravity.END)
     }
 
-    override fun onSeenByClicked(seenByUsername: String, clickedIv: ImageView) {
-        openProfile(chatId!!, seenByUsername, clickedIv)
+    override fun onSeenByClicked(clickedIv: ImageView) {
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+        openProfile(chatId!!, loggedInUsername!!, clickedIv)
     }
 }

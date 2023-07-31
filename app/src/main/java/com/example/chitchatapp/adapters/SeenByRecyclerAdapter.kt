@@ -36,9 +36,7 @@ class SeenByRecyclerAdapter(private var seenByClickInterface: SeenByClickInterfa
 
             binding.itemSeenByProfileUserNameTv.text = groupChatUserModel.username
             binding.root.setOnClickListener {
-                seenByClickInterface.onSeenByClicked(
-                    groupChatUserModel.username, binding.itemSeenByProfileUserIv
-                )
+                seenByClickInterface.onSeenByClicked(binding.itemSeenByProfileUserIv)
             }
 
         }
