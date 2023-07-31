@@ -395,37 +395,9 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
         startActivity(intent, activityOptionsCompat.toBundle())
     }
 
-    override fun onUserImageClicked(clickedUsername: String, chatImageIv: ImageView) {
-        val loggedInUsername = viewModel.getLoggedInUsername(this)
+    override fun onUserImageClicked(clickedUsername: String, chatImageIv: ImageView) =
+        openUserProfile(clickedUsername, chatImageIv)
 
-        val loaderDialog =
-            MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
-                .show()
-
-        groupProfileViewModel.findGroupMember(
-            loggedInUsername!!, clickedUsername
-        ) { chatId ->
-            loaderDialog.dismiss()
-            if (chatId == null) {
-                Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
-                return@findGroupMember
-            }
-
-            openUserProfile(chatId, loggedInUsername, chatImageIv)
-        }
-    }
-
-    private fun openUserProfile(
-        chatId: String, loggedInUsername: String, animationView: ImageView
-    ) {
-        val intent = Intent(this, ChatProfileActivity::class.java)
-        intent.putExtra(ChatConstants.CHAT_ID, chatId)
-        intent.putExtra(UserConstants.USERNAME, loggedInUsername)
-        val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this, animationView, getString(R.string.chat_profile_activity_profile_image_transition)
-        )
-        profileLauncher.launch(intent, activityOptionsCompat)
-    }
 
     override fun onSeenByClicked(groupMessageModel: GroupMessageModel, anchor: View) {
         val popupWindow = PopupWindow(this)
@@ -453,28 +425,36 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
     }
 
     override fun onSeenByClicked(
-        seenByUsername: String,
-        clickedIv: ImageView
-    ) {
+        seenByUsername: String, clickedIv: ImageView
+    ) = openUserProfile(seenByUsername, clickedIv)
+
+
+    private fun openUserProfile(clickedUsername: String, animationView: ImageView) {
+
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+
         val loaderDialog =
             MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
                 .show()
 
-        val loggedInUsername = viewModel.getLoggedInUsername(this)
-        groupProfileViewModel.findGroupMember(loggedInUsername!!, seenByUsername) { chatId ->
+        groupProfileViewModel.findGroupMember(
+            loggedInUsername!!, clickedUsername
+        ) { chatId ->
             loaderDialog.dismiss()
-
             if (chatId == null) {
                 Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
                 return@findGroupMember
             }
 
-            val intent = Intent(this, ChatActivity::class.java)
+            val intent = Intent(this, ChatProfileActivity::class.java)
             intent.putExtra(ChatConstants.CHAT_ID, chatId)
+            intent.putExtra(UserConstants.USERNAME, loggedInUsername)
             val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this, clickedIv, getString(R.string.chat_activity_chat_profile_image_transition)
+                this,
+                animationView,
+                getString(R.string.chat_profile_activity_profile_image_transition)
             )
-            startActivity(intent, activityOptionsCompat.toBundle())
+            profileLauncher.launch(intent, activityOptionsCompat)
         }
     }
 }
