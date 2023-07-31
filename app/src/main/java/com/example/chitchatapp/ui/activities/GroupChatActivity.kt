@@ -24,9 +24,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
-import com.example.chitchatapp.adapters.GroupMembersRecyclerAdapter
+import com.example.chitchatapp.adapters.SeenByRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
-import com.example.chitchatapp.adapters.interfaces.GroupProfileClickInterface
+import com.example.chitchatapp.adapters.interfaces.SeenByClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
@@ -34,7 +34,6 @@ import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.databinding.SeenByPopupWindowBinding
 import com.example.chitchatapp.models.ChatModel
-import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
@@ -49,8 +48,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface,
-    GroupProfileClickInterface {
+class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenByClickInterface {
     private lateinit var binding: ActivityGroupChatBinding
     private lateinit var viewModel: GroupChatViewModel
     private lateinit var groupProfileViewModel: GroupProfileViewModel
@@ -441,26 +439,42 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface,
 
         val groupModel = viewModel.groupChatDetails.value!!
 
-        val seenByAdapter = GroupMembersRecyclerAdapter(groupMessageModel.from, this)
+        val seenByAdapter = SeenByRecyclerAdapter(this@GroupChatActivity)
         popupBinding.seenByRv.apply {
             adapter = seenByAdapter
         }
 
-        val list = groupModel.members.filter { it.username in groupMessageModel.seenBy }
+        val list = groupModel.members.filter {
+            it.username in groupMessageModel.seenBy && it.username != groupMessageModel.from
+        }
         seenByAdapter.submitList(list)
 
         popupWindow.showAsDropDown(anchor, -600, -700, Gravity.END)
     }
 
-    override fun onMediaImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {
-        //no use here
-    }
-
-    override fun onGroupMemberClicked(
-        loggedInUsername: String,
-        memberUsername: String,
+    override fun onSeenByClicked(
+        seenByUsername: String,
         clickedIv: ImageView
     ) {
-        //no use here
+        val loaderDialog =
+            MaterialAlertDialogBuilder(this).setView(R.layout.dialog_loader).setCancelable(false)
+                .show()
+
+        val loggedInUsername = viewModel.getLoggedInUsername(this)
+        groupProfileViewModel.findGroupMember(loggedInUsername!!, seenByUsername) { chatId ->
+            loaderDialog.dismiss()
+
+            if (chatId == null) {
+                Toast.makeText(this, "Error Fetching User details", Toast.LENGTH_SHORT).show()
+                return@findGroupMember
+            }
+
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(ChatConstants.CHAT_ID, chatId)
+            val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, clickedIv, getString(R.string.chat_activity_chat_profile_image_transition)
+            )
+            startActivity(intent, activityOptionsCompat.toBundle())
+        }
     }
 }
