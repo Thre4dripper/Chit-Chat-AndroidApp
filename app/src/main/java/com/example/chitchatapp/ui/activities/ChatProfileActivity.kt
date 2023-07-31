@@ -91,7 +91,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
             mediaAdapter.submitList(chatMediasList)
         }
 
-        chatViewModel.getLiveChatDetails(this, chatId)
+        chatViewModel.getLiveChatDetails(chatId)
     }
 
     private fun initOpenChatButton(chatModel: ChatModel) {

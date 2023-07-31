@@ -2,7 +2,6 @@ package com.example.chitchatapp.viewModels
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,6 @@ import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatModel
 import com.example.chitchatapp.repository.GroupChatsRepository
 import com.example.chitchatapp.repository.GroupsRepository
-import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserChatsRepository
 import com.example.chitchatapp.store.UserStore
 
@@ -23,24 +21,16 @@ class GroupChatViewModel : ViewModel() {
         return UserStore.getUsername(context)
     }
 
-    fun getLiveGroupChatDetails(context: Context, lifecycleOwner: LifecycleOwner, groupId: String) {
-        //when chat is already loaded in home fragment then take it from there
-        if (HomeRepository.homeChats.value != null) {
-            HomeRepository.homeChats.observe(lifecycleOwner) {
-                val groupChatModel =
-                    it?.find { chat -> chat.groupChat?.id == groupId }?.groupChat
-                _groupChatDetails.value = groupChatModel
-            }
+    fun getGroupChatDetails(groupId: String, onSuccess: (GroupChatModel?) -> Unit) =
+        GroupChatsRepository.getGroupChatById(groupId, onSuccess)
+
+
+    fun getLiveGroupChatDetails(context: Context, groupId: String) {
+        //always fetch latest chat details
+        GroupChatsRepository.getLiveGroupChatById(groupId) {
+            _groupChatDetails.value = it
         }
-        //otherwise load it from firebase (open from notification case)
-        else {
-            GroupChatsRepository.getGroupChatById(groupId) {
-                _groupChatDetails.value = it
-            }
-            //it will fetch all the chats of the user in background
-            //and it will never execute if chats are already loaded
-            UserChatsRepository.getAllUserChats(context)
-        }
+        UserChatsRepository.getAllUserChats(context)
     }
 
     fun createGroup(

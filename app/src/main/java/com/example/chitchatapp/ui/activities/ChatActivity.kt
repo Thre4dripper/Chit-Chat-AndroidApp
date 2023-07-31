@@ -60,7 +60,6 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
     private var chatId: String? = null
     private var scrollToBottom = true
     private var prevActivity = false
-    private var isFirstTimeLoad = true
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -202,19 +201,19 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
             //submit the live list to the adapter
             chattingAdapter.submitList(it.chatMessages) {
                 //when the list is submitted, then update the seen status
-                if (prevActivity || !isFirstTimeLoad) {
-                    //when list is first time rendered from notifications, it is of old messages
-                    //strange behaviour of firestore, so don't update seen status on first time load
-                    viewModel.updateSeen(this) {}
-                }
-                isFirstTimeLoad = false
+                viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
                 if (scrollToBottom) binding.chattingRv.smoothScrollToPosition(0)
             }
 
         }
 
-        viewModel.getLiveChatDetails(this, chatId)
+        viewModel.getChatDetails(chatId) {
+            if (it != null) {
+                viewModel.updateSeen(this) {}
+                viewModel.getLiveChatDetails(chatId)
+            }
+        }
     }
 
     private fun createNewChat(userModel: UserModel, loggedInUsername: String) {

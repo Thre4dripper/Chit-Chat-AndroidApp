@@ -43,12 +43,17 @@ class UserChatsRepository {
             }
         }
 
-        fun getUserChatById(
+        fun getUserChatById(chatId: String, onSuccess: (ChatModel?) -> Unit) {
+            val firestore = FirebaseFirestore.getInstance()
+            GetChats.getUserChatById(firestore, chatId, onSuccess)
+        }
+
+        fun getLiveUserChatById(
             chatId: String,
             chatModel: (ChatModel?) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            GetChats.getUserChatById(firestore, chatId, chatModel)
+            GetChats.getLiveUserChatById(firestore, chatId, chatModel)
         }
 
         fun sendTextMessage(
@@ -114,10 +119,19 @@ class UserChatsRepository {
         }
 
         fun muteUnMuteChat(
-            chatModel: ChatModel, loggedInUsername: String, mute: Boolean, onSuccess: (Boolean) -> Unit
+            chatModel: ChatModel,
+            loggedInUsername: String,
+            mute: Boolean,
+            onSuccess: (Boolean) -> Unit
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            Messaging.muteUnMuteUserNotifications(firestore, chatModel, loggedInUsername,mute, onSuccess)
+            Messaging.muteUnMuteUserNotifications(
+                firestore,
+                chatModel,
+                loggedInUsername,
+                mute,
+                onSuccess
+            )
         }
 
         fun favouriteChat(

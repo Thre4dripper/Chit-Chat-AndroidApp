@@ -4,6 +4,7 @@ import com.example.chitchatapp.constants.FirestoreCollections
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupChatModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class UpdateSeen {
     companion object {
@@ -34,7 +35,7 @@ class UpdateSeen {
 
             firestore.collection(FirestoreCollections.CHATS_COLLECTION)
                 .document(chatModel.chatId)
-                .set(updatedChatModel)
+                .set(updatedChatModel, SetOptions.merge())
                 .addOnSuccessListener {
                     onSuccess(true)
                 }
@@ -70,7 +71,7 @@ class UpdateSeen {
 
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION)
                 .document(groupChatModel.id)
-                .set(updatedChatModel)
+                .set(updatedChatModel, SetOptions.merge())
                 .addOnSuccessListener {
                     onSuccess(true)
                 }

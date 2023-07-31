@@ -40,12 +40,17 @@ class GroupChatsRepository {
             }
         }
 
-        fun getGroupChatById(
+        fun getGroupChatById(groupId: String, onSuccess: (GroupChatModel?) -> Unit) {
+            val firestore = FirebaseFirestore.getInstance()
+            GetGroupChats.getGroupChatById(firestore, groupId, onSuccess)
+        }
+
+        fun getLiveGroupChatById(
             chatId: String,
             chatModel: (GroupChatModel?) -> Unit,
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            GetGroupChats.getGroupChatById(firestore, chatId, chatModel)
+            GetGroupChats.getLiveGroupChatById(firestore, chatId, chatModel)
         }
 
         fun sendGroupTextMessage(

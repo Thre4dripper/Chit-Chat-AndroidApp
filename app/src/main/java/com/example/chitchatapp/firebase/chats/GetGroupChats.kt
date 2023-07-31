@@ -37,6 +37,24 @@ class GetGroupChats {
         fun getGroupChatById(
             firestore: FirebaseFirestore,
             groupId: String,
+            onSuccess: (GroupChatModel?) -> Unit
+        ) {
+            firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupId)
+                .get()
+                .addOnSuccessListener {
+                    if (it == null) {
+                        onSuccess(null)
+                        return@addOnSuccessListener
+                    }
+
+                    val groupChatModel = it.toObject(GroupChatModel::class.java)
+                    onSuccess(groupChatModel)
+                }
+        }
+
+        fun getLiveGroupChatById(
+            firestore: FirebaseFirestore,
+            groupId: String,
             onSuccess: (GroupChatModel?) -> Unit,
         ) {
             firestore.collection(FirestoreCollections.GROUPS_COLLECTION).document(groupId)

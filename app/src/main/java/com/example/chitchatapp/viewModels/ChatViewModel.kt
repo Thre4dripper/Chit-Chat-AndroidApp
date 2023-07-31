@@ -2,7 +2,6 @@ package com.example.chitchatapp.viewModels
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,6 @@ import com.example.chitchatapp.firebase.utils.ChatUtils
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.UserModel
 import com.example.chitchatapp.repository.AddChatsRepository
-import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.repository.UserChatsRepository
 import com.example.chitchatapp.repository.UserRepository
 import com.example.chitchatapp.store.UserStore
@@ -40,19 +38,14 @@ class ChatViewModel : ViewModel() {
         return UserStore.getUsername(context)
     }
 
-    fun getLiveChatDetails(lifecycleOwner: LifecycleOwner, chatId: String) {
-        //when chat is already loaded in home fragment then take it from there
-        if (HomeRepository.homeChats.value != null) {
-            HomeRepository.homeChats.observe(lifecycleOwner) {
-                val chatModel = it?.find { chat -> chat.userChat?.chatId == chatId }?.userChat
-                _chatDetails.value = chatModel
-            }
-        }
-        //otherwise load it from firebase (open from notification case)
-        else {
-            UserChatsRepository.getUserChatById(chatId) {
-                _chatDetails.value = it
-            }
+    fun getChatDetails(chatId: String, onSuccess: (ChatModel?) -> Unit) =
+        UserChatsRepository.getUserChatById(chatId, onSuccess)
+
+
+    fun getLiveChatDetails(chatId: String) {
+        //always fetch latest chat detail
+        UserChatsRepository.getLiveUserChatById(chatId) {
+            _chatDetails.value = it
         }
     }
 

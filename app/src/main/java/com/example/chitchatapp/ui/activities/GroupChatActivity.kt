@@ -57,7 +57,6 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
     private var groupId: String? = null
     private var scrollToBottom = true
     private var prevActivity = false
-    private var isFirstTimeLoad = true
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,19 +160,19 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
             //submit the live list to the adapter
             groupChatAdapter.submitList(it.messages) {
                 //when the list is submitted, then update the seen status
-                if (prevActivity || !isFirstTimeLoad) {
-                    //when list is first time rendered from notifications, it is of old messages
-                    //strange behaviour of firestore, so don't update seen status on first time load
-                    viewModel.updateSeen(this) {}
-                }
-                isFirstTimeLoad = false
+                viewModel.updateSeen(this) {}
                 //scroll to the bottom of the recycler view
                 if (scrollToBottom) binding.groupChatRv.smoothScrollToPosition(0)
             }
 
         }
 
-        viewModel.getLiveGroupChatDetails(this, this, groupId)
+        viewModel.getGroupChatDetails(groupId) {
+            if (it == null) return@getGroupChatDetails
+            viewModel.updateSeen(this) {}
+            viewModel.getLiveGroupChatDetails(this, groupId)
+        }
+
     }
 
     private fun createNewGroup(
