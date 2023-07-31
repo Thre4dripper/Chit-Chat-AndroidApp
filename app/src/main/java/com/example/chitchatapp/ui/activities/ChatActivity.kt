@@ -50,6 +50,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
     private lateinit var chattingAdapter: ChattingRecyclerAdapter
     private var chatId: String? = null
     private var scrollToBottom = true
+    private var prevActivity = false
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         //getting intent data
         chatId = intent.getStringExtra(ChatConstants.CHAT_ID)
         val userModel = intent.getSerializableExtra(UserConstants.USER_MODEL) as? UserModel
+        prevActivity = intent.getBooleanExtra(Constants.PREV_ACTIVITY, false)
 
         val loggedInUsername = viewModel.getLoggedInUsername(this)
         if (loggedInUsername == null) {
@@ -80,7 +82,15 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
             createNewChat(userModel!!, loggedInUsername!!)
         }
 
-        binding.chattingBackBtn.setOnClickListener { finish() }
+        binding.chattingBackBtn.setOnClickListener { onBackPressed() }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (!prevActivity) {
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
+        finish()
     }
 
     private fun initMenu(chatId: String, loggedInUsername: String) {
@@ -168,7 +178,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
 
             //setting the profile image
             val chatProfileImage = ChatUtils.getUserChatProfileImage(it, loggedInUsername)
-            Glide.with(this).load(chatProfileImage).placeholder(R.drawable.ic_profile).circleCrop()
+            Glide.with(this).load(chatProfileImage).placeholder(R.drawable.ic_profile)
+                .circleCrop()
                 .into(binding.chattingProfileImage)
 
             //setting the username
@@ -337,7 +348,8 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
                     //on completion of async call
                     .invokeOnCompletion {
                         //Crop activity with source and destination uri
-                        val uCrop = UCrop.of(pickedPhotoUri, uri!!).withMaxResultSize(1080, 1080)
+                        val uCrop =
+                            UCrop.of(pickedPhotoUri, uri!!).withMaxResultSize(1080, 1080)
 
                         cropImageCallback.launch(uCrop.getIntent(this))
                     }
@@ -388,12 +400,18 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface {
         }
     }
 
-    private fun openProfile(chatId: String, loggedInUsername: String, animationView: ImageView) {
+    private fun openProfile(
+        chatId: String,
+        loggedInUsername: String,
+        animationView: ImageView
+    ) {
         val intent = Intent(this, ChatProfileActivity::class.java)
         intent.putExtra(ChatConstants.CHAT_ID, chatId)
         intent.putExtra(UserConstants.USERNAME, loggedInUsername)
         val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this, animationView, getString(R.string.chat_profile_activity_profile_image_transition)
+            this,
+            animationView,
+            getString(R.string.chat_profile_activity_profile_image_transition)
         )
         profileLauncher.launch(intent, activityOptionsCompat)
     }

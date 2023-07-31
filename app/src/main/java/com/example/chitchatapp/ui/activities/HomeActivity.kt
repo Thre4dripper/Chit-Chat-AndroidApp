@@ -284,12 +284,14 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     override fun onChatClicked(chatId: String) {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra(ChatConstants.CHAT_ID, chatId)
+        intent.putExtra(Constants.PREV_ACTIVITY, true)
         startActivity(intent)
     }
 
     override fun onGroupChatClicked(groupId: String) {
         val intent = Intent(this, GroupChatActivity::class.java)
         intent.putExtra(GroupConstants.GROUP_ID, groupId)
+        intent.putExtra(Constants.PREV_ACTIVITY, true)
         startActivity(intent)
     }
 

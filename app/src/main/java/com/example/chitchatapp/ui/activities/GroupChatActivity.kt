@@ -28,6 +28,7 @@ import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
 import com.example.chitchatapp.models.ChatModel
 import com.example.chitchatapp.models.GroupMessageModel
+import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
 import com.example.chitchatapp.viewModels.AddGroupViewModel
 import com.example.chitchatapp.viewModels.GroupChatViewModel
@@ -48,7 +49,9 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
     private lateinit var groupChatAdapter: GroupChatRecyclerAdapter
     private var groupId: String? = null
     private var scrollToBottom = true
+    private var prevActivity = false
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_chat)
@@ -62,6 +65,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
         val groupName = intent.getStringExtra(GroupConstants.GROUP_NAME) ?: "Group"
         val groupImage = intent.getStringExtra(GroupConstants.GROUP_IMAGE) ?: ""
         val groupMembers = AddGroupViewModel.selectedUsers.value
+        prevActivity = intent.getBooleanExtra(Constants.PREV_ACTIVITY, false)
 
         val loggedInUsername = viewModel.getLoggedInUsername(this)
         if (loggedInUsername == null) {
@@ -80,7 +84,19 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             )
         }
 
-        binding.groupChatBackBtn.setOnClickListener { finish() }
+        binding.groupChatBackBtn.setOnClickListener { onBackPressed() }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (!prevActivity) {
+            //home chats are fetched in background
+            //so we need to clear them if this is first activity in the stack (from notifications)
+            //so that they are fetched again when we open the home activity, with no errors
+            HomeRepository.homeChats.value = null
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
+        finish()
     }
 
     private fun initMenu(groupId: String, loggedInUsername: String) {
