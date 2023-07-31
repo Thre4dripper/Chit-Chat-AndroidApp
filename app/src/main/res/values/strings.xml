@@ -133,4 +133,8 @@
     <string name="group_profile_activity_profile_image_transition">groupImageTransition</string>
     <string name="chat_activity_chat_profile_image_transition">chatProfileImageTransition</string>
     <string name="group_chat_activity_group_profile_image_transition">groupChatProfileImageTransition</string>
+
+    //Seen by popup window
+    <string name="seen_by_popup_window_title">Seen By</string>
+    <string name="seen_by_popup_window_desc_close">Close Button</string>
 </resources>

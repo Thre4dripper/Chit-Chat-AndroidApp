@@ -1,11 +1,15 @@
 package com.example.chitchatapp.ui.activities
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,13 +24,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chitchatapp.R
 import com.example.chitchatapp.adapters.GroupChatRecyclerAdapter
+import com.example.chitchatapp.adapters.GroupMembersRecyclerAdapter
 import com.example.chitchatapp.adapters.interfaces.GroupMessageClickInterface
+import com.example.chitchatapp.adapters.interfaces.GroupProfileClickInterface
 import com.example.chitchatapp.constants.ChatConstants
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.constants.GroupConstants
 import com.example.chitchatapp.constants.UserConstants
 import com.example.chitchatapp.databinding.ActivityGroupChatBinding
+import com.example.chitchatapp.databinding.SeenByPopupWindowBinding
 import com.example.chitchatapp.models.ChatModel
+import com.example.chitchatapp.models.GroupChatUserModel
 import com.example.chitchatapp.models.GroupMessageModel
 import com.example.chitchatapp.repository.HomeRepository
 import com.example.chitchatapp.ui.bottomSheet.StickersBottomSheet
@@ -41,7 +49,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
+class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface,
+    GroupProfileClickInterface {
     private lateinit var binding: ActivityGroupChatBinding
     private lateinit var viewModel: GroupChatViewModel
     private lateinit var groupProfileViewModel: GroupProfileViewModel
@@ -418,5 +427,40 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface {
             this, animationView, getString(R.string.chat_profile_activity_profile_image_transition)
         )
         profileLauncher.launch(intent, activityOptionsCompat)
+    }
+
+    override fun onSeenByClicked(groupMessageModel: GroupMessageModel, anchor: View) {
+        val popupWindow = PopupWindow(this)
+        val popupBinding = SeenByPopupWindowBinding.inflate(layoutInflater)
+        popupWindow.contentView = popupBinding.root
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        popupBinding.btnClose.setOnClickListener {
+            popupWindow.dismiss()
+        }
+
+        val groupModel = viewModel.groupChatDetails.value!!
+
+        val seenByAdapter = GroupMembersRecyclerAdapter(groupMessageModel.from, this)
+        popupBinding.seenByRv.apply {
+            adapter = seenByAdapter
+        }
+
+        val list = groupModel.members.filter { it.username in groupMessageModel.seenBy }
+        seenByAdapter.submitList(list)
+
+        popupWindow.showAsDropDown(anchor, -600, -700, Gravity.END)
+    }
+
+    override fun onMediaImageClicked(groupMessageModel: GroupMessageModel, chatImageIv: ImageView) {
+        //no use here
+    }
+
+    override fun onGroupMemberClicked(
+        loggedInUsername: String,
+        memberUsername: String,
+        clickedIv: ImageView
+    ) {
+        //no use here
     }
 }

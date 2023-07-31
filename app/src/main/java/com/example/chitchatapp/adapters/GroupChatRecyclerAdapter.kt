@@ -29,8 +29,7 @@ class GroupChatRecyclerAdapter(
     private var loggedInUsername: String,
     private var groupChatModel: GroupChatModel,
     private var groupMessageClickInterface: GroupMessageClickInterface
-) :
-    ListAdapter<GroupMessageModel, ViewHolder>(GroupChatDiffUtil()) {
+) : ListAdapter<GroupMessageModel, ViewHolder>(GroupChatDiffUtil()) {
 
     companion object {
         private const val VIEW_TYPE_CREATED_GROUP = 0
@@ -186,9 +185,7 @@ class GroupChatRecyclerAdapter(
             val date = groupMessageModel.time.toDate()
             val formattedDate = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
             binding.itemGroupCreatedTv.text = context.getString(
-                R.string.item_group_chat_group_created,
-                groupMessageModel.from,
-                "on $formattedDate"
+                R.string.item_group_chat_group_created, groupMessageModel.from, "on $formattedDate"
             )
         }
     }
@@ -201,9 +198,7 @@ class GroupChatRecyclerAdapter(
             val date = groupMessageModel.time.toDate()
             val formattedDate = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(date)
             binding.itemGroupCreatedTv.text = context.getString(
-                R.string.item_group_chat_left_group,
-                groupMessageModel.from,
-                "on $formattedDate"
+                R.string.item_group_chat_left_group, groupMessageModel.from, "on $formattedDate"
             )
         }
     }
@@ -220,23 +215,18 @@ class GroupChatRecyclerAdapter(
 
         fun bind(groupMessageModel: GroupMessageModel) {
             binding.itemChatRightTextMessage.text = groupMessageModel.text
-            binding.itemChatRightTextTime.text =
-                TimeUtils.getFormattedTime(groupMessageModel.time)
+            binding.itemChatRightTextTime.text = TimeUtils.getFormattedTime(groupMessageModel.time)
 
             val senderImage =
                 ChatUtils.getGroupChatProfileImage(groupChatModel, groupMessageModel.from)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatMessageStatusIv1)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatMessageStatusIv1)
 
             //take last 5 seen by except sender
-            val lastFiveSeenBy = groupMessageModel.seenBy
-                .filter { it != groupMessageModel.from }
-                .takeLast(5)
+            val lastFiveSeenBy =
+                groupMessageModel.seenBy.filter { it != groupMessageModel.from }.takeLast(5)
 
+            //hide all status image view initially
             repeat(5) {
                 imageStatusIvs[it].visibility = View.GONE
             }
@@ -244,12 +234,20 @@ class GroupChatRecyclerAdapter(
                 imageStatusIvs[i].visibility = View.VISIBLE
                 val seenBy = lastFiveSeenBy[i]
                 val seenByImage = ChatUtils.getGroupChatProfileImage(groupChatModel, seenBy)
-                Glide
-                    .with(itemView.context)
-                    .load(seenByImage)
-                    .circleCrop()
-                    .placeholder(R.drawable.ic_profile)
-                    .into(imageStatusIvs[i])
+                Glide.with(itemView.context).load(seenByImage).circleCrop()
+                    .placeholder(R.drawable.ic_profile).into(imageStatusIvs[i])
+
+                imageStatusIvs[i].setOnClickListener {
+                    groupMessageClickInterface.onSeenByClicked(groupMessageModel, imageStatusIvs[i])
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                groupMessageClickInterface.onSeenByClicked(
+                    groupMessageModel,
+                    binding.itemChatRightTextMessage
+                )
+                true
             }
         }
     }
@@ -260,21 +258,15 @@ class GroupChatRecyclerAdapter(
         fun bind(groupMessageModel: GroupMessageModel) {
             val senderImage =
                 ChatUtils.getGroupChatProfileImage(groupChatModel, groupMessageModel.from)
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatLeftIv)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatLeftIv)
 
             binding.itemChatLeftTextMessage.text = groupMessageModel.text
-            binding.itemChatLeftTextTime.text =
-                TimeUtils.getFormattedTime(groupMessageModel.time)
+            binding.itemChatLeftTextTime.text = TimeUtils.getFormattedTime(groupMessageModel.time)
 
             binding.itemChatLeftIv.setOnClickListener {
                 groupMessageClickInterface.onUserImageClicked(
-                    groupMessageModel.from,
-                    binding.itemChatLeftIv
+                    groupMessageModel.from, binding.itemChatLeftIv
                 )
             }
         }
@@ -285,22 +277,17 @@ class GroupChatRecyclerAdapter(
 
         fun bind(groupMessageModel: GroupMessageModel) {
 
-            Glide
-                .with(itemView.context)
-                .load(groupMessageModel.image)
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatImageRightIv)
+            Glide.with(itemView.context).load(groupMessageModel.image)
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatImageRightIv)
 
             //hide status icon in group chat
             binding.itemChatImageStatusIv1.visibility = View.GONE
 
-            binding.itemChatRightImageTime.text =
-                TimeUtils.getFormattedTime(groupMessageModel.time)
+            binding.itemChatRightImageTime.text = TimeUtils.getFormattedTime(groupMessageModel.time)
 
             binding.itemChatImageRightIv.setOnClickListener {
                 groupMessageClickInterface.onImageClicked(
-                    groupMessageModel,
-                    binding.itemChatImageRightIv
+                    groupMessageModel, binding.itemChatImageRightIv
                 )
             }
         }
@@ -311,35 +298,25 @@ class GroupChatRecyclerAdapter(
 
         fun bind(groupMessageModel: GroupMessageModel) {
             val senderImage = ChatUtils.getGroupChatProfileImage(
-                groupChatModel,
-                groupMessageModel.from
+                groupChatModel, groupMessageModel.from
             )
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatLeftIv)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatLeftIv)
 
-            Glide
-                .with(itemView.context)
-                .load(groupMessageModel.image)
+            Glide.with(itemView.context).load(groupMessageModel.image)
                 .into(binding.itemChatLeftImage)
 
-            binding.itemChatLeftImageTime.text =
-                TimeUtils.getFormattedTime(groupMessageModel.time)
+            binding.itemChatLeftImageTime.text = TimeUtils.getFormattedTime(groupMessageModel.time)
 
             binding.itemChatLeftImage.setOnClickListener {
                 groupMessageClickInterface.onImageClicked(
-                    groupMessageModel,
-                    binding.itemChatLeftImage
+                    groupMessageModel, binding.itemChatLeftImage
                 )
             }
 
             binding.itemChatLeftIv.setOnClickListener {
                 groupMessageClickInterface.onUserImageClicked(
-                    groupMessageModel.from,
-                    binding.itemChatLeftIv
+                    groupMessageModel.from, binding.itemChatLeftIv
                 )
             }
         }
@@ -364,15 +341,10 @@ class GroupChatRecyclerAdapter(
 
         fun bind(groupMessageModel: GroupMessageModel) {
             val senderImage = ChatUtils.getGroupChatProfileImage(
-                groupChatModel,
-                groupMessageModel.from
+                groupChatModel, groupMessageModel.from
             )
-            Glide
-                .with(itemView.context)
-                .load(senderImage)
-                .circleCrop()
-                .placeholder(R.drawable.ic_profile)
-                .into(binding.itemChatLeftIv)
+            Glide.with(itemView.context).load(senderImage).circleCrop()
+                .placeholder(R.drawable.ic_profile).into(binding.itemChatLeftIv)
 
             binding.itemChatLeftLottie.setAnimation(LottieStickers.getSticker(groupMessageModel.sticker!!))
 
@@ -381,8 +353,7 @@ class GroupChatRecyclerAdapter(
 
             binding.itemChatLeftIv.setOnClickListener {
                 groupMessageClickInterface.onUserImageClicked(
-                    groupMessageModel.from,
-                    binding.itemChatLeftIv
+                    groupMessageModel.from, binding.itemChatLeftIv
                 )
             }
         }
@@ -390,15 +361,13 @@ class GroupChatRecyclerAdapter(
 
     class GroupChatDiffUtil : DiffUtil.ItemCallback<GroupMessageModel>() {
         override fun areItemsTheSame(
-            oldItem: GroupMessageModel,
-            newItem: GroupMessageModel
+            oldItem: GroupMessageModel, newItem: GroupMessageModel
         ): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: GroupMessageModel,
-            newItem: GroupMessageModel
+            oldItem: GroupMessageModel, newItem: GroupMessageModel
         ): Boolean {
             return oldItem == newItem
         }
