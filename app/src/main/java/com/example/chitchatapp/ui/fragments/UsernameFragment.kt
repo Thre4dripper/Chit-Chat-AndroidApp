@@ -63,8 +63,8 @@ class UsernameFragment : Fragment() {
             return
         }
 
-        if (username.length < 4) {
-            binding.usernameEt.error = "Username must be at least 4 characters long"
+        if (username.length < 5) {
+            binding.usernameEt.error = "Username must be at least 5 characters long"
             binding.usernameProgressBar.visibility = View.GONE
             binding.usernameSaveBtn.visibility = View.VISIBLE
             return
