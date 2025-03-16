@@ -207,7 +207,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     private fun showSignInFailedDialog() {
         MaterialAlertDialogBuilder(this).setTitle("Sign In Failed")
             .setMessage("Sign in failed. Do you want to try again?").setCancelable(false)
-            .setPositiveButton("Ok") { _, _ ->
+            .setPositiveButton("Yes") { _, _ ->
                 //restart activity
                 finish()
                 val intent = Intent(this, HomeActivity::class.java)
