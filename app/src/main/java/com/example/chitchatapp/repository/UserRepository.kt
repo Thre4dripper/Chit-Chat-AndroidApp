@@ -30,6 +30,12 @@ class UserRepository {
             val user = FirebaseAuth.getInstance().currentUser
             val username = UserStore.getUsername(context)
 
+            if (user == null || username == null) {
+                userDetails.postValue(null)
+                onSuccess(false)
+                return
+            }
+
             GetProfile.getProfile(firestore, user, username) { profile ->
                 if (profile != null) {
                     userDetails.postValue(profile)

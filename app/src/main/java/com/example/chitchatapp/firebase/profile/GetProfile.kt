@@ -10,13 +10,13 @@ class GetProfile {
         private const val TAG = "GetProfile"
         fun getProfile(
             firestore: FirebaseFirestore,
-            user: FirebaseUser?,
-            username: String?,
+            user: FirebaseUser,
+            username: String,
             profile: (UserModel?) -> Unit
         ) {
             getProfileFromUsernameDoc(firestore, username) { usernameDocProfile ->
                 if (usernameDocProfile == null) {
-                    getProfileFromUidDoc(firestore, user?.uid) { uidDocProfile ->
+                    getProfileFromUidDoc(firestore, user.uid) { uidDocProfile ->
                         profile(uidDocProfile)
                     }
                 } else {
@@ -27,11 +27,11 @@ class GetProfile {
 
         private fun getProfileFromUidDoc(
             firestore: FirebaseFirestore,
-            uid: String?,
+            uid: String,
             profile: (UserModel?) -> Unit
         ) {
             firestore.collection(FirestoreCollections.USERS_COLLECTION)
-                .document(uid!!)
+                .document(uid)
                 .get()
                 .addOnSuccessListener {
                     val data = it.toObject(UserModel::class.java)
@@ -44,13 +44,9 @@ class GetProfile {
 
         private fun getProfileFromUsernameDoc(
             firestore: FirebaseFirestore,
-            username: String?,
+            username: String,
             profile: (UserModel?) -> Unit
         ) {
-            if (username == null) {
-                profile(null)
-                return
-            }
             firestore.collection(FirestoreCollections.USERS_COLLECTION)
                 .document(username)
                 .get()

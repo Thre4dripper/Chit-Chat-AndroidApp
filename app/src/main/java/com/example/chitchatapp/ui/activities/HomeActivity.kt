@@ -180,6 +180,8 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         FirebaseAuthUIActivityResultContract(),
     ) { res ->
         viewModel.onSignInResult(res) {
+            // dont do anything if the activity is finishing or destroyed
+            if (isFinishing && isDestroyed) return@onSignInResult
             if (it) {
                 //after sign in, initCompleteProfile will be called again
                 initHomeLottieLayouts()
@@ -221,24 +223,25 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         binding.loadingLottie.visibility = View.VISIBLE
 
         viewModel.homeChats.observe(this) { homeChats ->
-            if (homeChats != null) {
+            if (homeChats == null) return@observe
+            if (this::homeChatsAdapter.isInitialized) {
                 homeChatsAdapter.submitList(homeChats)
-
-                if (homeChats.isEmpty()) {
-                    binding.homeLabelChatsTv.visibility = View.GONE
-                    binding.homeChatRv.visibility = View.GONE
-                    binding.addChatsLl.visibility = View.VISIBLE
-                    binding.homeActionFab.visibility = View.GONE
-                } else {
-                    binding.homeLabelChatsTv.visibility = View.VISIBLE
-                    binding.homeChatRv.visibility = View.VISIBLE
-                    binding.addChatsLl.visibility = View.GONE
-                    binding.homeActionFab.visibility = View.VISIBLE
-                }
-
-                //hiding loading lottie on loading complete
-                binding.loadingLottie.visibility = View.GONE
             }
+
+            if (homeChats.isEmpty()) {
+                binding.homeLabelChatsTv.visibility = View.GONE
+                binding.homeChatRv.visibility = View.GONE
+                binding.addChatsLl.visibility = View.VISIBLE
+                binding.homeActionFab.visibility = View.GONE
+            } else {
+                binding.homeLabelChatsTv.visibility = View.VISIBLE
+                binding.homeChatRv.visibility = View.VISIBLE
+                binding.addChatsLl.visibility = View.GONE
+                binding.homeActionFab.visibility = View.VISIBLE
+            }
+
+            //hiding loading lottie on loading complete
+            binding.loadingLottie.visibility = View.GONE
         }
 
         viewModel.userDetails.observe(this) {
@@ -260,7 +263,9 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
             //listen for favourite chats in user details
             viewModel.listenFavChats(it.username) { userModel ->
                 //visibility control for home label fav chats and home fav chat recycler view
-                val hasFavourites = userModel!!.favourites.isNotEmpty()
+                if (userModel == null) return@listenFavChats
+
+                val hasFavourites = userModel.favourites.isNotEmpty()
 
                 if (hasFavourites) {
                     binding.homeLabelFavChatsTv.visibility = View.VISIBLE
@@ -308,23 +313,19 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
                 when {
                     //this should handle the case when user has denied the permission but not permanently
                     shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS) -> {
-                        MaterialAlertDialogBuilder(this)
-                            .setTitle("Notifications Permission")
+                        MaterialAlertDialogBuilder(this).setTitle("Notifications Permission")
                             .setMessage("Notifications permission is required to receive device notifications")
                             .setPositiveButton("Enable") { dialog, _ ->
                                 dialog.dismiss()
                                 initPermissions()
-                            }
-                            .setNegativeButton("Cancel") { dialog, _ ->
+                            }.setNegativeButton("Cancel") { dialog, _ ->
                                 dialog.dismiss()
-                            }
-                            .show()
+                            }.show()
                     }
 
                     //this should handle the case when user has permanently denied the permission
                     else -> {
-                        MaterialAlertDialogBuilder(this)
-                            .setTitle("Notifications Permission")
+                        MaterialAlertDialogBuilder(this).setTitle("Notifications Permission")
                             .setMessage("It seems like you have permanently denied notifications permission. You can enable it from settings")
                             .setPositiveButton("Settings") { dialog, _ ->
                                 dialog.dismiss()
@@ -333,11 +334,9 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
                                 val uri = Uri.fromParts("package", packageName, null)
                                 intent.data = uri
                                 startActivity(intent)
-                            }
-                            .setNegativeButton("Cancel") { dialog, _ ->
+                            }.setNegativeButton("Cancel") { dialog, _ ->
                                 dialog.dismiss()
-                            }
-                            .show()
+                            }.show()
                     }
                 }
             }

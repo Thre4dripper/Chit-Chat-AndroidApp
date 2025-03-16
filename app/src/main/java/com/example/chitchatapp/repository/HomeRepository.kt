@@ -21,10 +21,15 @@ class HomeRepository {
             val firestore = FirebaseFirestore.getInstance()
             val user = FirebaseAuth.getInstance().currentUser
 
+            if(user == null) {
+                onSuccess(null)
+                return
+            }
+
             CrudUtils.getFirestoreDocument(
                 firestore,
                 FirestoreCollections.REGISTERED_IDS_COLLECTION,
-                user!!.uid,
+                user.uid,
                 onSuccess = { data ->
                     onSuccess(data?.get(UserConstants.USERNAME) as String?)
                 }
