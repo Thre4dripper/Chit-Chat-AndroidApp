@@ -12,74 +12,12 @@ permissions:
   packages: write
 
 jobs:
-#  build:
-#    name: Build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Set up JDK
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: 'oracle'
-#          java-version: '17'
-#          cache: gradle
-#
-#      - name: Create google-services.json
-#        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
-#
-#      - name: Create secrets.xml
-#        run: |
-#          cat << EOF > app/src/main/res/values/secrets.xml
-#          <?xml version="1.0" encoding="utf-8"?>
-#          <resources>
-#              <string name="fcm_server_key">${{ secrets.FCM_SERVER_KEY }}</string>
-#          </resources>
-#          EOF
-#
-#      - name: Change Gradle Wrapper Permissions
-#        run: chmod +x gradlew
-#
-#      - name: Build with Gradle
-#        run: ./gradlew assembleDebug
-#
-#      - name: Upload APK
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: app-debug
-#          path: app/build/outputs/apk/debug/app-debug.apk
-#          retention-days: 1
-#          content-type: application/vnd.android.package-archive
-#
-#      - name: Get short SHA
-#        id: sha
-#        run: echo "sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-#
-#      - name: Create Release
-#        id: create_release
-#        uses: softprops/action-gh-release@v2
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: release-${{ steps.sha.outputs.sha }}
-#          name: "Release ${{ steps.sha.outputs.sha }}"
-#          body: |
-#            ## What's Changed
-#            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }}
-#          draft: false
-#          prerelease: false
-#          files: |
-#            app/build/outputs/apk/debug/app-debug.apk
-
   setup:
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
       short_sha: ${{ steps.sha.outputs.sha }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Create google-services.json
         run: |
           mkdir -p app
@@ -128,9 +66,6 @@ jobs:
           name: config-files
           path: ./app
 
-      - name: Check config files
-        run: ls -la app
-
       - name: Change Gradle Wrapper Permissions
         run: chmod +x gradlew
 
@@ -148,10 +83,13 @@ jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: build
+    needs: [ setup,build ]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug
 
       - name: Create Release
         id: create_release
@@ -159,8 +97,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 1.0-${{ steps.sha.outputs.sha }}
-          name: "Release ${{ steps.sha.outputs.sha }}"
+          tag_name: 1.0-${{ needs.setup.outputs.short_sha }}
+          name: "Release ${{ needs.setup.outputs.short_sha }}"
           body: |
             ## What's Changed
             **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }}
