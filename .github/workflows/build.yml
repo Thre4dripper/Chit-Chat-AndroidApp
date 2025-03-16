@@ -50,7 +50,7 @@ jobs:
           retention-days: 1
 
   build:
-    name: Build
+    name: Build APK
     runs-on: ubuntu-latest
     needs: setup
     steps:
@@ -91,6 +91,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download APK
         uses: actions/download-artifact@v4
