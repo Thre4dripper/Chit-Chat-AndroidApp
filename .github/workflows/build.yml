@@ -73,6 +73,9 @@ jobs:
       - name: Change Gradle Wrapper Permissions
         run: chmod +x gradlew
 
+      - name: list every file recursively
+        run: tree
+
       - name: Build with Gradle
         run: ./gradlew assembleDebug
 
