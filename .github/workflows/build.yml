@@ -24,24 +24,18 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Install XML tools
-        run: sudo apt-get install -y libxml2-utils
-
       - name: Create google-services.json
-        run: printf '%s' "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
 
       - name: Create secrets.xml
         run: |
-          printf '%s' "${{ secrets.SECRETS_XML }}" > app/src/main/res/values/secrets.xml
-          sed -i '1s/^\xEF\xBB\xBF//' app/src/main/res/values/secrets.xml
-
-      - name: Validate XML format
-        run: xmllint --noout app/src/main/res/values/secrets.xml
-
-      - name: Fix line endings
-        run: |
-          dos2unix app/google-services.json
-          dos2unix app/src/main/res/values/secrets.xml
+          # Create properly quoted XML
+          cat << EOF > app/src/main/res/values/secrets.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+          <string name="fcm_server_key">${{ secrets.FCM_SERVER_KEY }}</string>
+          </resources>
+          EOF
 
       - name: Change Gradle Wrapper Permissions
         run: chmod +x gradlew
