@@ -51,18 +51,20 @@ jobs:
           retention-days: 1
           content-type: application/vnd.android.package-archive
 
+      - name: Get short SHA
+        id: sha
+        run: echo "sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          name: "Release ${{ github.sha }}"
+          tag_name: release-${{ steps.sha.outputs.sha }}
+          name: "Release ${{ steps.sha.outputs.sha }}"
           body: |
             ## What's Changed
-            ${{ steps.changelog.outputs.result }}
-            
             **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }}
           draft: false
           prerelease: false
