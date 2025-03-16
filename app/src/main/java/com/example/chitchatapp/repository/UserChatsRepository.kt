@@ -27,7 +27,8 @@ class UserChatsRepository {
             context: Context
         ) {
             val firestore = FirebaseFirestore.getInstance()
-            val loggedInUser = UserStore.getUsername(context) ?: ""
+            val loggedInUser = UserStore.getUsername(context) ?: return
+
             GetChats.getAllUserChats(firestore, loggedInUser) { userChats ->
                 val oldList = HomeRepository.homeChats.value ?: emptyList()
                 val updatedList = oldList.toMutableList()

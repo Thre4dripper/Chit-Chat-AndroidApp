@@ -75,11 +75,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         HomeRepository.checkCompleteRegistration {
             //init user details everytime even if the user is not completely registered
             //it will handle it inside the function
-            initUserDetails()
+            initUserDetails {
+                onSuccess(it)
+            }
         }
     }
 
-    private fun initUserDetails() {
+    private fun initUserDetails(onSuccess: () -> Unit) {
         val context = getApplication<Application>().applicationContext
         val fcmToken = UserStore.getFCMToken(context)
         Log.d("FCM", "initUserDetails: $fcmToken")
@@ -87,6 +89,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         HomeRepository.getUsername { username ->
             //save username even if it is null
             UserStore.saveUsername(context, username)
+            onSuccess()
 
             //when username is null,then user details will be fetched from uid doc
             UserRepository.getUserDetails(context) {}
