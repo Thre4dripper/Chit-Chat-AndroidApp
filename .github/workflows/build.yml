@@ -7,8 +7,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
+  packages: write
 
 jobs:
   build:
@@ -29,11 +30,10 @@ jobs:
 
       - name: Create secrets.xml
         run: |
-          # Create properly quoted XML
           cat << EOF > app/src/main/res/values/secrets.xml
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
-          <string name="fcm_server_key">${{ secrets.FCM_SERVER_KEY }}</string>
+              <string name="fcm_server_key">${{ secrets.FCM_SERVER_KEY }}</string>
           </resources>
           EOF
 
@@ -46,28 +46,25 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
+          name: app-debug.apk
           path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 1
+          content-type: application/vnd.android.package-archive
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          name: "Release ${{ github.sha }}"
           body: |
-            Changes in this Release
+            ## What's Changed
+            ${{ steps.changelog.outputs.result }}
+            
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.sha }}
           draft: false
           prerelease: false
-
-      - name: Upload APK to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/debug/app-debug.apk
-          asset_name: app-debug.apk
-          asset_content_type: application/vnd.android.package-archive
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
