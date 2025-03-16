@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 permissions:
   contents: write
   pull-requests: write
@@ -44,6 +47,7 @@ jobs:
           path: |
             app/google-services.json
             app/src/main/res/values/secrets.xml
+          retention-days: 1
 
   build:
     name: Build
@@ -85,6 +89,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ setup,build ]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download APK
         uses: actions/download-artifact@v4
         with:
