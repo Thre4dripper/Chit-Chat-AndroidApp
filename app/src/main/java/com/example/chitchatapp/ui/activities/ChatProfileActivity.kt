@@ -41,6 +41,7 @@ class ChatProfileActivity : AppCompatActivity(), ChatProfileClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chat_profile)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[ChatProfileViewModel::class.java]
         chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 

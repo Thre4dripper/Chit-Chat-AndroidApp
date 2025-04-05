@@ -39,6 +39,7 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

@@ -65,6 +65,7 @@ class ChatActivity : AppCompatActivity(), ChatMessageClickInterface, SeenByClick
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_chatting)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

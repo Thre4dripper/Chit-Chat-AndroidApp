@@ -49,6 +49,7 @@ class GroupProfileActivity : AppCompatActivity(), GroupProfileClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_profile)
+        binding.root.fitsSystemWindows = true
         groupChatViewModel = ViewModelProvider(this)[GroupChatViewModel::class.java]
         viewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 

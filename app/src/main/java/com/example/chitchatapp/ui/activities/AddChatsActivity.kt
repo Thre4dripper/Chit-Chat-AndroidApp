@@ -31,6 +31,7 @@ class AddChatsActivity : AppCompatActivity(), AddChatInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_chats)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[AddChatsViewModel::class.java]
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

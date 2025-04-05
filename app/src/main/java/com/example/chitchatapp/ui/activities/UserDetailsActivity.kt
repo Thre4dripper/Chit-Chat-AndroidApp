@@ -32,6 +32,7 @@ class UserDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_details)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[UserDetailsViewModel::class.java]
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

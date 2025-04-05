@@ -44,6 +44,7 @@ class AddGroupActivity : AppCompatActivity(), AddGroupInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_group)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[AddGroupViewModel::class.java]
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

@@ -2,6 +2,7 @@ package com.example.chitchatapp.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.chitchatapp.constants.Constants
 import com.example.chitchatapp.R
@@ -14,6 +15,8 @@ class SetDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_details)
+
+        findViewById<View>(R.id.set_details_frame_layout).fitsSystemWindows = true
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 

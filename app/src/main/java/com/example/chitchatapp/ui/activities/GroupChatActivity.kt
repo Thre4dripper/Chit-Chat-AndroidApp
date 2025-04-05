@@ -62,6 +62,7 @@ class GroupChatActivity : AppCompatActivity(), GroupMessageClickInterface, SeenB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_group_chat)
+        binding.root.fitsSystemWindows = true
         viewModel = ViewModelProvider(this)[GroupChatViewModel::class.java]
         groupProfileViewModel = ViewModelProvider(this)[GroupProfileViewModel::class.java]
 
