@@ -22,7 +22,6 @@ class FirebaseUISignIn {
                 .createSignInIntentBuilder()
                 .setAlwaysShowSignInMethodScreen(true)
                 .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false)
                 .setTheme(R.style.Theme_ChitChat)
                 .setLogo(R.drawable.auth_ui_logo)
                 .build()
