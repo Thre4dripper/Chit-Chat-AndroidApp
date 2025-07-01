@@ -1,6 +1,5 @@
 package com.example.chitchatapp.firebase.auth
 
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import com.example.chitchatapp.R
@@ -41,18 +40,17 @@ class FirebaseUISignIn {
             result: FirebaseAuthUIAuthenticationResult,
             callback: (user: FirebaseUser?) -> Unit,
         ) {
-            val response = result.idpResponse
-            if (result.resultCode == RESULT_OK) {
-                // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                callback(user)
-            } else {
-                callback(null)
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
+            val auth = FirebaseAuth.getInstance()
+            val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+                val user = firebaseAuth.currentUser
+                if (user != null) {
+                    callback(user)
+                } else {
+                    callback(null)
+                }
             }
+
+            auth.addAuthStateListener(listener)
         }
     }
 }
