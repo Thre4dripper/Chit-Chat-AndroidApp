@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -162,6 +163,11 @@ class HomeActivity : AppCompatActivity(), ChatClickInterface {
         MaterialAlertDialogBuilder(this).setTitle("Sign Out")
             .setMessage("Are you sure you want to sign out?")
             .setPositiveButton("Yes") { dialog, _ ->
+                binding.homeNestedScrollView.visibility = View.GONE
+                binding.loadingLottie.visibility = View.VISIBLE
+                binding.homeActionFab.visibility = View.GONE
+                binding.profileImageBtn.setOnClickListener {  }
+                binding.logoutBtn.setOnClickListener {  }
                 viewModel.signOutUser(this) {
                     if (it) {
                         finish()
