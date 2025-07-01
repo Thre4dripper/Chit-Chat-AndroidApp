@@ -40,6 +40,10 @@ jobs:
         id: sha
         run: echo "sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
+      - name: Create keystore
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
+
       - name: Upload config files
         uses: actions/upload-artifact@v4
         with:
@@ -47,6 +51,7 @@ jobs:
           path: |
             app/google-services.json
             app/src/main/res/values/secrets.xml
+            app/keystore.jks
           retention-days: 1
 
   build:
@@ -70,19 +75,14 @@ jobs:
           name: config-files
           path: ./app
 
-      - name: Decode keystore
-        run: |
-          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
+      - name: Change Gradle Wrapper Permissions
+        run: chmod +x gradlew
 
       - name: Export signing env vars
         run: |
           echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> $GITHUB_ENV
           echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_ENV
-
-
-      - name: Change Gradle Wrapper Permissions
-        run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew assembleRelease
