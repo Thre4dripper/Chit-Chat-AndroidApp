@@ -50,7 +50,7 @@ class GroupSelectedRecyclerAdapter(
             //zoom in and out animation
             val animation = android.view.animation.AnimationUtils.loadAnimation(
                 context,
-                com.bumptech.glide.R.anim.abc_slide_in_bottom
+                androidx.appcompat.R.anim.abc_slide_in_bottom
             )
             animation.duration = 300
             binding.itemGroupSelectedIv.startAnimation(animation)
