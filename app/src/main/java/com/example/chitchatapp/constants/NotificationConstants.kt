@@ -2,8 +2,6 @@ package com.example.chitchatapp.constants
 
 class NotificationConstants {
     companion object {
-        const val FCM_URL = "https://6753fab93e069e74e144.appwrite.global"
-
         const val USER_CHAT_CHANNEL_ID = "user_chat_channel_id"
         const val USER_CHAT_CHANNEL_NAME = "User Chat"
         const val USER_CHAT_CHANNEL_DESCRIPTION = "User Chat Notifications"

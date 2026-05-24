@@ -18,7 +18,7 @@ class Messaging {
         private val TAG = "Messaging"
         fun fireNotification(context: Context, payload: JSONObject) {
             val queue = Volley.newRequestQueue(context)
-            val url = NotificationConstants.FCM_URL
+            val url = context.getString(R.string.lambda_fcm_url)
 
             val request = object : JsonObjectRequest(Method.POST, url, payload, { response ->
                 Log.d(TAG, "$response")
@@ -27,7 +27,8 @@ class Messaging {
             }) {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
-                    headers["Authorization"] = "key=${context.getString(R.string.fcm_server_key)}"
+                    headers["x-api-key"]= context.getString(R.string.lambda_fcm_api_key)
+                    headers["Authorization"] = "Bearer ${context.getString(R.string.lambda_fcm_auth_token)}"
                     headers["Content-Type"] = "application/json"
                     return headers
                 }
